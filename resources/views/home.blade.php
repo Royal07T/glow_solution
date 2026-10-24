@@ -235,14 +235,6 @@
                 </div>
             @endforelse
         </div>
-        <div class="mt-8 text-center sm:hidden">
-            <a href="{{ route('jobs.index') }}" class="inline-flex items-center text-brand-800 hover:text-brand-700 font-semibold">
-                View All Jobs
-                <svg class="ml-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
-                </svg>
-            </a>
-        </div>
     </div>
 </section>
 
@@ -435,7 +427,7 @@
     </div>
 </section>
 
-<!-- Verified Testimonials Section -->
+<!-- Testimonials Slider -->
 <section class="py-16 bg-gray-50 overflow-hidden">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-12">
@@ -541,9 +533,38 @@
             <h2 class="font-display text-3xl sm:text-4xl font-bold text-slate-900 mb-4">Contact Us</h2>
             <p class="text-lg text-slate-600">Get in touch with our team</p>
         </div>
-        <div class="max-w-2xl mx-auto bg-white rounded-xl border border-stone-200 p-8 text-center">
-            <p class="text-slate-600 mb-4">For inquiries, please reach out to us through the appropriate channels.</p>
-            <p class="text-sm text-slate-500">Contact details will be provided upon request.</p>
+        <div class="max-w-3xl mx-auto">
+            <div class="bg-white rounded-xl border border-stone-200 p-8 shadow-sm">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="flex items-start gap-4">
+                        <div class="w-12 h-12 bg-brand-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                            <svg class="w-6 h-6 text-brand-800" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                            </svg>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold text-slate-900 mb-1">Address</h3>
+                            <p class="text-slate-600 leading-relaxed">{{ env('COMPANY_ADDRESS', 'Ultra mordern market mpape Block C Suite C73 opposite Chiken Republic Mpape Abuja Nigeria') }}</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-4">
+                        <div class="w-12 h-12 bg-brand-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                            <svg class="w-6 h-6 text-brand-800" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path>
+                            </svg>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold text-slate-900 mb-1">Phone</h3>
+                            <p class="text-slate-600 mb-2">{{ env('COMPANY_PHONE', '08036227769') }}</p>
+                            <div class="flex gap-3">
+                                <a href="tel:{{ env('COMPANY_PHONE', '08036227769') }}" class="text-brand-800 hover:text-brand-700 font-medium">Call</a>
+                                <a href="https://wa.me/234{{ substr(env('COMPANY_PHONE', '08036227769'), 1) }}" target="_blank" rel="noopener" class="text-green-600 hover:text-green-700 font-medium">WhatsApp</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </section>
