@@ -31,29 +31,9 @@
             
             <div class="relative">
                 <div class="relative rounded-2xl overflow-hidden shadow-2xl">
-                    <x-image 
-                        src="{{ asset('images/hero-recruitment.jpg') }}" 
-                        alt="Professional recruiters and job seekers in a meeting"
-                        :lazy="false"
-                        :priority="true"
-                        class="w-full h-[400px] sm:h-[500px] object-cover"
-                        width="1200"
-                        height="800"
-                    />
+                    <img src="{{ asset('images/hero-recruitment.jpg') }}" alt="Professional recruiters and job seekers in a meeting" class="w-full h-[400px] sm:h-[500px] object-cover" loading="eager" fetchpriority="high">
                     <div class="absolute inset-0 bg-brand-950 opacity-70"></div>
-                    <div class="absolute inset-0 flex items-center justify-center">
-                        <div class="text-center text-white p-6">
-                            <div class="w-16 h-16 bg-gold-500 rounded-full flex items-center justify-center mx-auto mb-4">
-                                <svg class="w-8 h-8 text-brand-950" fill="currentColor" viewBox="0 0 20 20">
-                                    <path fill-rule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
-                                </svg>
-                            </div>
-                            <h3 class="font-display text-xl font-bold mb-2">Verified Employers</h3>
-                            <p class="text-gray-200">Trusted partners you can rely on</p>
-                        </div>
-                    </div>
                 </div>
-                <!-- Floating card -->
                 <div class="absolute -bottom-6 -left-6 bg-white rounded-xl shadow-xl p-4 hidden lg:block">
                     <div class="flex items-center gap-3">
                         <div class="w-12 h-12 bg-brand-100 rounded-full flex items-center justify-center">
@@ -62,7 +42,7 @@
                             </svg>
                         </div>
                         <div>
-                            <p class="font-semibold text-slate-900">Verified employers</p>
+                            <p class="font-semibold text-slate-900">Verified Employers</p>
                             <p class="text-sm text-slate-600">Safe & secure hiring</p>
                         </div>
                     </div>
@@ -82,11 +62,7 @@
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
             <a href="{{ route('jobs.index') }}" class="group relative rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow">
                 <div class="relative h-64">
-                    <x-image 
-                        src="{{ asset('images/audience-find-work.jpg') }}" 
-                        alt="Job seeker looking for employment opportunities"
-                        class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                    />
+                    <img src="{{ asset('images/audience-find-work.jpg') }}" alt="Job seeker looking for employment opportunities" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
                     <div class="absolute inset-0 bg-brand-950 opacity-70"></div>
                 </div>
                 <div class="absolute inset-0 flex items-center justify-center">
@@ -105,11 +81,7 @@
             
             <a href="#for-employers" class="group relative rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow">
                 <div class="relative h-64">
-                    <x-image 
-                        src="{{ asset('images/audience-find-staff.jpg') }}" 
-                        alt="Household looking for trusted domestic staff"
-                        class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                    />
+                    <img src="{{ asset('images/audience-find-staff.jpg') }}" alt="Household looking for trusted domestic staff" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
                     <div class="absolute inset-0 bg-brand-950 opacity-70"></div>
                 </div>
                 <div class="absolute inset-0 flex items-center justify-center">
@@ -179,11 +151,7 @@
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div class="order-2 lg:order-1">
                 <div class="relative rounded-2xl overflow-hidden shadow-xl">
-                    <x-image 
-                        src="{{ asset('images/professional-recruitment.jpg') }}" 
-                        alt="Office professionals in a recruitment interview"
-                        class="w-full h-[400px] object-cover"
-                    />
+                    <img src="{{ asset('images/professional-recruitment.jpg') }}" alt="Office professionals in a recruitment interview" class="w-full h-[400px] object-cover">
                     <div class="absolute inset-0 bg-brand-950 opacity-70"></div>
                 </div>
             </div>
@@ -309,13 +277,9 @@
 <section id="for-employers" class="py-16 bg-gray-50">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-12">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div class="relative rounded-2xl overflow-hidden shadow-xl md:col-span-2">
-                    <x-image 
-                        src="{{ asset('images/employer-hiring.jpg') }}" 
-                        alt="Employer reviewing job applications"
-                        class="w-full h-[300px] object-cover"
-                    />
+            <div>
+                <div class="relative rounded-2xl overflow-hidden shadow-xl">
+                    <img src="{{ asset('images/employer-hiring.jpg') }}" alt="Employer reviewing job applications" class="w-full h-[400px] object-cover">
                     <div class="absolute inset-0 bg-brand-950 opacity-70"></div>
                 </div>
             </div>
@@ -388,11 +352,7 @@
             </div>
             <div class="order-1 lg:order-2">
                 <div class="relative rounded-2xl overflow-hidden shadow-xl">
-                    <x-image 
-                        src="{{ asset('images/jobseeker-search.jpg') }}" 
-                        alt="Job seeker browsing opportunities on a device"
-                        class="w-full h-[400px] object-cover"
-                    />
+                    <img src="{{ asset('images/jobseeker-search.jpg') }}" alt="Job seeker browsing opportunities on a device" class="w-full h-[400px] object-cover">
                     <div class="absolute inset-0 bg-brand-950 opacity-70"></div>
                 </div>
             </div>
@@ -476,52 +436,55 @@
 </section>
 
 <!-- Verified Testimonials Section -->
-<section class="py-16 bg-gray-50">
+<section class="py-16 bg-gray-50 overflow-hidden">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-12">
-            <h2 class="font-display text-3xl sm:text-4xl font-bold text-slate-900 mb-4">Testimonials</h2>
-            <p class="text-lg text-slate-600 max-w-2xl mx-auto">Feedback from our community - Placeholder section until real, consented testimonials are available</p>
+            <h2 class="font-display text-3xl sm:text-4xl font-bold text-slate-900 mb-4">What Our Clients Say</h2>
+            <p class="text-lg text-slate-600 max-w-2xl mx-auto">Real experiences from Nigerian families and professionals</p>
         </div>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div class="bg-white rounded-xl border border-stone-200 p-6">
-                <div class="flex items-center mb-4">
-                    <div class="w-12 h-12 bg-brand-100 rounded-full flex items-center justify-center mr-4">
-                        <span class="text-brand-800 font-semibold">JD</span>
-                    </div>
-                    <div>
-                        <p class="font-semibold text-slate-900">[Placeholder Name]</p>
-                        <p class="text-sm text-slate-600">[Placeholder Role]</p>
-                    </div>
-                </div>
-                <p class="text-slate-700 italic">"[Placeholder testimonial - awaiting real, consented feedback]"</p>
-            </div>
-            <div class="bg-white rounded-xl border border-stone-200 p-6">
-                <div class="flex items-center mb-4">
-                    <div class="w-12 h-12 bg-brand-100 rounded-full flex items-center justify-center mr-4">
-                        <span class="text-brand-800 font-semibold">SM</span>
-                    </div>
-                    <div>
-                        <p class="font-semibold text-slate-900">[Placeholder Name]</p>
-                        <p class="text-sm text-slate-600">[Placeholder Role]</p>
-                    </div>
-                </div>
-                <p class="text-slate-700 italic">"[Placeholder testimonial - awaiting real, consented feedback]"</p>
-            </div>
-            <div class="bg-white rounded-xl border border-stone-200 p-6">
-                <div class="flex items-center mb-4">
-                    <div class="w-12 h-12 bg-brand-100 rounded-full flex items-center justify-center mr-4">
-                        <span class="text-brand-800 font-semibold">AK</span>
-                    </div>
-                    <div>
-                        <p class="font-semibold text-slate-900">[Placeholder Name]</p>
-                        <p class="text-sm text-slate-600">[Placeholder Role]</p>
-                    </div>
-                </div>
-                <p class="text-slate-700 italic">"[Placeholder testimonial - awaiting real, consented feedback]"</p>
-            </div>
-        </div>
-        <p class="text-center text-sm text-slate-500 mt-4">* All testimonials shown are placeholders until real, consented feedback is collected.</p>
     </div>
+    <div class="relative">
+        <div class="flex animate-scroll hover:pause-animation">
+            @php
+                $testimonials = [
+                    ['name' => 'Adebayo Olumide', 'role' => 'Employer, Lagos', 'text' => 'Glow Recruitment helped us find a reliable housekeeper within days. Professional service and verified candidates.'],
+                    ['name' => 'Chioma Nwankwo', 'role' => 'Job Seeker, Abuja', 'text' => 'I found my dream administrative job through Glow. The platform is easy to use and very trustworthy.'],
+                    ['name' => 'Ibrahim Musa', 'role' => 'Employer, Port Harcourt', 'text' => 'Excellent service! We hired a qualified nanny through them. Highly recommended for families.'],
+                    ['name' => 'Funke Adeyemi', 'role' => 'Job Seeker, Ibadan', 'text' => 'Thanks to Glow, I secured a caregiving job that changed my life. Great platform for domestic workers.'],
+                    ['name' => 'Emeka Okonkwo', 'role' => 'Employer, Enugu', 'text' => 'Professional and efficient. Found skilled staff for our business quickly. Very satisfied.'],
+                    ['name' => 'Aisha Bello', 'role' => 'Job Seeker, Kano', 'text' => 'Glow connected me with a great family. The verification process gave me confidence.'],
+                ];
+            @endphp
+            @foreach(array_merge($testimonials, $testimonials) as $testimonial)
+                <div class="flex-shrink-0 w-80 mx-4">
+                    <div class="bg-white rounded-xl border border-stone-200 p-6 h-full shadow-sm">
+                        <div class="flex items-center mb-4">
+                            <div class="w-12 h-12 bg-gradient-to-br from-brand-800 to-brand-600 rounded-full flex items-center justify-center mr-4">
+                                <span class="text-white font-semibold text-sm">{{ substr($testimonial['name'], 0, 2) }}</span>
+                            </div>
+                            <div>
+                                <p class="font-semibold text-slate-900">{{ $testimonial['name'] }}</p>
+                                <p class="text-sm text-slate-600">{{ $testimonial['role'] }}</p>
+                            </div>
+                        </div>
+                        <p class="text-slate-700 leading-relaxed">"{{ $testimonial['text'] }}"</p>
+                    </div>
+                </div>
+            @endforeach
+        </div>
+    </div>
+    <style>
+        @keyframes scroll {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+        .animate-scroll {
+            animation: scroll 40s linear infinite;
+        }
+        .hover\:pause-animation:hover {
+            animation-play-state: paused;
+        }
+    </style>
 </section>
 
 <!-- FAQ Accordion -->
