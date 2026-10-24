@@ -86,3 +86,7 @@ CVs are stored privately in `storage/app/private/cvs/`. Ensure proper permission
 
 This project is proprietary software for Glow Recruitment Agency.
 # glow_solution
+
+# Developer
+
+Timothy Ogheenero Jehwo
