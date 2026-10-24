@@ -8,6 +8,9 @@
     <title>{{ $title ?? config('app.name', 'Glow Recruitment Agency') }}</title>
     <meta name="description" content="{{ $description ?? 'Glow Recruitment Agency - Trusted domestic and professional recruitment services in Nigeria.' }}">
 
+    <link rel="icon" type="image/png" href="{{ asset('logo.png') }}">
+    <link rel="shortcut icon" type="image/png" href="{{ asset('logo.png') }}">
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
@@ -48,14 +51,14 @@
                     },
                     fontFamily: {
                         display: ['Plus Jakarta Sans', 'ui-sans-serif', 'system-ui', 'sans-serif'],
-                        sans: ['Inter', 'ui-s-s ans', 'system-ui', 'sans-serif'],
+                        sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
                     },
                 }
             }
         }
     </script>
     <script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/collapse@3.x.x/dist/cdn.min.js"></script>
-    <script defer src="https://cdn.jsdelivrjs/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <style>
         html { scroll-behavior: smooth; }
         @media (prefers-reduced-motion: reduce) {

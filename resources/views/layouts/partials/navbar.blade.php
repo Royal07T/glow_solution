@@ -2,11 +2,9 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16">
             <div class="flex items-center">
-                <a href="{{ route('home') }}" class="flex items-center gap-2">
-                    <div class="w-10 h-10 bg-brand-800 rounded-lg flex items-center justify-center">
-                        <span class="text-gold-500 font-display font-bold text-lg">G</span>
-                    </div>
-                    <span class="font-display font-bold text-xl text-slate-900 hidden sm:block">Glow Recruitment</span>
+                <a href="{{ route('home') }}" class="flex items-center gap-3">
+                    <img src="{{ asset('logo.png') }}" alt="Glow Recruitment Agency" class="h-10 w-auto">
+                    <span class="font-display font-bold text-xl text-slate-900 hidden sm:block">Glow Recruitment Agency</span>
                 </a>
             </div>
 
@@ -15,6 +13,7 @@
                 <a href="{{ route('jobs.index') }}" class="text-slate-600 hover:text-brand-800 font-medium transition-colors">Find Jobs</a>
                 <a href="{{ route('home') }}#for-employers" class="text-slate-600 hover:text-brand-800 font-medium transition-colors">For Employers</a>
                 <a href="{{ route('home') }}#pricing" class="text-slate-600 hover:text-brand-800 font-medium transition-colors">Pricing</a>
+                <a href="{{ route('home') }}#contact" class="text-slate-600 hover:text-brand-800 font-medium transition-colors">Contact</a>
                 
                 @auth
                     @if(auth()->user()->isJobSeeker())
@@ -30,7 +29,7 @@
                     </form>
                 @else
                     <a href="{{ route('login') }}" class="text-slate-600 hover:text-brand-800 font-medium transition-colors">Login</a>
-                    <x-button href="{{ route('register') }}" variant="primary">Get Started</x-button>
+                    <a href="{{ route('register') }}" class="inline-flex items-center justify-center px-6 py-2.5 bg-brand-800 hover:bg-brand-700 text-white font-semibold rounded-lg transition-colors min-h-[44px]">Get Started</a>
                 @endauth
             </div>
 
@@ -52,6 +51,7 @@
             <a href="{{ route('jobs.index') }}" class="block px-3 py-2 text-slate-600 hover:text-brand-800 hover:bg-brand-50 rounded-lg font-medium">Find Jobs</a>
             <a href="{{ route('home') }}#for-employers" class="block px-3 py-2 text-slate-600 hover:text-brand-800 hover:bg-brand-50 rounded-lg font-medium">For Employers</a>
             <a href="{{ route('home') }}#pricing" class="block px-3 py-2 text-slate-600 hover:text-brand-800 hover:bg-brand-50 rounded-lg font-medium">Pricing</a>
+            <a href="{{ route('home') }}#contact" class="block px-3 py-2 text-slate-600 hover:text-brand-800 hover:bg-brand-50 rounded-lg font-medium">Contact</a>
             
             @auth
                 @if(auth()->user()->isJobSeeker())
@@ -72,4 +72,3 @@
         </div>
     </div>
 </nav>
-<script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/collapse@3.x.x/dist/cdn.min.js"></script><script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>

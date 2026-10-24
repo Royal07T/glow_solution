@@ -2,10 +2,8 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div class="col-span-1 md:col-span-2">
-                <div class="flex items-center gap-2 mb-4">
-                    <div class="w-10 h-10 bg-gold-500 rounded-lg flex items-center justify-center">
-                        <span class="text-brand-950 font-display font-bold text-lg">G</span>
-                    </div>
+                <div class="flex items-center gap-3 mb-4">
+                    <img src="{{ asset('logo.png') }}" alt="Glow Recruitment Agency" class="h-12 w-auto">
                     <span class="font-display font-bold text-xl">Glow Recruitment Agency</span>
                 </div>
                 <p class="text-gray-300 mb-4 max-w-md">
