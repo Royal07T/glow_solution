@@ -1,4 +1,4 @@
-<nav class="bg-white border-b border-slate-200 sticky top-0 z-40" x-data="{ mobileMenuOpen: false }">
+<nav class="bg-white border-b border-slate-200 sticky top-0 z-40" data-site-nav x-data="{ mobileMenuOpen: false }">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16">
             <div class="flex items-center">
@@ -23,6 +23,7 @@
                     @elseif(auth()->user()->isAdmin())
                         <a href="{{ route('admin.dashboard') }}" class="text-slate-700 hover:text-brand-700 font-medium transition-colors">Admin</a>
                     @endif
+                    <x-notification-bell />
                     <form method="POST" action="{{ route('logout') }}" class="inline">
                         @csrf
                         <button type="submit" class="text-slate-700 hover:text-brand-700 font-medium transition-colors">Logout</button>
@@ -61,6 +62,7 @@
                 @elseif(auth()->user()->isAdmin())
                     <a href="{{ route('admin.dashboard') }}" class="block px-3 py-2 text-slate-700 hover:text-brand-700 hover:bg-brand-50 rounded-lg font-medium">Admin</a>
                 @endif
+                <a href="{{ route('notifications.index') }}" class="block px-3 py-2 text-slate-700 hover:text-brand-700 hover:bg-brand-50 rounded-lg font-medium">Notifications</a>
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
                     <button type="submit" class="w-full text-left px-3 py-2 text-slate-700 hover:text-brand-700 hover:bg-brand-50 rounded-lg font-medium">Logout</button>

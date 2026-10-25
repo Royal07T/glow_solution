@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\AuditLog;
 use App\Models\EmployerVerification;
+use App\Notifications\SystemNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -53,6 +54,14 @@ class VerificationController extends Controller
 
         AuditLog::record('employer.verification.approved', $verification, ['status' => 'pending'], ['status' => 'approved']);
 
+        $verification->loadMissing('employerProfile.user');
+        $verification->employerProfile?->user?->notify(new SystemNotification(
+            'Verification approved',
+            'Your employer account has been verified. You can now post jobs and manage applications.',
+            route('employer.verification', absolute: false),
+            'success',
+        ));
+
         return back()->with('success', 'Employer verified successfully.');
     }
 
@@ -80,6 +89,14 @@ class VerificationController extends Controller
         });
 
         AuditLog::record('employer.verification.rejected', $verification, ['status' => 'pending'], ['status' => 'rejected']);
+
+        $verification->loadMissing('employerProfile.user');
+        $verification->employerProfile?->user?->notify(new SystemNotification(
+            'Verification needs attention',
+            'Your verification was not approved. '.$validated['admin_notes'],
+            route('employer.verification', absolute: false),
+            'danger',
+        ));
 
         return back()->with('success', 'Verification rejected.');
     }

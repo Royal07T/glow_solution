@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers\Employer;
 
+use App\Enums\ApplicationStatus;
 use App\Http\Controllers\Controller;
 use App\Models\Application;
+use App\Notifications\SystemNotification;
 use Illuminate\Http\Request;
 
 class ApplicationController extends Controller
@@ -17,13 +19,13 @@ class ApplicationController extends Controller
     {
         $profile = auth()->user()->employerProfile;
         $jobs = $profile->jobs()->latest()->get();
-        $applications = Application::whereHas('job', function($q) use ($profile, $request) {
+        $applications = Application::whereHas('job', function ($q) use ($profile, $request) {
             $q->where('employer_profile_id', $profile->id);
             if ($request->filled('job')) {
                 $q->where('id', $request->job);
             }
         })->with(['job', 'jobSeeker', 'cv'])
-            ->when($request->filled('status'), function($q) use ($request) {
+            ->when($request->filled('status'), function ($q) use ($request) {
                 $q->where('status', $request->status);
             })
             ->latest()->paginate(15)->withQueryString();
@@ -35,6 +37,7 @@ class ApplicationController extends Controller
     {
         $this->authorize('view', $application);
         $application->load(['job', 'jobSeeker.jobSeekerProfile', 'cv']);
+
         return view('employer.applications.show', compact('application'));
     }
 
@@ -47,11 +50,25 @@ class ApplicationController extends Controller
             'employer_notes' => 'nullable|string',
         ]);
 
+        $previousStatus = $application->status;
+
         $application->update([
             'status' => $validated['status'],
             'employer_notes' => $validated['employer_notes'] ?? $application->employer_notes,
             'status_updated_at' => now(),
         ]);
+
+        if ($previousStatus?->value !== $validated['status']) {
+            $application->loadMissing(['job', 'jobSeeker']);
+            $status = ApplicationStatus::tryFrom($validated['status']);
+
+            $application->jobSeeker?->notify(new SystemNotification(
+                'Application update',
+                'Your application for "'.$application->job?->title.'" is now '.($status?->label() ?? $validated['status']).'.',
+                route('applications.show', $application, false),
+                $status?->variant() ?? 'info',
+            ));
+        }
 
         return redirect()->back()->with('success', 'Application status updated successfully.');
     }

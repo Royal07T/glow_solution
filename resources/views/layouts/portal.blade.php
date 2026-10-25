@@ -28,6 +28,8 @@
                 </div>
 
                 <div class="flex items-center gap-2 sm:gap-3">
+                    <x-notification-bell />
+
                     @php
                         $portalUser = auth()->user();
                         $roleLabel = $portalUser->isAdmin() ? 'Admin' : ($portalUser->isEmployer() ? 'Employer' : 'Job seeker');

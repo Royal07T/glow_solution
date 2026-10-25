@@ -137,6 +137,51 @@ details[data-menu][open] > div {
     display: block;
 }
 
+/* Motion and depth */
+@keyframes marquee {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+}
+
+.has-js [data-reveal],
+.has-js [data-reveal-group] > * {
+    opacity: 0;
+    transform: translate3d(0, 1.25rem, 0);
+    transition:
+        opacity 600ms cubic-bezier(0.22, 1, 0.36, 1),
+        transform 600ms cubic-bezier(0.22, 1, 0.36, 1);
+    transition-delay: var(--reveal-delay, 0ms);
+    will-change: opacity, transform;
+}
+
+.has-js [data-reveal].is-revealed,
+.has-js [data-reveal-group] > .is-revealed {
+    opacity: 1;
+    transform: none;
+    will-change: auto;
+}
+
+[data-site-nav] {
+    transition: box-shadow 250ms ease, background-color 250ms ease;
+}
+
+[data-site-nav].is-scrolled {
+    box-shadow: 0 14px 34px -22px rgba(7, 26, 51, 0.5);
+}
+
+.marquee-track {
+    animation: marquee 40s linear infinite;
+}
+
+.marquee:hover .marquee-track,
+.marquee:focus-within .marquee-track {
+    animation-play-state: paused;
+}
+
+[id] {
+    scroll-margin-top: 5rem;
+}
+
 /* Respect reduced-motion preferences */
 @media (prefers-reduced-motion: reduce) {
     *,
@@ -146,6 +191,18 @@ details[data-menu][open] > div {
         animation-iteration-count: 1 !important;
         transition-duration: 0.01ms !important;
     }
+
+    .has-js [data-reveal],
+    .has-js [data-reveal-group] > * {
+        opacity: 1 !important;
+        transform: none !important;
+        transition: none !important;
+    }
+
+    .marquee-track {
+        animation: none;
+    }
+
     html {
         scroll-behavior: auto;
     }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Enums\ApplicationStatus;
 use App\Models\Application;
 use App\Models\Job;
+use App\Notifications\SystemNotification;
 use Illuminate\Http\Request;
 
 class ApplicationController extends Controller
@@ -90,7 +91,7 @@ class ApplicationController extends Controller
             return redirect()->route('jobs.show', $job)->with('error', 'You have already applied for this job.');
         }
 
-        Application::create([
+        $application = Application::create([
             'job_id' => $job->id,
             'job_seeker_id' => auth()->id(),
             'cv_id' => $validated['cv_id'] ?? null,
@@ -98,6 +99,14 @@ class ApplicationController extends Controller
             'status' => 'submitted',
             'applied_at' => now(),
         ]);
+
+        $job->loadMissing('employerProfile.user');
+        $job->employerProfile?->user?->notify(new SystemNotification(
+            'New application received',
+            auth()->user()->name.' applied for "'.$job->title.'".',
+            route('employer.applications.show', $application, false),
+            'info',
+        ));
 
         return redirect()->route('applications.index')->with('success', 'Application submitted successfully.');
     }
@@ -119,6 +128,14 @@ class ApplicationController extends Controller
             'status' => ApplicationStatus::WITHDRAWN,
             'status_updated_at' => now(),
         ]);
+
+        $application->loadMissing(['job.employerProfile.user']);
+        $application->job?->employerProfile?->user?->notify(new SystemNotification(
+            'Application withdrawn',
+            auth()->user()->name.' withdrew their application for "'.$application->job?->title.'".',
+            route('employer.applications.show', $application, false),
+            'warning',
+        ));
 
         return redirect()->route('applications.index')->with('success', 'Application withdrawn.');
     }

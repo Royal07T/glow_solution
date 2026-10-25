@@ -9,11 +9,11 @@
     
     <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20 lg:py-28">
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            <div>
+            <div data-reveal>
                 <h1 class="font-display text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-tight mb-6">
                     Trusted Recruitment for <span class="text-gold-400">Homes</span> & <span class="text-gold-400">Careers</span>
                 </h1>
-                <p class="text-xl text-gray-200 mb-8 leading-relaxed">
+                <p class="text-xl text-slate-200 mb-8 leading-relaxed">
                     Glow Recruitment Agency Solution connects families with verified domestic staff and helps professionals find meaningful career opportunities across Nigeria.
                 </p>
                 <div class="flex flex-col sm:flex-row gap-4">
@@ -29,7 +29,7 @@
                 </div>
             </div>
             
-            <div class="relative">
+            <div class="relative" data-reveal style="--reveal-delay: 140ms">
                 <div class="relative rounded-2xl overflow-hidden shadow-2xl">
                     <img src="{{ asset('images/hero-recruitment.jpg') }}" alt="Professional recruiters and job seekers in a meeting" class="w-full h-[400px] sm:h-[500px] object-cover" loading="eager" fetchpriority="high">
                     <div class="absolute inset-0 bg-gradient-to-t from-brand-900/60 to-transparent"></div>
@@ -55,12 +55,12 @@
 <!-- Two-card Audience Split -->
 <section class="py-16 bg-white">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="text-center mb-12">
+        <div class="text-center mb-12" data-reveal>
             <h2 class="font-display text-3xl sm:text-4xl font-bold text-slate-900 mb-4">How Can We Help You?</h2>
             <p class="text-lg text-slate-600 max-w-2xl mx-auto">Choose your path - whether you're looking for work or looking to hire</p>
         </div>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <a href="{{ route('jobs.index') }}" class="group relative rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8" data-reveal-group>
+            <a href="{{ route('jobs.index') }}" class="group relative rounded-2xl overflow-hidden shadow-lg transition duration-300 hover:-translate-y-1 hover:shadow-xl">
                 <div class="relative h-64">
                     <img src="{{ asset('images/audience-find-work.jpg') }}" alt="Job seeker looking for employment opportunities" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
                     <div class="absolute inset-0 bg-gradient-to-t from-brand-900/90 to-brand-900/50"></div>
@@ -68,7 +68,7 @@
                 <div class="absolute inset-0 flex items-center justify-center">
                     <div class="text-center text-white p-6">
                         <h3 class="font-display text-2xl sm:text-3xl font-bold mb-2">Find Work</h3>
-                        <p class="text-gray-200 mb-4">Browse domestic and professional opportunities</p>
+                        <p class="text-slate-200 mb-4">Browse domestic and professional opportunities</p>
                         <span class="inline-flex items-center text-gold-400 font-semibold">
                             Get Started
                             <svg class="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -79,7 +79,7 @@
                 </div>
             </a>
             
-            <a href="#for-employers" class="group relative rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow">
+            <a href="#for-employers" class="group relative rounded-2xl overflow-hidden shadow-lg transition duration-300 hover:-translate-y-1 hover:shadow-xl">
                 <div class="relative h-64">
                     <img src="{{ asset('images/audience-find-staff.jpg') }}" alt="Household looking for trusted domestic staff" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
                     <div class="absolute inset-0 bg-gradient-to-t from-brand-900/90 to-brand-900/50"></div>
@@ -87,7 +87,7 @@
                 <div class="absolute inset-0 flex items-center justify-center">
                     <div class="text-center text-white p-6">
                         <h3 class="font-display text-2xl sm:text-3xl font-bold mb-2">Find Domestic Staff / Hire Professionals</h3>
-                        <p class="text-gray-200 mb-4">Connect with verified candidates</p>
+                        <p class="text-slate-200 mb-4">Connect with verified candidates</p>
                         <span class="inline-flex items-center text-gold-400 font-semibold">
                             Post a Job
                             <svg class="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -102,14 +102,14 @@
 </section>
 
 <!-- Domestic Services Icon Grid -->
-<section class="py-16 bg-gray-50">
+<section class="py-16 bg-slate-50">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="text-center mb-12">
+        <div class="text-center mb-12" data-reveal>
             <h2 class="font-display text-3xl sm:text-4xl font-bold text-slate-900 mb-4">Domestic Staffing Services</h2>
             <p class="text-lg text-slate-600 max-w-2xl mx-auto">Trusted help for your home and family needs</p>
         </div>
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
-            <div class="bg-white p-6 rounded-xl border border-slate-200 text-center hover:shadow-md transition-shadow">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-6" data-reveal-group>
+            <div class="bg-white p-6 rounded-xl border border-slate-200 text-center transition duration-300 hover:-translate-y-1 hover:border-brand-200 hover:shadow-md">
                 <div class="w-12 h-12 bg-gold-100 rounded-lg flex items-center justify-center mx-auto mb-4">
                     <svg class="w-6 h-6 text-brand-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
@@ -117,7 +117,7 @@
                 </div>
                 <h3 class="font-semibold text-slate-900">Housekeeping</h3>
             </div>
-            <div class="bg-white p-6 rounded-xl border border-slate-200 text-center hover:shadow-md transition-shadow">
+            <div class="bg-white p-6 rounded-xl border border-slate-200 text-center transition duration-300 hover:-translate-y-1 hover:border-brand-200 hover:shadow-md">
                 <div class="w-12 h-12 bg-gold-100 rounded-lg flex items-center justify-center mx-auto mb-4">
                     <svg class="w-6 h-6 text-brand-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"></path>
@@ -125,7 +125,7 @@
                 </div>
                 <h3 class="font-semibold text-slate-900">Childcare & Nanny</h3>
             </div>
-            <div class="bg-white p-6 rounded-xl border border-slate-200 text-center hover:shadow-md transition-shadow">
+            <div class="bg-white p-6 rounded-xl border border-slate-200 text-center transition duration-300 hover:-translate-y-1 hover:border-brand-200 hover:shadow-md">
                 <div class="w-12 h-12 bg-gold-100 rounded-lg flex items-center justify-center mx-auto mb-4">
                     <svg class="w-6 h-6 text-brand-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
@@ -133,7 +133,7 @@
                 </div>
                 <h3 class="font-semibold text-slate-900">Elderly Care</h3>
             </div>
-            <div class="bg-white p-6 rounded-xl border border-slate-200 text-center hover:shadow-md transition-shadow">
+            <div class="bg-white p-6 rounded-xl border border-slate-200 text-center transition duration-300 hover:-translate-y-1 hover:border-brand-200 hover:shadow-md">
                 <div class="w-12 h-12 bg-gold-100 rounded-lg flex items-center justify-center mx-auto mb-4">
                     <svg class="w-6 h-6 text-brand-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
@@ -148,7 +148,7 @@
 <!-- Professional Recruitment Block -->
 <section class="py-16 bg-white">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center" data-reveal-group>
             <div class="order-2 lg:order-1">
                 <div class="relative rounded-2xl overflow-hidden shadow-xl">
                     <img src="{{ asset('images/professional-recruitment.jpg') }}" alt="Office professionals in a recruitment interview" class="w-full h-[400px] object-cover">
@@ -192,7 +192,7 @@
 </section>
 
 <!-- Featured Job Previews -->
-<section class="py-16 bg-gray-50">
+<section class="py-16 bg-slate-50">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between items-center mb-12">
             <div>
@@ -206,9 +206,9 @@
                 </svg>
             </a>
         </div>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" data-reveal-group>
             @forelse($featuredJobs as $job)
-                <div class="bg-white rounded-xl border border-slate-200 p-6 hover:shadow-lg transition-shadow">
+                <div class="bg-white rounded-xl border border-slate-200 p-6 transition duration-300 hover:-translate-y-1 hover:border-brand-200 hover:shadow-lg">
                     <div class="flex justify-between items-start mb-3">
                         <span class="px-3 py-1 bg-gold-100 text-brand-700 text-xs font-medium rounded-full">{{ ucfirst($job->type) }}</span>
                         <span class="text-xs text-slate-500">{{ $job->created_at->diffForHumans() }}</span>
@@ -241,11 +241,11 @@
 <!-- How it Works -->
 <section class="py-16 bg-white">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="text-center mb-12">
+        <div class="text-center mb-12" data-reveal>
             <h2 class="font-display text-3xl sm:text-4xl font-bold text-slate-900 mb-4">How It Works</h2>
             <p class="text-lg text-slate-600 max-w-2xl mx-auto">Simple steps to find your perfect match</p>
         </div>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8" data-reveal-group>
             <div class="text-center">
                 <div class="w-16 h-16  bg-brand-700 text-white rounded-full flex items-center justify-center mx-auto mb-4 text-2xl font-bold">1</div>
                 <h3 class="font-display text-xl font-semibold text-slate-900 mb-2">Create Your Profile</h3>
@@ -266,9 +266,9 @@
 </section>
 
 <!-- Employer Block and Job Seeker Block -->
-<section id="for-employers" class="py-16 bg-gray-50">
+<section id="for-employers" class="py-16 bg-slate-50">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-12">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-12" data-reveal-group>
             <div>
                 <div class="relative rounded-2xl overflow-hidden shadow-xl">
                     <img src="{{ asset('images/employer-hiring.jpg') }}" alt="Employer reviewing job applications" class="w-full h-[400px] object-cover">
@@ -309,7 +309,7 @@
             </div>
         </div>
         
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12" data-reveal-group>
             <div class="flex flex-col justify-center order-2 lg:order-1">
                 <h2 class="font-display text-3xl sm:text-4xl font-bold text-slate-900 mb-4">For Job Seekers</h2>
                 <p class="text-lg text-slate-600 mb-6 leading-relaxed">
@@ -355,17 +355,17 @@
 <!-- Subscription Benefits -->
 <section id="pricing" class="py-16 bg-white">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="text-center mb-12">
+        <div class="text-center mb-12" data-reveal>
             <h2 class="font-display text-3xl sm:text-4xl font-bold text-slate-900 mb-4">Subscription Plans</h2>
             <p class="text-lg text-slate-600 max-w-2xl mx-auto">Access platform features with flexible subscription options</p>
         </div>
-        <div class="bg-gold-100 border border-gold-400 rounded-lg p-4 mb-8 max-w-3xl mx-auto">
+        <div class="bg-gold-100 border border-gold-400 rounded-lg p-4 mb-8 max-w-3xl mx-auto" data-reveal>
             <p class="text-center text-brand-900 font-medium">
                 <strong>Important:</strong> A subscription gives access to platform features. It does not guarantee employment.
             </p>
         </div>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-            <div class="bg-white rounded-xl border-2 border-slate-200 p-8 relative">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto" data-reveal-group>
+            <div class="bg-white rounded-xl border-2 border-slate-200 p-8 relative transition duration-300 hover:-translate-y-1 hover:border-brand-200 hover:shadow-xl">
                 <h3 class="font-display text-xl font-bold text-slate-900 mb-2">Job Seeker</h3>
                 <p class="text-slate-600 mb-6">For individuals seeking employment</p>
                 <ul class="space-y-3 mb-8">
@@ -393,7 +393,7 @@
                 </a>
             </div>
             
-            <div class="bg-white rounded-xl border-2 border-gold-500 p-8 relative shadow-lg">
+            <div class="bg-white rounded-xl border-2 border-gold-500 p-8 relative shadow-lg transition duration-300 hover:-translate-y-1 hover:shadow-xl">
                 <div class="absolute -top-4 left-1/2 transform -translate-x-1/2">
                     <span class="bg-gold-500 text-brand-900 px-4 py-1 rounded-full text-sm font-semibold">Most popular</span>
                 </div>
@@ -428,15 +428,15 @@
 </section>
 
 <!-- Testimonials Slider -->
-<section class="py-16 bg-gray-50 overflow-hidden">
+<section class="py-16 bg-slate-50 overflow-hidden">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="text-center mb-12">
+        <div class="text-center mb-12" data-reveal>
             <h2 class="font-display text-3xl sm:text-4xl font-bold text-slate-900 mb-4">What Our Clients Say</h2>
             <p class="text-lg text-slate-600 max-w-2xl mx-auto">Real experiences from Nigerian families and professionals</p>
         </div>
     </div>
-    <div class="relative">
-        <div class="flex animate-scroll hover:pause-animation">
+    <div class="relative marquee">
+        <div class="flex marquee-track">
             @php
                 $testimonials = [
                     ['name' => 'Adebayo Olumide', 'role' => 'Employer, Lagos', 'text' => 'Glow Recruitment helped us find a reliable housekeeper within days. Professional service and verified candidates.'],
@@ -465,30 +465,18 @@
             @endforeach
         </div>
     </div>
-    <style>
-        @keyframes scroll {
-            0% { transform: translateX(0); }
-            100% { transform: translateX(-50%); }
-        }
-        .animate-scroll {
-            animation: scroll 40s linear infinite;
-        }
-        .hover\:pause-animation:hover {
-            animation-play-state: paused;
-        }
-    </style>
 </section>
 
 <!-- FAQ Accordion -->
 <section class="py-16 bg-white">
     <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="text-center mb-12">
+        <div class="text-center mb-12" data-reveal>
             <h2 class="font-display text-3xl sm:text-4xl font-bold text-slate-900 mb-4">Frequently Asked Questions</h2>
             <p class="text-lg text-slate-600">Common questions about our services</p>
         </div>
-        <div class="space-y-4" x-data="{ open: null }">
-            <div class="border border-slate-200 rounded-lg">
-                <button @click="open = open === 1 ? null : 1" class="w-full px-6 py-4 text-left flex justify-between items-center hover:bg-gray-50 transition-colors min-h-[44px]">
+        <div class="space-y-4" x-data="{ open: null }" data-reveal-group>
+            <div class="border border-slate-200 rounded-lg transition-colors hover:border-brand-200">
+                <button @click="open = open === 1 ? null : 1" class="w-full px-6 py-4 text-left flex justify-between items-center hover:bg-slate-50 transition-colors min-h-[44px]">
                     <span class="font-semibold text-slate-900">How do I register as a job seeker?</span>
                     <svg class="w-5 h-5 text-slate-500 transition-transform" :class="{ 'rotate-180': open === 1 }" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
@@ -499,8 +487,8 @@
                 </div>
             </div>
             
-            <div class="border border-slate-200 rounded-lg">
-                <button @click="open = open === 2 ? null : 2" class="w-full px-6 py-4 text-left flex justify-between items-center hover:bg-gray-50 transition-colors min-h-[44px]">
+            <div class="border border-slate-200 rounded-lg transition-colors hover:border-brand-200">
+                <button @click="open = open === 2 ? null : 2" class="w-full px-6 py-4 text-left flex justify-between items-center hover:bg-slate-50 transition-colors min-h-[44px]">
                     <span class="font-semibold text-slate-900">How do employers post jobs?</span>
                     <svg class="w-5 h-5 text-slate-500 transition-transform" :class="{ 'rotate-180': open === 2 }" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
@@ -511,8 +499,8 @@
                 </div>
             </div>
             
-            <div class="border border-slate-200 rounded-lg">
-                <button @click="open = open === 3 ? null : 3" class="w-full px-6 py-4 text-left flex justify-between items-center hover:bg-gray-50 transition-colors min-h-[44px]">
+            <div class="border border-slate-200 rounded-lg transition-colors hover:border-brand-200">
+                <button @click="open = open === 3 ? null : 3" class="w-full px-6 py-4 text-left flex justify-between items-center hover:bg-slate-50 transition-colors min-h-[44px]">
                     <span class="font-semibold text-slate-900">Are subscriptions refundable?</span>
                     <svg class="w-5 h-5 text-slate-500 transition-transform" :class="{ 'rotate-180': open === 3 }" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
@@ -539,12 +527,12 @@
 
 <section id="contact" class="py-16 bg-slate-50">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="text-center mb-12">
+        <div class="text-center mb-12" data-reveal>
             <h2 class="font-display text-3xl sm:text-4xl font-bold text-slate-900 mb-4">Contact Us</h2>
             <p class="text-lg text-slate-600">Get in touch with our team</p>
         </div>
 
-        <div class="mx-auto grid max-w-6xl gap-6 lg:grid-cols-2">
+        <div class="mx-auto grid max-w-6xl gap-6 lg:grid-cols-2" data-reveal-group>
             <div class="rounded-xl border border-slate-200 bg-white p-8 shadow-sm">
                 <div class="space-y-6">
                     <div class="flex items-start gap-4">

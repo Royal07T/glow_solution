@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\AuditLog;
 use App\Models\Job;
+use App\Notifications\SystemNotification;
 use Illuminate\Http\Request;
 
 class JobController extends Controller
@@ -47,6 +48,14 @@ class JobController extends Controller
         } catch (\Throwable $e) {
         }
 
+        $job->loadMissing('employerProfile.user');
+        $job->employerProfile?->user?->notify(new SystemNotification(
+            'Job approved',
+            'Your job "'.$job->title.'" is now live and visible to job seekers.',
+            route('employer.jobs.show', $job, false),
+            'success',
+        ));
+
         return redirect()->back()->with('success', 'Job approved successfully.');
     }
 
@@ -67,6 +76,14 @@ class JobController extends Controller
             AuditLog::record('job.rejected', $job);
         } catch (\Throwable $e) {
         }
+
+        $job->loadMissing('employerProfile.user');
+        $job->employerProfile?->user?->notify(new SystemNotification(
+            'Job needs attention',
+            'Your job "'.$job->title.'" was not approved. Review the feedback and resubmit it for review.',
+            route('employer.jobs.edit', $job, false),
+            'warning',
+        ));
 
         return redirect()->back()->with('success', 'Job rejected.');
     }

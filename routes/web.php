@@ -19,6 +19,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\JobController;
 use App\Http\Controllers\JobSeeker\DashboardController as JobSeekerDashboard;
 use App\Http\Controllers\JobSeeker\ProfileController as JobSeekerProfile;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\SavedJobController;
 use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\SubscriptionPlanController;
@@ -106,6 +107,10 @@ Route::middleware(['auth', 'verified', 'role:admin'])->prefix('admin')->name('ad
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/settings', [AccountController::class, 'edit'])->name('settings.edit');
+
+    Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
+    Route::get('/notifications/{notification}/read', [NotificationController::class, 'read'])->name('notifications.read');
+    Route::post('/notifications/read-all', [NotificationController::class, 'markAllRead'])->name('notifications.read-all');
 });
 
 Route::middleware(['auth', 'verified'])->group(function () {

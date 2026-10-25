@@ -6,6 +6,7 @@ use App\Enums\UserRole;
 use App\Models\AuditLog;
 use App\Models\Subscription;
 use App\Models\SubscriptionPlan;
+use App\Notifications\SystemNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 
@@ -61,6 +62,13 @@ class SubscriptionController extends Controller
             } catch (\Throwable $e) {
             }
 
+            $user->notify(new SystemNotification(
+                'Subscription activated',
+                'Your '.$plan->name.' plan is now active.',
+                route('billing.index', absolute: false),
+                'success',
+            ));
+
             return redirect()->route('employer.dashboard')->with('success', 'Plan activated.');
         }
 
@@ -91,6 +99,21 @@ class SubscriptionController extends Controller
                 AuditLog::record('subscription.activated', $subscription, [], ['subscription_plan_id' => $plan->id, 'status' => $subscription->status]);
             } catch (\Throwable $e) {
             }
+
+            $user->notify($isFree
+                ? new SystemNotification(
+                    'Subscription activated',
+                    'Your '.$plan->name.' plan is now active.',
+                    route('billing.index', absolute: false),
+                    'success',
+                )
+                : new SystemNotification(
+                    'Subscription pending payment',
+                    'Your '.$plan->name.' plan is pending activation. Complete payment to unlock it.',
+                    route('billing.index', absolute: false),
+                    'warning',
+                ));
+
             if ($isFree) {
                 return redirect()->route('jobseeker.dashboard')->with('success', 'Plan activated.');
             }
