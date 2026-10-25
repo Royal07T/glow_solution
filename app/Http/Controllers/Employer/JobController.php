@@ -94,7 +94,15 @@ class JobController extends Controller
     {
         $this->authorize('view', $job);
 
-        return view('employer.jobs.show', compact('job'));
+        $job->load('category')->loadCount('applications');
+
+        $recentApplications = $job->applications()
+            ->with('jobSeeker')
+            ->latest()
+            ->take(5)
+            ->get();
+
+        return view('employer.jobs.show', compact('job', 'recentApplications'));
     }
 
     public function edit(Job $job)

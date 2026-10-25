@@ -45,6 +45,7 @@ class PagesTest extends TestCase
         $this->get(route('employer.dashboard'))->assertOk();
         $this->get(route('employer.jobs.index'))->assertOk();
         $this->get(route('employer.jobs.create'))->assertOk();
+        $this->get(route('employer.jobs.show', $job))->assertOk()->assertSee($seeker->name);
         $this->get(route('employer.jobs.edit', $job))->assertOk();
         $this->get(route('employer.applications.index'))->assertOk();
         $this->get(route('employer.applications.show', $application))->assertOk();
