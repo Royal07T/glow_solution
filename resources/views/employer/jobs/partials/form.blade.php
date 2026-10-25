@@ -83,14 +83,7 @@
                     <input id="location" type="text" name="location" required maxlength="255" value="{{ old('location', $job->location ?? '') }}" class="w-full rounded-lg border border-slate-300 px-3 py-2" placeholder="e.g. Ikoyi, Lagos">
                     @error('location') <p class="mt-1 text-sm text-danger">{{ $message }}</p> @enderror
                 </div>
-                <div>
-                    <label for="city" class="mb-1 block text-sm font-medium text-slate-700">City</label>
-                    <input id="city" type="text" name="city" maxlength="100" value="{{ old('city', $job->city ?? '') }}" class="w-full rounded-lg border border-slate-300 px-3 py-2">
-                </div>
-                <div>
-                    <label for="state" class="mb-1 block text-sm font-medium text-slate-700">State</label>
-                    <input id="state" type="text" name="state" maxlength="100" value="{{ old('state', $job->state ?? '') }}" class="w-full rounded-lg border border-slate-300 px-3 py-2">
-                </div>
+                <x-location-fields :state="$job->state ?? null" :city="$job->city ?? null" />
             </div>
         </section>
 
@@ -127,11 +120,13 @@
             </div>
         </section>
 
-        <section class="rounded-xl border border-gold-100 bg-brand-50 p-5">
-            <h2 class="font-display text-sm font-semibold text-brand-800">Moderation</h2>
-            <p class="mt-1 text-xs text-brand-700">
-                Every new or edited listing is reviewed by an administrator before it becomes public.
-            </p>
-        </section>
+        @unless(auth()->user()->isAdmin())
+            <section class="rounded-xl border border-gold-100 bg-brand-50 p-5">
+                <h2 class="font-display text-sm font-semibold text-brand-800">Moderation</h2>
+                <p class="mt-1 text-xs text-brand-700">
+                    Every new or edited listing is reviewed by an administrator before it becomes public.
+                </p>
+            </section>
+        @endunless
     </div>
 </div>

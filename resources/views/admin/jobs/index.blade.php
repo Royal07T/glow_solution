@@ -5,6 +5,13 @@
 
 @section('content')
     <div class="space-y-5">
+        <div class="flex flex-wrap items-center justify-between gap-3">
+            <p class="text-sm text-slate-600">Create agency listings or review employer submissions.</p>
+            <a href="{{ route('admin.jobs.create') }}" class="inline-flex items-center gap-2 rounded-lg bg-brand-700 px-4 py-2 text-sm font-semibold text-white hover:bg-brand-600">
+                <x-icon name="plus" class="h-4 w-4" /> Post a job
+            </a>
+        </div>
+
         <div class="flex flex-wrap gap-2">
             <a href="{{ route('admin.jobs.index') }}" @class([
                 'rounded-full border px-4 py-2 text-sm font-semibold',

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Carbon;
 
 class SubscriptionPlan extends Model
 {
@@ -37,5 +38,17 @@ class SubscriptionPlan extends Model
     public function subscriptions()
     {
         return $this->hasMany(Subscription::class);
+    }
+
+    public function endsAt(?Carbon $start = null): Carbon
+    {
+        $start ??= now();
+
+        return match ($this->interval) {
+            'weekly' => $start->copy()->addWeek(),
+            'quarterly' => $start->copy()->addMonths(3),
+            'annual' => $start->copy()->addYear(),
+            default => $start->copy()->addMonth(),
+        };
     }
 }

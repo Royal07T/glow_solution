@@ -8,7 +8,6 @@ use App\Models\Subscription;
 use App\Models\SubscriptionPlan;
 use App\Notifications\SystemNotification;
 use Illuminate\Http\Request;
-use Illuminate\Support\Carbon;
 
 class SubscriptionController extends Controller
 {
@@ -46,7 +45,7 @@ class SubscriptionController extends Controller
                     'subscription_plan_id' => $plan->id,
                     'status' => 'active',
                     'starts_at' => now(),
-                    'ends_at' => $this->endsAt($plan),
+                    'ends_at' => $plan->endsAt(),
                 ]);
             } else {
                 $subscription = Subscription::create([
@@ -54,7 +53,7 @@ class SubscriptionController extends Controller
                     'subscription_plan_id' => $plan->id,
                     'status' => 'active',
                     'starts_at' => now(),
-                    'ends_at' => $this->endsAt($plan),
+                    'ends_at' => $plan->endsAt(),
                 ]);
             }
             try {
@@ -84,7 +83,7 @@ class SubscriptionController extends Controller
                     'subscription_plan_id' => $plan->id,
                     'status' => $isFree ? 'active' : 'pending',
                     'starts_at' => now(),
-                    'ends_at' => $this->endsAt($plan),
+                    'ends_at' => $plan->endsAt(),
                 ]);
             } else {
                 $subscription = Subscription::create([
@@ -92,7 +91,7 @@ class SubscriptionController extends Controller
                     'subscription_plan_id' => $plan->id,
                     'status' => $isFree ? 'active' : 'pending',
                     'starts_at' => now(),
-                    'ends_at' => $this->endsAt($plan),
+                    'ends_at' => $plan->endsAt(),
                 ]);
             }
             try {
@@ -130,16 +129,6 @@ class SubscriptionController extends Controller
     public function index()
     {
         return redirect()->route('billing.index');
-    }
-
-    private function endsAt(SubscriptionPlan $plan): Carbon
-    {
-        return match ($plan->interval) {
-            'weekly' => now()->addWeek(),
-            'quarterly' => now()->addMonths(3),
-            'annual' => now()->addYear(),
-            default => now()->addMonth(),
-        };
     }
 
     /**

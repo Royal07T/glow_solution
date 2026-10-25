@@ -65,16 +65,7 @@
                         <input id="address" name="address" type="text" value="{{ old('address', $profile->address) }}" autocomplete="street-address" class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/30">
                         @error('address') <p class="mt-1 text-sm text-danger">{{ $message }}</p> @enderror
                     </div>
-                    <div>
-                        <label for="city" class="mb-1 block text-sm font-medium text-slate-700">City</label>
-                        <input id="city" name="city" type="text" value="{{ old('city', $profile->city) }}" autocomplete="address-level2" class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/30">
-                        @error('city') <p class="mt-1 text-sm text-danger">{{ $message }}</p> @enderror
-                    </div>
-                    <div>
-                        <label for="state" class="mb-1 block text-sm font-medium text-slate-700">State</label>
-                        <input id="state" name="state" type="text" value="{{ old('state', $profile->state) }}" autocomplete="address-level1" class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/30">
-                        @error('state') <p class="mt-1 text-sm text-danger">{{ $message }}</p> @enderror
-                    </div>
+                    <x-location-fields :state="$profile->state" :city="$profile->city" />
                     <div>
                         <label for="country" class="mb-1 block text-sm font-medium text-slate-700">Country</label>
                         <input id="country" name="country" type="text" value="{{ old('country', $profile->country ?? 'Nigeria') }}" autocomplete="country-name" class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/30">

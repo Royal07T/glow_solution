@@ -41,14 +41,7 @@
                     <label for="address" class="mb-1 block text-sm font-medium text-slate-700">Street address</label>
                     <input id="address" type="text" name="address" maxlength="255" value="{{ old('address', $profile->address) }}" class="w-full rounded-lg border border-slate-300 px-3 py-2">
                 </div>
-                <div>
-                    <label for="city" class="mb-1 block text-sm font-medium text-slate-700">City</label>
-                    <input id="city" type="text" name="city" maxlength="100" value="{{ old('city', $profile->city) }}" class="w-full rounded-lg border border-slate-300 px-3 py-2">
-                </div>
-                <div>
-                    <label for="state" class="mb-1 block text-sm font-medium text-slate-700">State</label>
-                    <input id="state" type="text" name="state" maxlength="100" value="{{ old('state', $profile->state) }}" class="w-full rounded-lg border border-slate-300 px-3 py-2">
-                </div>
+                <x-location-fields :state="$profile->state" :city="$profile->city" />
                 <div>
                     <label for="country" class="mb-1 block text-sm font-medium text-slate-700">Country</label>
                     <input id="country" type="text" name="country" maxlength="100" value="{{ old('country', $profile->country) }}" class="w-full rounded-lg border border-slate-300 px-3 py-2">

@@ -1,5 +1,11 @@
 <?php
 
+use App\Http\Middleware\CheckEmployerVerified;
+use App\Http\Middleware\CheckTwoFactor;
+use App\Http\Middleware\EnsureSubscriptionActive;
+use App\Http\Middleware\EnsureUserRole;
+use App\Http\Middleware\RateLimitSensitiveActions;
+use App\Http\Middleware\SecurityHeaders;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -12,13 +18,17 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
-        $middleware->append(\App\Http\Middleware\SecurityHeaders::class);
+        $middleware->trustProxies(at: '*');
+        $middleware->validateCsrfTokens(except: [
+            'payments/paystack/webhook',
+        ]);
+        $middleware->append(SecurityHeaders::class);
         $middleware->alias([
-            'role' => \App\Http\Middleware\EnsureUserRole::class,
-            'subscription' => \App\Http\Middleware\EnsureSubscriptionActive::class,
-            'employer.verified' => \App\Http\Middleware\CheckEmployerVerified::class,
-            'rate.limit' => \App\Http\Middleware\RateLimitSensitiveActions::class,
-            '2fa' => \App\Http\Middleware\CheckTwoFactor::class,
+            'role' => EnsureUserRole::class,
+            'subscription' => EnsureSubscriptionActive::class,
+            'employer.verified' => CheckEmployerVerified::class,
+            'rate.limit' => RateLimitSensitiveActions::class,
+            '2fa' => CheckTwoFactor::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

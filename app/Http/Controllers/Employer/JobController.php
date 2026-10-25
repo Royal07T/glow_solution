@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\Employer;
 
+use App\Enums\JobStatus;
 use App\Http\Controllers\Controller;
+use App\Models\AuditLog;
 use App\Models\Job;
 use App\Models\JobCategory;
 use Illuminate\Http\Request;
@@ -19,6 +21,7 @@ class JobController extends Controller
     {
         $profile = auth()->user()->employerProfile;
         $jobs = $profile->jobs()->withCount('applications')->latest()->paginate(10);
+
         return view('employer.jobs.index', compact('jobs'));
     }
 
@@ -26,6 +29,7 @@ class JobController extends Controller
     {
         $this->authorize('create', Job::class);
         $categories = JobCategory::where('is_active', true)->get();
+
         return view('employer.jobs.create', compact('categories'));
     }
 
@@ -42,6 +46,8 @@ class JobController extends Controller
             'requirements' => 'nullable|string',
             'responsibilities' => 'nullable|string',
             'location' => 'required|string|max:255',
+            'city' => 'nullable|string|max:100',
+            'state' => 'nullable|string|max:100',
             'salary_min' => 'nullable|numeric|min:0',
             'salary_max' => 'nullable|numeric|min:0|gte:salary_min',
             'application_deadline' => 'nullable|date|after_or_equal:today',
@@ -65,17 +71,19 @@ class JobController extends Controller
             'requirements' => $validated['requirements'] ?? null,
             'responsibilities' => $validated['responsibilities'] ?? null,
             'location' => $validated['location'],
+            'city' => $validated['city'] ?? null,
+            'state' => $validated['state'] ?? null,
             'salary_min' => $validated['salary_min'] ?? null,
             'salary_max' => $validated['salary_max'] ?? null,
             'application_deadline' => $validated['application_deadline'] ?? null,
             'benefits' => $validated['benefits'] ?? null,
             'slug' => Str::slug($validated['title'].'-'.Str::random(6)),
-            'status' => \App\Enums\JobStatus::PENDING,
+            'status' => JobStatus::PENDING,
             'is_remote' => $request->boolean('is_remote'),
         ]);
 
         try {
-            \App\Models\AuditLog::record('job.created', $job);
+            AuditLog::record('job.created', $job);
         } catch (\Throwable $e) {
         }
 
@@ -85,6 +93,7 @@ class JobController extends Controller
     public function show(Job $job)
     {
         $this->authorize('view', $job);
+
         return view('employer.jobs.show', compact('job'));
     }
 
@@ -92,6 +101,7 @@ class JobController extends Controller
     {
         $this->authorize('update', $job);
         $categories = JobCategory::where('is_active', true)->get();
+
         return view('employer.jobs.edit', compact('job', 'categories'));
     }
 
@@ -108,6 +118,8 @@ class JobController extends Controller
             'requirements' => 'nullable|string',
             'responsibilities' => 'nullable|string',
             'location' => 'required|string|max:255',
+            'city' => 'nullable|string|max:100',
+            'state' => 'nullable|string|max:100',
             'salary_min' => 'nullable|numeric|min:0',
             'salary_max' => 'nullable|numeric|min:0|gte:salary_min',
             'application_deadline' => 'nullable|date|after_or_equal:today',
@@ -129,12 +141,14 @@ class JobController extends Controller
             'requirements' => $validated['requirements'] ?? null,
             'responsibilities' => $validated['responsibilities'] ?? null,
             'location' => $validated['location'],
+            'city' => $validated['city'] ?? null,
+            'state' => $validated['state'] ?? null,
             'salary_min' => $validated['salary_min'] ?? null,
             'salary_max' => $validated['salary_max'] ?? null,
             'application_deadline' => $validated['application_deadline'] ?? null,
             'benefits' => $validated['benefits'] ?? null,
             'is_remote' => $request->boolean('is_remote'),
-            'status' => \App\Enums\JobStatus::PENDING,
+            'status' => JobStatus::PENDING,
             'published_at' => null,
         ]);
 
@@ -145,6 +159,7 @@ class JobController extends Controller
     {
         $this->authorize('delete', $job);
         $job->delete();
+
         return redirect()->route('employer.jobs.index')->with('status', 'Job deleted.');
     }
 }

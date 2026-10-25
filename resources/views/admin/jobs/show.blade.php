@@ -12,7 +12,10 @@
                         <h2 class="font-display text-xl font-semibold text-slate-900">{{ $job->title }}</h2>
                         <p class="text-sm text-slate-600">{{ $job->employerProfile->company_name ?? $job->employerProfile->user->name ?? 'Employer' }} · {{ $job->location }}</p>
                     </div>
-                    <x-badge :variant="$job->statusVariant()">{{ $job->statusLabel() }}</x-badge>
+                    <div class="flex flex-wrap items-center gap-2">
+                        <x-badge :variant="$job->statusVariant()">{{ $job->statusLabel() }}</x-badge>
+                        <a href="{{ route('admin.jobs.edit', $job) }}" class="rounded-lg border border-slate-300 px-3 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-50">Edit listing</a>
+                    </div>
                 </div>
 
                 <div class="mt-4 flex flex-wrap gap-2">

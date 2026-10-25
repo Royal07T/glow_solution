@@ -14,7 +14,7 @@ class JobPolicy
 
     public function view(?User $user, Job $job): bool
     {
-        if ($job->status === 'approved' && $job->published_at && $job->published_at->isPast() && !$job->isExpired()) {
+        if ($job->status === 'approved' && $job->published_at && $job->published_at->isPast() && ! $job->isExpired()) {
             return true;
         }
 
@@ -31,33 +31,37 @@ class JobPolicy
 
     public function create(User $user): bool
     {
-        if (!$user->isEmployer()) {
+        if ($user->isAdmin()) {
+            return true;
+        }
+
+        if (! $user->isEmployer()) {
             return false;
         }
 
         $profile = $user->employerProfile;
-        if (!$profile || !$profile->isVerified()) {
+        if (! $profile || ! $profile->isVerified()) {
             return false;
         }
 
         // Check subscription limits
         $subscription = $user->activeSubscription;
-        if (!$subscription || !$subscription->isActive()) {
+        if (! $subscription || ! $subscription->isActive()) {
             return false;
         }
 
         // Check if under limit
         $entitlements = $subscription->plan->entitlements ?? [];
         $limit = $entitlements['active_job_listings'] ?? 0;
-        
+
         if ($limit == -1) { // unlimited
             return true;
         }
-        
-        $currentCount = Job::whereHas('employerProfile', function($q) use ($user) {
+
+        $currentCount = Job::whereHas('employerProfile', function ($q) use ($user) {
             $q->where('user_id', $user->id);
         })->whereIn('status', ['approved', 'pending'])->count();
-        
+
         return $currentCount < $limit;
     }
 

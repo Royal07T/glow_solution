@@ -32,7 +32,7 @@
                     </dl>
                 @else
                     <p class="mt-2 text-sm text-slate-600">You do not have a subscription yet.</p>
-                    <p class="mt-1 text-sm text-slate-600">Activate a free plan below. Paid plans are arranged with the Glow Recruitment team.</p>
+                    <p class="mt-1 text-sm text-slate-600">Choose a free plan below or pay securely for a premium plan with Paystack.</p>
                 @endif
 
                 @if($subscription?->plan?->entitlements)
@@ -88,8 +88,18 @@
                                     </form>
                                 @endif
                             @else
-                                <button type="button" disabled class="mt-4 w-full cursor-not-allowed rounded-lg bg-slate-100 px-4 py-2 text-sm font-semibold text-slate-500" title="Paid plans are activated by the Glow team">Contact support to purchase</button>
-                                <p class="mt-2 text-xs text-slate-500">Card payments for this plan are not enabled in this environment.</p>
+                                @if(config('services.paystack.secret_key'))
+                                    <form method="POST" action="{{ route('payments.paystack.initialize', $plan) }}" class="mt-4">
+                                        @csrf
+                                        <button type="submit" class="w-full rounded-lg bg-brand-700 px-4 py-2 text-sm font-semibold text-white hover:bg-brand-800">
+                                            Pay {{ $plan->currency }} {{ number_format((float) $plan->price) }} with Paystack
+                                        </button>
+                                    </form>
+                                    <p class="mt-2 text-xs text-slate-500">Secure checkout. You will be redirected to Paystack to complete payment.</p>
+                                @else
+                                    <button type="button" disabled class="mt-4 w-full cursor-not-allowed rounded-lg bg-slate-100 px-4 py-2 text-sm font-semibold text-slate-500">Payments unavailable</button>
+                                    <p class="mt-2 text-xs text-slate-500">Paystack is not configured yet. Please contact support.</p>
+                                @endif
                             @endif
                         </div>
                     @empty

@@ -39,4 +39,19 @@ class SecurityHeadersTest extends TestCase
         $this->assertStringContainsString('no-store', $cacheControl);
         $this->assertStringContainsString('private', $cacheControl);
     }
+
+    public function test_forwarded_https_requests_generate_secure_urls(): void
+    {
+        $response = $this
+            ->withServerVariables(['REMOTE_ADDR' => '127.0.0.1'])
+            ->withHeaders([
+                'X-Forwarded-Proto' => 'https',
+                'X-Forwarded-Host' => 'glow.test',
+            ])
+            ->get('/');
+
+        $response->assertOk()
+            ->assertSee('https://glow.test/logo.png', false)
+            ->assertSee('https://glow.test/build/assets/', false);
+    }
 }

@@ -19,7 +19,9 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\JobController;
 use App\Http\Controllers\JobSeeker\DashboardController as JobSeekerDashboard;
 use App\Http\Controllers\JobSeeker\ProfileController as JobSeekerProfile;
+use App\Http\Controllers\LocationController;
 use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\PaystackPaymentController;
 use App\Http\Controllers\SavedJobController;
 use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\SubscriptionPlanController;
@@ -28,6 +30,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/jobs', [JobController::class, 'index'])->name('jobs.index');
 Route::get('/jobs/{job}', [JobController::class, 'show'])->name('jobs.show');
+Route::get('/locations/lgas', [LocationController::class, 'lgas'])->name('locations.lgas');
 
 // Auth routes
 Route::get('/login', [AuthenticatedSessionController::class, 'create'])->name('login')->middleware('guest');
@@ -90,7 +93,11 @@ Route::middleware(['auth', 'verified', 'role:admin'])->prefix('admin')->name('ad
     Route::post('/users/{user}/suspend', [AdminUserController::class, 'suspend'])->name('users.suspend');
     Route::post('/users/{user}/unsuspend', [AdminUserController::class, 'unsuspend'])->name('users.unsuspend');
     Route::get('/jobs', [AdminJobController::class, 'index'])->name('jobs.index');
+    Route::get('/jobs/create', [AdminJobController::class, 'create'])->name('jobs.create');
+    Route::post('/jobs', [AdminJobController::class, 'store'])->name('jobs.store');
     Route::get('/jobs/{job}', [AdminJobController::class, 'show'])->name('jobs.show');
+    Route::get('/jobs/{job}/edit', [AdminJobController::class, 'edit'])->name('jobs.edit');
+    Route::put('/jobs/{job}', [AdminJobController::class, 'update'])->name('jobs.update');
     Route::post('/jobs/{job}/approve', [AdminJobController::class, 'approve'])->name('jobs.approve');
     Route::post('/jobs/{job}/reject', [AdminJobController::class, 'reject'])->name('jobs.reject');
     Route::get('/verifications', [AdminVerificationController::class, 'index'])->name('verifications.index');
@@ -118,4 +125,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/subscriptions', [SubscriptionController::class, 'index'])->name('subscriptions.index');
     Route::post('/subscriptions/activate/{plan}', [SubscriptionController::class, 'activate'])->name('subscriptions.activate');
     Route::get('/billing', [SubscriptionPlanController::class, 'index'])->name('billing.index');
+    Route::post('/payments/paystack/initialize/{plan}', [PaystackPaymentController::class, 'initialize'])->name('payments.paystack.initialize');
+    Route::get('/payments/paystack/callback', [PaystackPaymentController::class, 'callback'])->name('payments.paystack.callback');
 });
+
+Route::post('/payments/paystack/webhook', [PaystackPaymentController::class, 'webhook'])->name('payments.paystack.webhook');

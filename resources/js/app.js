@@ -166,6 +166,52 @@ ready(() => {
         });
     }
 
+    document.querySelectorAll('[data-location-state]').forEach((stateSelect) => {
+        const citySelect = document.getElementById(stateSelect.dataset.locationCity);
+
+        if (!citySelect) return;
+
+        const resetCity = (message = 'Select city / LGA') => {
+            citySelect.replaceChildren(new Option(message, ''));
+            citySelect.disabled = false;
+        };
+
+        stateSelect.addEventListener('change', async () => {
+            const stateId = stateSelect.selectedOptions[0]?.dataset.stateId;
+
+            if (!stateId) {
+                resetCity();
+                return;
+            }
+
+            resetCity('Loading cities...');
+            citySelect.disabled = true;
+
+            try {
+                const url = new URL(stateSelect.dataset.lgaUrl, window.location.origin);
+                url.searchParams.set('state', stateId);
+
+                const response = await fetch(url, {
+                    headers: { Accept: 'application/json' },
+                });
+
+                if (!response.ok) throw new Error('Unable to load cities.');
+
+                const lgas = await response.json();
+                citySelect.replaceChildren(new Option('Select city / LGA', ''));
+
+                lgas.forEach((lga) => {
+                    citySelect.add(new Option(lga.name, lga.name));
+                });
+            } catch (error) {
+                resetCity('Unable to load cities');
+                return;
+            }
+
+            citySelect.disabled = false;
+        });
+    });
+
     document.querySelectorAll('form[data-confirm]').forEach((form) => {
         form.addEventListener('submit', (event) => {
             if (!window.confirm(form.dataset.confirm)) {
