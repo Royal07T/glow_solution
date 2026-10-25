@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Request;
 
 class AuditLog extends Model
 {
@@ -36,5 +38,24 @@ class AuditLog extends Model
     public function auditable()
     {
         return $this->morphTo();
+    }
+
+    public static function record(string $action, ?Model $auditable = null, array $oldValues = [], array $newValues = []): self
+    {
+        $data = [
+            'user_id' => Auth::id(),
+            'action' => $action,
+            'old_values' => $oldValues ?: null,
+            'new_values' => $newValues ?: null,
+            'ip_address' => Request::ip(),
+            'user_agent' => substr((string) Request::userAgent(), 0, 255),
+        ];
+
+        if ($auditable) {
+            $data['auditable_type'] = $auditable->getMorphClass();
+            $data['auditable_id'] = $auditable->getKey();
+        }
+
+        return static::create($data);
     }
 }

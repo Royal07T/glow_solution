@@ -127,9 +127,9 @@
             </div>
         </section>
 
-        <section class="rounded-xl border border-brand-100 bg-brand-50 p-5">
-            <h2 class="font-display text-sm font-semibold text-brand-900">Moderation</h2>
-            <p class="mt-1 text-xs text-brand-800">
+        <section class="rounded-xl border border-[#EDE9FE bg-[#F5F3FF p-5">
+            <h2 class="font-display text-sm font-semibold text-[#05244a">Moderation</h2>
+            <p class="mt-1 text-xs text-[#062B52">
                 Every new or edited listing is reviewed by an administrator before it becomes public.
             </p>
         </section>

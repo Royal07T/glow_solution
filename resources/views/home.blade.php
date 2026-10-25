@@ -2,7 +2,7 @@
 
 @section('content')
 <!-- Hero Section -->
-<section class="relative bg-gradient-to-br from-brand-950 via-brand-800 to-brand-700 overflow-hidden">
+<section class="relative bg-gradient-to-br from-[#041e3a] via-[#062B52] to-[#07335c] overflow-hidden">
     <div class="absolute inset-0 opacity-10">
         <div class="absolute inset-0" style="background-image: url('data:image/svg+xml,%3Csvg width=\"60\" height=\"60\" viewBox=\"0 0 60 60\" xmlns=\"http://www.w3.org/2000/svg\"%3E%3Cg fill=\"none\" fill-rule=\"evenodd\"%3E%3Cg fill=\"%23ffffff\" fill-opacity=\"0.4\"%3E%3Ccircle cx=\"30\" cy=\"30\" r=\"4\"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E');"></div>
     </div>
@@ -14,10 +14,10 @@
                     Trusted Recruitment for <span class="text-gold-400">Homes</span> & <span class="text-gold-400">Careers</span>
                 </h1>
                 <p class="text-xl text-gray-200 mb-8 leading-relaxed">
-                    Glow Recruitment Agency connects families with verified domestic staff and helps professionals find meaningful career opportunities across Nigeria.
+                    Glow Recruitment Agency Solution connects families with verified domestic staff and helps professionals find meaningful career opportunities across Nigeria.
                 </p>
                 <div class="flex flex-col sm:flex-row gap-4">
-                    <a href="{{ route('jobs.index') }}" class="inline-flex items-center justify-center px-8 py-4 bg-gold-500 hover:bg-gold-600 text-brand-950 font-semibold rounded-lg transition-colors shadow-lg hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-gold-400 focus:ring-offset-2 focus:ring-offset-brand-800 min-h-[44px]">
+                    <a href="{{ route('jobs.index') }}" class="inline-flex items-center justify-center px-8 py-4 bg-gold-500 hover:bg-gold-600 text-[#041e3a] font-semibold rounded-lg transition-colors shadow-lg hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-gold-400 focus:ring-offset-2 min-h-[44px]">
                         Find Work
                         <svg class="ml-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
@@ -32,12 +32,12 @@
             <div class="relative">
                 <div class="relative rounded-2xl overflow-hidden shadow-2xl">
                     <img src="{{ asset('images/hero-recruitment.jpg') }}" alt="Professional recruiters and job seekers in a meeting" class="w-full h-[400px] sm:h-[500px] object-cover" loading="eager" fetchpriority="high">
-                    <div class="absolute inset-0 bg-brand-950 opacity-70"></div>
+                    <div class="absolute inset-0 bg-gradient-to-t from-[#041e3a]/60 to-transparent"></div>
                 </div>
                 <div class="absolute -bottom-6 -left-6 bg-white rounded-xl shadow-xl p-4 hidden lg:block">
                     <div class="flex items-center gap-3">
-                        <div class="w-12 h-12 bg-brand-100 rounded-full flex items-center justify-center">
-                            <svg class="w-6 h-6 text-brand-800" fill="currentColor" viewBox="0 0 20 20">
+                        <div class="w-12 h-12 bg-[#EDE9FE] rounded-full flex items-center justify-center">
+                            <svg class="w-6 h-6 text-[#062B52]" fill="currentColor" viewBox="0 0 20 20">
                                 <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"/>
                             </svg>
                         </div>
@@ -63,7 +63,7 @@
             <a href="{{ route('jobs.index') }}" class="group relative rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow">
                 <div class="relative h-64">
                     <img src="{{ asset('images/audience-find-work.jpg') }}" alt="Job seeker looking for employment opportunities" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
-                    <div class="absolute inset-0 bg-brand-950 opacity-70"></div>
+                    <div class="absolute inset-0 bg-gradient-to-t from-[#041e3a]/90 to-[#041e3a]/50"></div>
                 </div>
                 <div class="absolute inset-0 flex items-center justify-center">
                     <div class="text-center text-white p-6">
@@ -82,7 +82,7 @@
             <a href="#for-employers" class="group relative rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow">
                 <div class="relative h-64">
                     <img src="{{ asset('images/audience-find-staff.jpg') }}" alt="Household looking for trusted domestic staff" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
-                    <div class="absolute inset-0 bg-brand-950 opacity-70"></div>
+                    <div class="absolute inset-0 bg-gradient-to-t from-[#041e3a]/90 to-[#041e3a]/50"></div>
                 </div>
                 <div class="absolute inset-0 flex items-center justify-center">
                     <div class="text-center text-white p-6">
@@ -110,32 +110,32 @@
         </div>
         <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
             <div class="bg-white p-6 rounded-xl border border-stone-200 text-center hover:shadow-md transition-shadow">
-                <div class="w-12 h-12 bg-brand-100 rounded-lg flex items-center justify-center mx-auto mb-4">
-                    <svg class="w-6 h-6 text-brand-800" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div class="w-12 h-12 bg-[#EDE9FE rounded-lg flex items-center justify-center mx-auto mb-4">
+                    <svg class="w-6 h-6  bg-[#062B52]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
                     </svg>
                 </div>
                 <h3 class="font-semibold text-slate-900">Housekeeping</h3>
             </div>
             <div class="bg-white p-6 rounded-xl border border-stone-200 text-center hover:shadow-md transition-shadow">
-                <div class="w-12 h-12 bg-brand-100 rounded-lg flex items-center justify-center mx-auto mb-4">
-                    <svg class="w-6 h-6 text-brand-800" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div class="w-12 h-12 bg-[#EDE9FE rounded-lg flex items-center justify-center mx-auto mb-4">
+                    <svg class="w-6 h-6  bg-[#062B52]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"></path>
                     </svg>
                 </div>
                 <h3 class="font-semibold text-slate-900">Childcare & Nanny</h3>
             </div>
             <div class="bg-white p-6 rounded-xl border border-stone-200 text-center hover:shadow-md transition-shadow">
-                <div class="w-12 h-12 bg-brand-100 rounded-lg flex items-center justify-center mx-auto mb-4">
-                    <svg class="w-6 h-6 text-brand-800" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div class="w-12 h-12 bg-[#EDE9FE rounded-lg flex items-center justify-center mx-auto mb-4">
+                    <svg class="w-6 h-6  bg-[#062B52]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
                     </svg>
                 </div>
                 <h3 class="font-semibold text-slate-900">Elderly Care</h3>
             </div>
             <div class="bg-white p-6 rounded-xl border border-stone-200 text-center hover:shadow-md transition-shadow">
-                <div class="w-12 h-12 bg-brand-100 rounded-lg flex items-center justify-center mx-auto mb-4">
-                    <svg class="w-6 h-6 text-brand-800" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div class="w-12 h-12 bg-[#EDE9FE rounded-lg flex items-center justify-center mx-auto mb-4">
+                    <svg class="w-6 h-6  bg-[#062B52]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
                     </svg>
                 </div>
@@ -152,7 +152,7 @@
             <div class="order-2 lg:order-1">
                 <div class="relative rounded-2xl overflow-hidden shadow-xl">
                     <img src="{{ asset('images/professional-recruitment.jpg') }}" alt="Office professionals in a recruitment interview" class="w-full h-[400px] object-cover">
-                    <div class="absolute inset-0 bg-brand-950 opacity-70"></div>
+                    <div class="absolute inset-0  bg-[#041e3a] opacity-70"></div>
                 </div>
             </div>
             <div class="order-1 lg:order-2">
@@ -180,7 +180,7 @@
                         <span class="text-slate-700">Matched to your specific requirements</span>
                     </li>
                 </ul>
-                <a href="#for-employers" class="inline-flex items-center px-6 py-3 bg-brand-800 hover:bg-brand-700 text-white font-semibold rounded-lg transition-colors min-h-[44px]">
+                <a href="#for-employers" class="inline-flex items-center px-6 py-3  bg-[#062B52] hover:bg-[#07335c text-white font-semibold rounded-lg transition-colors min-h-[44px]">
                     Learn More
                     <svg class="ml-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
@@ -199,7 +199,7 @@
                 <h2 class="font-display text-3xl sm:text-4xl font-bold text-slate-900 mb-2">Featured Opportunities</h2>
                 <p class="text-lg text-slate-600">Latest job openings from verified employers</p>
             </div>
-            <a href="{{ route('jobs.index') }}" class="hidden sm:inline-flex items-center text-brand-800 hover:text-brand-700 font-semibold">
+            <a href="{{ route('jobs.index') }}" class="hidden sm:inline-flex items-center bg-[#062B52] hover:bg-[#07335c font-semibold">
                 View All Jobs
                 <svg class="ml-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
@@ -210,7 +210,7 @@
             @forelse($featuredJobs as $job)
                 <div class="bg-white rounded-xl border border-stone-200 p-6 hover:shadow-lg transition-shadow">
                     <div class="flex justify-between items-start mb-3">
-                        <span class="px-3 py-1 bg-brand-100 text-brand-800 text-xs font-medium rounded-full">{{ ucfirst($job->type) }}</span>
+                        <span class="px-3 py-1 bg-[#EDE9FE  bg-[#062B52] text-xs font-medium rounded-full">{{ ucfirst($job->type) }}</span>
                         <span class="text-xs text-slate-500">{{ $job->created_at->diffForHumans() }}</span>
                     </div>
                     <h3 class="font-display text-lg font-semibold text-slate-900 mb-2 line-clamp-2">{{ $job->title }}</h3>
@@ -226,7 +226,7 @@
                     @endif
                     <div class="flex items-center justify-between pt-4 border-t border-stone-200">
                         <span class="text-xs text-slate-500">{{ $job->employerProfile->company_name ?? 'Company' }}</span>
-                        <a href="{{ route('jobs.show', $job) }}" class="text-brand-800 hover:text-brand-700 font-medium text-sm">View Details</a>
+                        <a href="{{ route('jobs.show', $job) }}" class=" bg-[#062B52] hover:bg-[#07335c font-medium text-sm">View Details</a>
                     </div>
                 </div>
             @empty
@@ -247,17 +247,17 @@
         </div>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div class="text-center">
-                <div class="w-16 h-16 bg-brand-800 text-white rounded-full flex items-center justify-center mx-auto mb-4 text-2xl font-bold">1</div>
+                <div class="w-16 h-16  bg-[#062B52] text-white rounded-full flex items-center justify-center mx-auto mb-4 text-2xl font-bold">1</div>
                 <h3 class="font-display text-xl font-semibold text-slate-900 mb-2">Create Your Profile</h3>
                 <p class="text-slate-600">Sign up and build your profile with your skills, experience, or hiring needs.</p>
             </div>
             <div class="text-center">
-                <div class="w-16 h-16 bg-brand-800 text-white rounded-full flex items-center justify-center mx-auto mb-4 text-2xl font-bold">2</div>
+                <div class="w-16 h-16  bg-[#062B52] text-white rounded-full flex items-center justify-center mx-auto mb-4 text-2xl font-bold">2</div>
                 <h3 class="font-display text-xl font-semibold text-slate-900 mb-2">Browse & Connect</h3>
                 <p class="text-slate-600">Search for jobs or candidates, and connect with verified matches.</p>
             </div>
             <div class="text-center">
-                <div class="w-16 h-16 bg-brand-800 text-white rounded-full flex items-center justify-center mx-auto mb-4 text-2xl font-bold">3</div>
+                <div class="w-16 h-16  bg-[#062B52] text-white rounded-full flex items-center justify-center mx-auto mb-4 text-2xl font-bold">3</div>
                 <h3 class="font-display text-xl font-semibold text-slate-900 mb-2">Start Working</h3>
                 <p class="text-slate-600">Begin your employment journey or hire the perfect candidate.</p>
             </div>
@@ -272,7 +272,7 @@
             <div>
                 <div class="relative rounded-2xl overflow-hidden shadow-xl">
                     <img src="{{ asset('images/employer-hiring.jpg') }}" alt="Employer reviewing job applications" class="w-full h-[400px] object-cover">
-                    <div class="absolute inset-0 bg-brand-950 opacity-70"></div>
+                    <div class="absolute inset-0  bg-[#041e3a] opacity-70"></div>
                 </div>
             </div>
             <div class="flex flex-col justify-center">
@@ -300,7 +300,7 @@
                         <span class="text-slate-700">Streamlined recruitment process</span>
                     </li>
                 </ul>
-                <a href="{{ route('register') }}" class="inline-flex items-center px-6 py-3 bg-brand-800 hover:bg-brand-700 text-white font-semibold rounded-lg transition-colors self-start min-h-[44px]">
+                <a href="{{ route('register') }}" class="inline-flex items-center px-6 py-3  bg-[#062B52] hover:bg-[#07335c text-white font-semibold rounded-lg transition-colors self-start min-h-[44px]">
                     Post a Job
                     <svg class="ml-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
@@ -335,7 +335,7 @@
                         <span class="text-slate-700">Application tracking</span>
                     </li>
                 </ul>
-                <a href="{{ route('register') }}" class="inline-flex items-center px-6 py-3 bg-gold-500 hover:bg-gold-600 text-brand-950 font-semibold rounded-lg transition-colors self-start min-h-[44px]">
+                <a href="{{ route('register') }}" class="inline-flex items-center px-6 py-3 bg-gold-500 hover:bg-gold-600  bg-[#041e3a] font-semibold rounded-lg transition-colors self-start min-h-[44px]">
                     Find Jobs
                     <svg class="ml-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
@@ -345,7 +345,7 @@
             <div class="order-1 lg:order-2">
                 <div class="relative rounded-2xl overflow-hidden shadow-xl">
                     <img src="{{ asset('images/jobseeker-search.jpg') }}" alt="Job seeker browsing opportunities on a device" class="w-full h-[400px] object-cover">
-                    <div class="absolute inset-0 bg-brand-950 opacity-70"></div>
+                    <div class="absolute inset-0  bg-[#041e3a] opacity-70"></div>
                 </div>
             </div>
         </div>
@@ -360,7 +360,7 @@
             <p class="text-lg text-slate-600 max-w-2xl mx-auto">Access platform features with flexible subscription options</p>
         </div>
         <div class="bg-gold-100 border border-gold-400 rounded-lg p-4 mb-8 max-w-3xl mx-auto">
-            <p class="text-center text-brand-950 font-medium">
+            <p class="text-center bg-[#041e3a] font-medium">
                 <strong>Important:</strong> A subscription gives access to platform features. It does not guarantee employment.
             </p>
         </div>
@@ -388,14 +388,14 @@
                         <span class="text-slate-700">Profile management</span>
                     </li>
                 </ul>
-                <a href="{{ route('register') }}" class="w-full inline-flex items-center justify-center px-6 py-3 bg-brand-800 hover:bg-brand-700 text-white font-semibold rounded-lg transition-colors min-h-[44px]">
+                <a href="{{ route('register') }}" class="w-full inline-flex items-center justify-center px-6 py-3  bg-[#062B52] hover:bg-[#07335c text-white font-semibold rounded-lg transition-colors min-h-[44px]">
                     Get Started
                 </a>
             </div>
             
             <div class="bg-white rounded-xl border-2 border-gold-500 p-8 relative shadow-lg">
                 <div class="absolute -top-4 left-1/2 transform -translate-x-1/2">
-                    <span class="bg-gold-500 text-brand-950 px-4 py-1 rounded-full text-sm font-semibold">Most popular</span>
+                    <span class="bg-gold-500  bg-[#041e3a] px-4 py-1 rounded-full text-sm font-semibold">Most popular</span>
                 </div>
                 <h3 class="font-display text-xl font-bold text-slate-900 mb-2 mt-2">Employer</h3>
                 <p class="text-slate-600 mb-6">For businesses and households hiring</p>
@@ -419,7 +419,7 @@
                         <span class="text-slate-700">Access candidate database</span>
                     </li>
                 </ul>
-                <a href="{{ route('register') }}" class="w-full inline-flex items-center justify-center px-6 py-3 bg-gold-500 hover:bg-gold-600 text-brand-950 font-semibold rounded-lg transition-colors min-h-[44px]">
+                <a href="{{ route('register') }}" class="w-full inline-flex items-center justify-center px-6 py-3 bg-gold-500 hover:bg-gold-600  bg-[#041e3a] font-semibold rounded-lg transition-colors min-h-[44px]">
                     Post a Job
                 </a>
             </div>
@@ -451,7 +451,7 @@
                 <div class="flex-shrink-0 w-80 mx-4">
                     <div class="bg-white rounded-xl border border-stone-200 p-6 h-full shadow-sm">
                         <div class="flex items-center mb-4">
-                            <div class="w-12 h-12 bg-gradient-to-br from-brand-800 to-brand-600 rounded-full flex items-center justify-center mr-4">
+                            <div class="w-12 h-12 bg-gradient-to-br--[#062B52]  bg-[#084170] rounded-full flex items-center justify-center mr-4">
                                 <span class="text-white font-semibold text-sm">{{ substr($testimonial['name'], 0, 2) }}</span>
                             </div>
                             <div>
@@ -537,8 +537,8 @@
             <div class="bg-white rounded-xl border border-stone-200 p-8 shadow-sm">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div class="flex items-start gap-4">
-                        <div class="w-12 h-12 bg-brand-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                            <svg class="w-6 h-6 text-brand-800" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <div class="w-12 h-12 bg-[#EDE9FE rounded-lg flex items-center justify-center flex-shrink-0">
+                            <svg class="w-6 h-6  bg-[#062B52]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
                             </svg>
@@ -549,8 +549,8 @@
                         </div>
                     </div>
                     <div class="flex items-start gap-4">
-                        <div class="w-12 h-12 bg-brand-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                            <svg class="w-6 h-6 text-brand-800" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <div class="w-12 h-12 bg-[#EDE9FE rounded-lg flex items-center justify-center flex-shrink-0">
+                            <svg class="w-6 h-6  bg-[#062B52]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path>
                             </svg>
                         </div>
@@ -558,7 +558,7 @@
                             <h3 class="font-semibold text-slate-900 mb-1">Phone</h3>
                             <p class="text-slate-600 mb-2">{{ env('COMPANY_PHONE', '08036227769') }}</p>
                             <div class="flex gap-3">
-                                <a href="tel:{{ env('COMPANY_PHONE', '08036227769') }}" class="text-brand-800 hover:text-brand-700 font-medium">Call</a>
+                                <a href="tel:{{ env('COMPANY_PHONE', '08036227769') }}" class=" bg-[#062B52] hover:bg-[#07335c font-medium">Call</a>
                                 <a href="https://wa.me/234{{ substr(env('COMPANY_PHONE', '08036227769'), 1) }}" target="_blank" rel="noopener" class="text-green-600 hover:text-green-700 font-medium">WhatsApp</a>
                             </div>
                         </div>

@@ -23,12 +23,12 @@
                         <td class="px-6 py-4 text-gray-600">{{ $application->job->employerProfile->company_name ?? '' }}</td>
                         <td class="px-6 py-4 text-sm text-gray-500">{{ $application->applied_at->format('M d, Y') }}</td>
                         <td class="px-6 py-4">
-                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-purple-100 text-purple-800">
-                                {{ ucfirst(str_replace('_', ' ', $application->status)) }}
-                            </span>
+                            <x-badge :variant="$application->statusVariant()">
+                                {{ $application->statusLabel() }}
+                            </x-badge>
                         </td>
                         <td class="px-6 py-4">
-                            @if($application->status === 'submitted')
+                            @if($application->status === \App\Enums\ApplicationStatus::SUBMITTED)
                                 <form method="POST" action="{{ route('applications.withdraw', $application) }}" onsubmit="return confirm('Withdraw application?')">
                                     @csrf
                                     <button class="text-red-600 hover:text-red-900 text-sm">Withdraw</button>

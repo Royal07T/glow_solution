@@ -55,7 +55,7 @@
                             <label for="status" class="mb-1 block text-sm font-medium text-slate-700">New status</label>
                             <select id="status" name="status" class="w-full rounded-lg border border-stone-300 px-3 py-2">
                                 @foreach(['under_review' => 'Under review', 'shortlisted' => 'Shortlisted', 'interview' => 'Interview', 'accepted' => 'Accepted', 'rejected' => 'Rejected'] as $value => $label)
-                                    <option value="{{ $value }}" @selected($application->status === $value)>{{ $label }}</option>
+                                    <option value="{{ $value }}" @selected(($application->status instanceof \App\Enums\ApplicationStatus ? $application->status->value : $application->status) === $value)>{{ $label }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -64,7 +64,7 @@
                             <input id="employer_notes" type="text" name="employer_notes" maxlength="2000" value="{{ $application->employer_notes }}" class="w-full rounded-lg border border-stone-300 px-3 py-2">
                         </div>
                     </div>
-                    <button type="submit" class="rounded-lg bg-brand-800 px-5 py-2.5 text-sm font-semibold text-white hover:bg-brand-700">Save decision</button>
+                    <button type="submit" class="rounded-lg bg-[#062B52 px-5 py-2.5 text-sm font-semibold text-white hover:bg-[#5B21B6">Save decision</button>
                 </form>
             </section>
         </div>

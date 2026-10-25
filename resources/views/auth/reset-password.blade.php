@@ -27,7 +27,7 @@
                     <input id="password_confirmation" name="password_confirmation" type="password" required autocomplete="new-password" class="w-full rounded-lg border border-stone-300 px-3 py-2">
                 </div>
 
-                <button type="submit" class="w-full rounded-lg bg-brand-800 px-4 py-2.5 text-sm font-semibold text-white hover:bg-brand-700">
+                <button type="submit" class="w-full rounded-lg bg-[#062B52 px-4 py-2.5 text-sm font-semibold text-white hover:bg-[#5B21B6">
                     Reset password
                 </button>
             </form>

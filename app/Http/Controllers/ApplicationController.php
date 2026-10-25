@@ -14,6 +14,13 @@ class ApplicationController extends Controller
         return view('applications.index', compact('applications'));
     }
 
+    public function show(Application $application)
+    {
+        $this->authorize('view', $application);
+        $application->load(['job.employerProfile', 'cv']);
+        return view('jobseeker.applications.show', compact('application'));
+    }
+
     public function create(Job $job)
     {
         $this->authorize('create', Application::class);
@@ -71,10 +78,10 @@ class ApplicationController extends Controller
         $this->authorize('withdraw', $application);
 
         $application->update([
-            'status' => 'withdrawn',
+            'status' => \App\Enums\ApplicationStatus::WITHDRAWN,
             'status_updated_at' => now(),
         ]);
 
-        return redirect()->back()->with('success', 'Application withdrawn.');
+        return redirect()->route('applications.index')->with('success', 'Application withdrawn.');
     }
 }

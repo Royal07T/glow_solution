@@ -15,8 +15,12 @@ class EnsureUserRole
         }
 
         if ($request->user()->is_suspended) {
-            auth()->logout();
-            abort(403, 'Your account has been suspended.');
+            auth()->guard('web')->logout();
+            if ($request->hasSession()) {
+                $request->session()->invalidate();
+                $request->session()->regenerateToken();
+            }
+            return redirect()->route('login')->with('error', 'Your account has been suspended. Please contact support.');
         }
 
         if (!in_array($request->user()->role, $roles)) {

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\ApplicationStatus;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -25,6 +26,7 @@ class Application extends Model
         return [
             'applied_at' => 'datetime',
             'status_updated_at' => 'datetime',
+            'status' => ApplicationStatus::class,
         ];
     }
 
@@ -41,5 +43,39 @@ class Application extends Model
     public function cv()
     {
         return $this->belongsTo(Cv::class);
+    }
+
+    public function statusVariant(): string
+    {
+        if ($this->status instanceof ApplicationStatus) {
+            return $this->status->variant();
+        }
+        if (is_string($this->status)) {
+            $status = ApplicationStatus::tryFrom($this->status);
+            if ($status) {
+                return $status->variant();
+            }
+        }
+        return 'neutral';
+    }
+
+    public function statusLabel(): string
+    {
+        if ($this->status instanceof ApplicationStatus) {
+            return $this->status->label();
+        }
+        if (is_string($this->status)) {
+            $status = ApplicationStatus::tryFrom($this->status);
+            if ($status) {
+                return $status->label();
+            }
+        }
+        return $this->status ? ucfirst(str_replace('_', ' ', $this->status)) : 'Unknown';
+    }
+
+    public function canBeWithdrawn(): bool
+    {
+        $status = $this->status instanceof ApplicationStatus ? $this->status : ApplicationStatus::tryFrom($this->status);
+        return in_array($status, [ApplicationStatus::SUBMITTED, ApplicationStatus::UNDER_REVIEW]);
     }
 }

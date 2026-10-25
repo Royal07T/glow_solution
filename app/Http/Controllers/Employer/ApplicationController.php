@@ -13,14 +13,22 @@ class ApplicationController extends Controller
         $this->middleware(['role:employer', 'employer.verified']);
     }
 
-    public function index()
+    public function index(Request $request)
     {
         $profile = auth()->user()->employerProfile;
-        $applications = Application::whereHas('job', function($q) use ($profile) {
+        $jobs = $profile->jobs()->latest()->get();
+        $applications = Application::whereHas('job', function($q) use ($profile, $request) {
             $q->where('employer_profile_id', $profile->id);
-        })->with(['job', 'jobSeeker', 'cv'])->latest()->paginate(15);
+            if ($request->filled('job')) {
+                $q->where('id', $request->job);
+            }
+        })->with(['job', 'jobSeeker', 'cv'])
+            ->when($request->filled('status'), function($q) use ($request) {
+                $q->where('status', $request->status);
+            })
+            ->latest()->paginate(15)->withQueryString();
 
-        return view('employer.applications.index', compact('applications'));
+        return view('employer.applications.index', compact('applications', 'jobs'));
     }
 
     public function show(Application $application)

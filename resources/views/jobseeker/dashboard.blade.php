@@ -1,4 +1,6 @@
-@extends('layouts.app')
+@extends('layouts.portal')
+
+@section('title', 'Job Seeker Dashboard')
 
 @section('content')
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -30,7 +32,7 @@
                 <div class="border-b border-gray-200 py-3 last:border-0">
                     <h3 class="font-semibold">{{ $application->job->title }}</h3>
                     <p class="text-sm text-gray-600">{{ $application->job->employerProfile->company_name ?? '' }}</p>
-                    <p class="text-xs text-gray-500 mt-1">Status: <span class="font-semibold">{{ ucfirst(str_replace('_', ' ', $application->status)) }}</span></p>
+                    <p class="text-xs text-gray-500 mt-1">Status: <span class="font-semibold">{{ $application->statusLabel() }}</span></p>
                 </div>
             @empty
                 <p class="text-gray-500">No applications yet.</p>

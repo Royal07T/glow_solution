@@ -117,11 +117,14 @@ class BillingAndJobPostingTest extends TestCase
 
     private function jobPayload(array $overrides = []): array
     {
+        $category = \App\Models\JobCategory::first() ?? \App\Models\JobCategory::factory()->create();
         return array_merge([
             'title' => 'Live-in Housekeeper',
             'type' => 'domestic',
+            'job_category_id' => $category->id,
             'employment_type' => 'live_in',
             'description' => 'Manage a private residence in Lagos.',
+            'requirements' => 'Experience required',
             'location' => 'Ikoyi, Lagos',
             'salary_min' => 180000,
             'salary_max' => 250000,

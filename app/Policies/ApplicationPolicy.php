@@ -44,6 +44,7 @@ class ApplicationPolicy
 
     public function withdraw(User $user, Application $application): bool
     {
-        return $user->id === $application->job_seeker_id && $application->status === 'submitted';
+        return $user->id === $application->job_seeker_id
+            && $application->status === \App\Enums\ApplicationStatus::SUBMITTED;
     }
 }

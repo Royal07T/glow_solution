@@ -10,10 +10,10 @@
 $baseClasses = 'inline-flex items-center justify-center px-6 py-3 font-semibold rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed min-h-[44px]';
 
 $variants = [
-    'primary' => 'bg-brand-800 hover:bg-brand-700 text-white focus:ring-brand-500',
-    'gold' => 'bg-gold-500 hover:bg-gold-600 text-brand-950 focus:ring-gold-400',
-    'secondary' => 'bg-white hover:bg-gray-50 text-slate-900 border border-stone-300 focus:ring-brand-500',
-    'ghost' => 'bg-transparent hover:bg-gray-100 text-slate-700 focus:ring-brand-500',
+    'primary' => 'bg-[#062B52 hover:bg-[#5B21B6 text-white focus:ring-#F5F3FF0',
+    'gold' => 'bg-gold-500 hover:bg-gold-600 text-[#041e3a focus:ring-gold-400',
+    'secondary' => 'bg-white hover:bg-gray-50 text-slate-900 border border-stone-300 focus:ring-#F5F3FF0',
+    'ghost' => 'bg-transparent hover:bg-gray-100 text-slate-700 focus:ring-#F5F3FF0',
     'danger' => 'bg-danger hover:bg-red-700 text-white focus:ring-red-500',
 ];
 @endphp

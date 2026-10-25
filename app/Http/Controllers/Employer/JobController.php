@@ -12,7 +12,7 @@ class JobController extends Controller
 {
     public function __construct()
     {
-        $this->middleware(['role:employer', 'employer.verified']);
+        $this->middleware(['role:employer', 'employer.verified', 'subscription']);
     }
 
     public function index()
@@ -35,33 +35,57 @@ class JobController extends Controller
 
         $validated = $request->validate([
             'title' => 'required|string|max:255',
-            'job_category_id' => 'nullable|exists:job_categories,id',
-            'type' => 'required|in:domestic,professional',
-            'employment_type' => 'required|in:full_time,part_time,contract,temporary,live_in,live_out',
+            'job_category_id' => 'required|exists:job_categories,id',
+            'type' => 'nullable|in:full_time,part_time,contract,internship,domestic',
+            'employment_type' => 'nullable|in:full_time,part_time,contract,temporary,live_in,live_out',
             'description' => 'required|string',
+            'requirements' => 'nullable|string',
             'responsibilities' => 'nullable|string',
-            'qualifications' => 'nullable|string',
-            'benefits' => 'nullable|string',
             'location' => 'required|string|max:255',
-            'city' => 'nullable|string|max:255',
-            'state' => 'nullable|string|max:255',
-            'salary_min' => 'nullable|numeric',
-            'salary_max' => 'nullable|numeric',
-            'salary_currency' => 'nullable|string|max:3',
-            'salary_negotiable' => 'boolean',
-            'application_deadline' => 'nullable|date',
-            'positions_available' => 'nullable|integer|min:1',
+            'salary_min' => 'nullable|numeric|min:0',
+            'salary_max' => 'nullable|numeric|min:0|gte:salary_min',
+            'application_deadline' => 'nullable|date|after_or_equal:today',
+            'benefits' => 'nullable|string',
+            'is_remote' => 'nullable|boolean',
         ]);
 
         $profile = auth()->user()->employerProfile;
-        $validated['employer_profile_id'] = $profile->id;
-        $validated['slug'] = Str::slug($validated['title']) . '-' . Str::random(6);
-        $validated['status'] = 'pending';
-        $validated['salary_negotiable'] = $request->has('salary_negotiable');
 
-        Job::create($validated);
+        $employmentType = $validated['employment_type'] ?? ($validated['type'] === 'domestic' ? 'live_in' : ($validated['type'] ?? 'full_time'));
+        if (isset($validated['type']) && in_array($validated['type'], ['full_time', 'part_time', 'contract'])) {
+            $employmentType = $validated['type'];
+        }
 
-        return redirect()->route('employer.jobs.index')->with('success', 'Job posted successfully and is awaiting admin approval.');
+        $job = $profile->jobs()->create([
+            'title' => $validated['title'],
+            'job_category_id' => $validated['job_category_id'],
+            'employment_type' => $employmentType,
+            'type' => $validated['type'] ?? $employmentType,
+            'description' => $validated['description'],
+            'requirements' => $validated['requirements'] ?? null,
+            'responsibilities' => $validated['responsibilities'] ?? null,
+            'location' => $validated['location'],
+            'salary_min' => $validated['salary_min'] ?? null,
+            'salary_max' => $validated['salary_max'] ?? null,
+            'application_deadline' => $validated['application_deadline'] ?? null,
+            'benefits' => $validated['benefits'] ?? null,
+            'slug' => Str::slug($validated['title'].'-'.Str::random(6)),
+            'status' => \App\Enums\JobStatus::PENDING,
+            'is_remote' => $request->boolean('is_remote'),
+        ]);
+
+        try {
+            \App\Models\AuditLog::record('job.created', $job);
+        } catch (\Throwable $e) {
+        }
+
+        return redirect()->route('employer.jobs.index')->with('status', 'Job submitted for moderation.');
+    }
+
+    public function show(Job $job)
+    {
+        $this->authorize('view', $job);
+        return view('employer.jobs.show', compact('job'));
     }
 
     public function edit(Job $job)
@@ -77,34 +101,50 @@ class JobController extends Controller
 
         $validated = $request->validate([
             'title' => 'required|string|max:255',
-            'job_category_id' => 'nullable|exists:job_categories,id',
-            'type' => 'required|in:domestic,professional',
-            'employment_type' => 'required|in:full_time,part_time,contract,temporary,live_in,live_out',
+            'job_category_id' => 'required|exists:job_categories,id',
+            'type' => 'nullable|in:full_time,part_time,contract,internship,domestic',
+            'employment_type' => 'nullable|in:full_time,part_time,contract,temporary,live_in,live_out',
             'description' => 'required|string',
+            'requirements' => 'nullable|string',
             'responsibilities' => 'nullable|string',
-            'qualifications' => 'nullable|string',
-            'benefits' => 'nullable|string',
             'location' => 'required|string|max:255',
-            'city' => 'nullable|string|max:255',
-            'state' => 'nullable|string|max:255',
-            'salary_min' => 'nullable|numeric',
-            'salary_max' => 'nullable|numeric',
-            'salary_currency' => 'nullable|string|max:3',
-            'salary_negotiable' => 'boolean',
-            'application_deadline' => 'nullable|date',
-            'positions_available' => 'nullable|integer|min:1',
+            'salary_min' => 'nullable|numeric|min:0',
+            'salary_max' => 'nullable|numeric|min:0|gte:salary_min',
+            'application_deadline' => 'nullable|date|after_or_equal:today',
+            'benefits' => 'nullable|string',
+            'is_remote' => 'nullable|boolean',
         ]);
 
-        $validated['salary_negotiable'] = $request->has('salary_negotiable');
-        $job->update($validated);
+        $employmentType = $validated['employment_type'] ?? ($validated['type'] === 'domestic' ? 'live_in' : ($validated['type'] ?? $job->employment_type ?? 'full_time'));
+        if (isset($validated['type']) && in_array($validated['type'], ['full_time', 'part_time', 'contract'])) {
+            $employmentType = $validated['type'];
+        }
 
-        return redirect()->route('employer.jobs.index')->with('success', 'Job updated successfully.');
+        $job->update([
+            'title' => $validated['title'],
+            'job_category_id' => $validated['job_category_id'],
+            'employment_type' => $employmentType,
+            'type' => $validated['type'] ?? $employmentType,
+            'description' => $validated['description'],
+            'requirements' => $validated['requirements'] ?? null,
+            'responsibilities' => $validated['responsibilities'] ?? null,
+            'location' => $validated['location'],
+            'salary_min' => $validated['salary_min'] ?? null,
+            'salary_max' => $validated['salary_max'] ?? null,
+            'application_deadline' => $validated['application_deadline'] ?? null,
+            'benefits' => $validated['benefits'] ?? null,
+            'is_remote' => $request->boolean('is_remote'),
+            'status' => \App\Enums\JobStatus::PENDING,
+            'published_at' => null,
+        ]);
+
+        return redirect()->route('employer.jobs.index')->with('status', 'Job updated and resubmitted for moderation.');
     }
 
     public function destroy(Job $job)
     {
         $this->authorize('delete', $job);
         $job->delete();
-        return redirect()->route('employer.jobs.index')->with('success', 'Job deleted successfully.');
+        return redirect()->route('employer.jobs.index')->with('status', 'Job deleted.');
     }
 }

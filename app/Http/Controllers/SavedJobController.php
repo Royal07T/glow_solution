@@ -7,12 +7,15 @@ use Illuminate\Http\Request;
 
 class SavedJobController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    public function __construct()
+    {
+        $this->middleware(['auth', 'verified', 'role:job_seeker']);
+    }
+
     public function index()
     {
-        //
+        $savedJobs = auth()->user()->savedJobs()->with(['employerProfile'])->paginate(10);
+        return view('jobseeker.saved-jobs.index', compact('savedJobs'));
     }
 
     /**

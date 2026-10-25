@@ -1,19 +1,32 @@
 @import 'tailwindcss';
 
 @theme {
-    /* Brand Colors */
-    --color-brand-50: #F5F3FF;
-    --color-brand-100: #EDE9FE;
-    --color-brand-500: #7C3AED;
-    --color-brand-700: #5B21B6;
-    --color-brand-800: #4C1D95;
-    --color-brand-950: #2E1065;
+    /* Brand Colors - Glow Recruitment (Navy Blue) */
+    --color-brand-50: #F0F4F8;
+    --color-brand-100: #D9E2EC;
+    --color-brand-200: #BCCCDC;
+    --color-brand-300: #9FB3C8;
+    --color-brand-400: #829AB1;
+    --color-brand-500: #0a3d6b;
+    --color-brand-600: #07335c;
+    --color-brand-700: #062B52;
+    --color-brand-800: #05244a;
+    --color-brand-900: #041e3a;
+    --color-brand-950: #03162b;
+    
+    /* Primary brand color */
+    --color-primary: #062B52;
+    --color-primary-foreground: #ffffff;
     
     /* Gold Accent Colors */
+    --color-gold-50: #FEFCE8;
     --color-gold-100: #FBF1D3;
+    --color-gold-200: #F7E68C;
+    --color-gold-300: #F3DB5B;
     --color-gold-400: #E3B93C;
     --color-gold-500: #D4A017;
     --color-gold-600: #B8860B;
+    --color-gold-700: #92400E;
     
     /* Status Colors */
     --color-success: #15803D;
@@ -27,10 +40,12 @@
 }
 
 :root {
-    --color-page-bg: #FAFAF9;
-    --color-border: #E7E5E4;
-    --color-text-primary: #0F172A;
-    --color-text-secondary: #475569;
+    --color-page-bg: #f8f9fa;
+    --color-surface: #ffffff;
+    --color-border: #e5e7eb;
+    --color-text-primary: #111827;
+    --color-text-secondary: #6b7280;
+    --color-text-muted: #9ca3af;
 }
 
 html {
@@ -41,6 +56,29 @@ body {
     background-color: var(--color-page-bg);
     color: var(--color-text-primary);
     font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* Utility classes for consistent styling */
+.bg-brand-primary {
+    background-color: #062B52;
+}
+
+.text-brand-primary {
+    color: #062B52;
+}
+
+.border-brand-primary {
+    border-color: #062B52;
+}
+
+.bg-gold-accent {
+    background-color: #D4A017;
+}
+
+.text-gold-accent {
+    color: #D4A017;
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -13,7 +13,7 @@
                     <input id="password" name="password" type="password" required autocomplete="current-password" class="w-full rounded-lg border border-stone-300 px-3 py-2">
                     @error('password') <p class="mt-1 text-sm text-danger">{{ $message }}</p> @enderror
                 </div>
-                <button type="submit" class="w-full rounded-lg bg-brand-800 px-4 py-2.5 text-sm font-semibold text-white hover:bg-brand-700">Confirm</button>
+                <button type="submit" class="w-full rounded-lg bg-[#062B52 px-4 py-2.5 text-sm font-semibold text-white hover:bg-[#5B21B6">Confirm</button>
             </form>
         </div>
     </div>

@@ -39,8 +39,8 @@ class AccessControlTest extends TestCase
 
     public function test_employer_cannot_edit_another_employers_job(): void
     {
-        $owner = $this->employer();
-        $other = $this->employer();
+        $owner = $this->employerWithPlan();
+        $other = $this->employerWithPlan();
         $job = $this->job($owner);
 
         $this->actingAs($other)

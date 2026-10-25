@@ -19,7 +19,7 @@
             </select>
         </div>
         <div class="flex items-end gap-2">
-            <button type="submit" class="rounded-lg bg-brand-800 px-4 py-2 text-sm font-semibold text-white hover:bg-brand-700">Filter</button>
+            <button type="submit" class="rounded-lg bg-[#062B52 px-4 py-2 text-sm font-semibold text-white hover:bg-[#5B21B6">Filter</button>
             <a href="{{ route('admin.jobs.index') }}" class="rounded-lg border border-stone-300 px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-stone-50">Reset</a>
         </div>
     </form>
@@ -47,7 +47,7 @@
                             <td class="px-5 py-4"><x-badge :variant="$job->statusVariant()">{{ $job->statusLabel() }}</x-badge></td>
                             <td class="px-5 py-4 text-slate-500">{{ $job->created_at->format('M j, Y') }}</td>
                             <td class="px-5 py-4 text-right">
-                                <a href="{{ route('admin.jobs.show', $job) }}" class="font-semibold text-brand-800 hover:underline">Review</a>
+                                <a href="{{ route('admin.jobs.show', $job) }}" class="font-semibold text-[#062B52 hover:underline">Review</a>
                             </td>
                         </tr>
                     @empty

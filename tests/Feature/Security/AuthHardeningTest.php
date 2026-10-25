@@ -63,8 +63,8 @@ class AuthHardeningTest extends TestCase
         $response = $this->post(route('register'), [
             'name' => 'New Seeker',
             'email' => 'new@example.com',
-            'password' => 'Password12345',
-            'password_confirmation' => 'Password12345',
+            'password' => 'Password12345!',
+            'password_confirmation' => 'Password12345!',
             'role' => 'job_seeker',
         ]);
 

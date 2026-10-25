@@ -31,7 +31,16 @@ class UserController extends Controller
     public function show(User $user)
     {
         $user->load(['jobSeekerProfile', 'employerProfile', 'subscriptions.plan']);
-        return view('admin.users.show', compact('user'));
+        $applicationsCount = 0;
+        if ($user->jobSeekerProfile) {
+            $applicationsCount = $user->jobSeekerProfile->applications()->count();
+        } elseif ($user->employerProfile) {
+            $applicationsCount = \App\Models\Application::whereHas('job', function($q) use ($user) {
+                $q->where('employer_profile_id', $user->employerProfile->id);
+            })->count();
+        }
+        $logs = \App\Models\AuditLog::where('user_id', $user->id)->latest()->limit(20)->get();
+        return view('admin.users.show', compact('user', 'applicationsCount', 'logs'));
     }
 
     public function suspend(Request $request, User $user)
@@ -50,6 +59,11 @@ class UserController extends Controller
             'suspension_reason' => $validated['suspension_reason'],
         ]);
 
+        try {
+            \App\Models\AuditLog::record('user.suspended', $user, ['is_suspended' => false], ['is_suspended' => true]);
+        } catch (\Throwable $e) {
+        }
+
         return redirect()->back()->with('success', 'User suspended successfully.');
     }
 
@@ -60,6 +74,11 @@ class UserController extends Controller
             'suspended_at' => null,
             'suspension_reason' => null,
         ]);
+
+        try {
+            \App\Models\AuditLog::record('user.unsuspended', $user, ['is_suspended' => true], ['is_suspended' => false]);
+        } catch (\Throwable $e) {
+        }
 
         return redirect()->back()->with('success', 'User unsuspended successfully.');
     }

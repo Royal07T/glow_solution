@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Enums\JobStatus;
 
 class Job extends Model
 {
@@ -78,5 +79,22 @@ class Job extends Model
     public function isExpired()
     {
         return $this->expires_at && $this->expires_at->isPast();
+    }
+    public function statusVariant(): string
+    {
+        if ($this->status instanceof JobStatus) {
+            return $this->status->statusVariant();
+        }
+        $status = JobStatus::tryFrom($this->status ?? 'pending');
+        return $status ? $status->statusVariant() : 'secondary';
+    }
+
+    public function statusLabel(): string
+    {
+        if ($this->status instanceof JobStatus) {
+            return $this->status->statusLabel();
+        }
+        $status = JobStatus::tryFrom($this->status ?? 'pending');
+        return $status ? $status->statusLabel() : ucfirst($this->status ?? '');
     }
 }

@@ -11,7 +11,8 @@ class JobController extends Controller
     public function index()
     {
         $jobs = Job::with(['employerProfile.user', 'category'])->latest()->paginate(15);
-        return view('admin.jobs.index', compact('jobs'));
+        $pendingCount = Job::where('status', 'pending')->count();
+        return view('admin.jobs.index', compact('jobs', 'pendingCount'));
     }
 
     public function show(Job $job)
@@ -30,6 +31,11 @@ class JobController extends Controller
             'admin_notes' => $request->admin_notes,
         ]);
 
+        try {
+            \App\Models\AuditLog::record('job.approved', $job);
+        } catch (\Throwable $e) {
+        }
+
         return redirect()->back()->with('success', 'Job approved successfully.');
     }
 
@@ -45,6 +51,11 @@ class JobController extends Controller
             'reviewed_at' => now(),
             'admin_notes' => $validated['admin_notes'],
         ]);
+
+        try {
+            \App\Models\AuditLog::record('job.rejected', $job);
+        } catch (\Throwable $e) {
+        }
 
         return redirect()->back()->with('success', 'Job rejected.');
     }

@@ -111,7 +111,7 @@ trait PortalFixtures
         return Application::create(array_merge([
             'job_id' => $job->id,
             'job_seeker_id' => $seeker->id,
-            'status' => 'submitted',
+            'status' => \App\Enums\ApplicationStatus::SUBMITTED,
             'applied_at' => now(),
         ], $attributes));
     }
