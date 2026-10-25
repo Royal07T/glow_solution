@@ -29,6 +29,7 @@
                         <th class="px-5 py-3 font-medium">Actor</th>
                         <th class="px-5 py-3 font-medium">Target</th>
                         <th class="px-5 py-3 font-medium">IP</th>
+                        <th class="px-5 py-3 text-right font-medium">Actions</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-100">
@@ -49,10 +50,13 @@
                                 {{ $log->auditable_type ? class_basename($log->auditable_type).' #'.$log->auditable_id : '—' }}
                             </td>
                             <td class="px-5 py-4 text-slate-500">{{ $log->ip_address }}</td>
+                            <td class="px-5 py-4 text-right">
+                                <a href="{{ route('admin.audit-logs.show', $log) }}" class="font-semibold text-brand-700 hover:underline">View</a>
+                            </td>
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="5" class="px-5 py-8 text-center text-slate-600">No audit events match these filters.</td>
+                            <td colspan="6" class="px-5 py-8 text-center text-slate-600">No audit events match these filters.</td>
                         </tr>
                     @endforelse
                 </tbody>
