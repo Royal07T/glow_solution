@@ -8,11 +8,13 @@
 
             <form method="POST" action="{{ route('password.confirm.store') }}" class="mt-6 space-y-5">
                 @csrf
-                <div>
-                    <label for="password" class="mb-1 block text-sm font-medium text-slate-700">Password</label>
-                    <input id="password" name="password" type="password" required autocomplete="current-password" class="w-full rounded-lg border border-slate-300 px-3 py-2">
-                    @error('password') <p class="mt-1 text-sm text-danger">{{ $message }}</p> @enderror
-                </div>
+                <x-password-input
+                    label="Password"
+                    name="password"
+                    id="password"
+                    autocomplete="current-password"
+                    :required="true"
+                />
                 <button type="submit" class="w-full rounded-lg bg-brand-700 px-4 py-2.5 text-sm font-semibold text-white hover:bg-brand-600">Confirm</button>
             </form>
         </div>

@@ -26,6 +26,7 @@ class SecurityHeadersTest extends TestCase
         $this->assertStringContainsString("default-src 'self'", $csp);
         $this->assertStringContainsString("script-src 'self'", $csp);
         $this->assertStringContainsString("object-src 'none'", $csp);
+        $this->assertStringContainsString("frame-src 'self' https://www.google.com https://maps.google.com", $csp);
         $this->assertStringContainsString("frame-ancestors 'self'", $csp);
     }
 

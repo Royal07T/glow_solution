@@ -22,7 +22,7 @@
                 <div class="flex items-start justify-between gap-3">
                     <div>
                         <h2 class="font-display text-base font-semibold text-brand-900">Personal information</h2>
-                        <p class="mt-1 text-sm text-slate-600">Your name and location help employers reach you.</p>
+                        <p class="mt-1 text-sm text-slate-600">Your name, phone number and location help employers reach you.</p>
                     </div>
                     @if(filled($profile->first_name) || filled($profile->last_name))
                         <x-badge variant="success">Started</x-badge>
@@ -39,6 +39,11 @@
                         <label for="last_name" class="mb-1 block text-sm font-medium text-slate-700">Last name</label>
                         <input id="last_name" name="last_name" type="text" value="{{ old('last_name', $profile->last_name) }}" autocomplete="family-name" class="w-full rounded-lg border px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/30 {{ $errors->has('last_name') ? 'border-red-400' : 'border-slate-300' }}">
                         @error('last_name') <p class="mt-1 text-sm text-danger">{{ $message }}</p> @enderror
+                    </div>
+                    <div>
+                        <label for="phone" class="mb-1 block text-sm font-medium text-slate-700">Phone number</label>
+                        <input id="phone" name="phone" type="tel" value="{{ old('phone', $user->phone) }}" autocomplete="tel" placeholder="e.g. 0803 622 7769" class="w-full rounded-lg border px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/30 {{ $errors->has('phone') ? 'border-red-400' : 'border-slate-300' }}">
+                        @error('phone') <p class="mt-1 text-sm text-danger">{{ $message }}</p> @enderror
                     </div>
                     <div>
                         <label for="date_of_birth" class="mb-1 block text-sm font-medium text-slate-700">Date of birth</label>

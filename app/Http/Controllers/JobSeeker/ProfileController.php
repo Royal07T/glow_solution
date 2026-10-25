@@ -25,6 +25,7 @@ class ProfileController extends Controller
         $validated = $request->validate([
             'first_name' => 'nullable|string|max:100',
             'last_name' => 'nullable|string|max:100',
+            'phone' => 'nullable|string|max:20|regex:/^[0-9+\-\s()]{7,20}$/',
             'date_of_birth' => 'nullable|date|before:today',
             'gender' => 'nullable|in:male,female,other',
             'address' => 'nullable|string|max:500',
@@ -82,6 +83,8 @@ class ProfileController extends Controller
         ]);
 
         $profile->save();
+
+        $request->user()->update(['phone' => $validated['phone'] ?? null]);
 
         return redirect()->route('jobseeker.profile.edit')->with('success', 'Profile updated successfully.');
     }

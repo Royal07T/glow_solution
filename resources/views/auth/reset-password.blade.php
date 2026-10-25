@@ -15,17 +15,22 @@
                     @error('email') <p class="mt-1 text-sm text-danger">{{ $message }}</p> @enderror
                 </div>
 
-                <div>
-                    <label for="password" class="mb-1 block text-sm font-medium text-slate-700">New password</label>
-                    <input id="password" name="password" type="password" required autocomplete="new-password" class="w-full rounded-lg border border-slate-300 px-3 py-2">
-                    <p class="mt-1 text-xs text-slate-500">At least 12 characters with upper and lower case and a number.</p>
-                    @error('password') <p class="mt-1 text-sm text-danger">{{ $message }}</p> @enderror
-                </div>
+                <x-password-input
+                    label="New password"
+                    name="password"
+                    id="password"
+                    autocomplete="new-password"
+                    help="At least 12 characters with upper and lower case and a number."
+                    :required="true"
+                />
 
-                <div>
-                    <label for="password_confirmation" class="mb-1 block text-sm font-medium text-slate-700">Confirm new password</label>
-                    <input id="password_confirmation" name="password_confirmation" type="password" required autocomplete="new-password" class="w-full rounded-lg border border-slate-300 px-3 py-2">
-                </div>
+                <x-password-input
+                    label="Confirm new password"
+                    name="password_confirmation"
+                    id="password_confirmation"
+                    autocomplete="new-password"
+                    :required="true"
+                />
 
                 <button type="submit" class="w-full rounded-lg bg-brand-700 px-4 py-2.5 text-sm font-semibold text-white hover:bg-brand-600">
                     Reset password

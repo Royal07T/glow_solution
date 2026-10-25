@@ -126,6 +126,9 @@
             <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12s3.75-6.75 9.75-6.75S21.75 12 21.75 12 18 18.75 12 18.75 2.25 12 2.25 12Z" />
             <path stroke-linecap="round" stroke-linejoin="round" d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z" />
             @break
+        @case('eye-off')
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3 3l18 18M10.5 10.5a2.12 2.12 0 0 0 3 3M9.88 5.62A9.7 9.7 0 0 1 12 5.25c6 0 9.75 6.75 9.75 6.75a17.9 17.9 0 0 1-3.16 4.02M6.2 6.2a17.6 17.6 0 0 0-3.95 5.8S6 18.75 12 18.75a9.7 9.7 0 0 0 4.14-.9" />
+            @break
         @case('send')
             <path stroke-linecap="round" stroke-linejoin="round" d="m3.75 3.75 17 8.25-17 8.25 2.25-6.75L15 12 5.99 9.75l-2.24-6Z" />
             @break

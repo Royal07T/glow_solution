@@ -128,4 +128,78 @@ class NewPagesTest extends TestCase
             ->assertSee('08012345678')
             ->assertSee('Account');
     }
+
+    public function test_password_fields_have_visibility_toggles(): void
+    {
+        $seeker = $this->jobSeeker();
+
+        $this->actingAs($seeker)
+            ->get(route('settings.edit'))
+            ->assertOk()
+            ->assertSee('data-password-toggle="current_password"', false)
+            ->assertSee('data-password-toggle="password"', false)
+            ->assertSee('data-password-toggle="password_confirmation"', false);
+    }
+
+    public function test_profile_information_updates_first_and_last_name(): void
+    {
+        $seeker = $this->jobSeeker();
+
+        $this->actingAs($seeker)
+            ->put(route('user-profile-information.update'), [
+                'first_name' => 'Ada',
+                'last_name' => 'Okafor',
+                'email' => $seeker->email,
+            ])
+            ->assertSessionHasNoErrors();
+
+        $seeker->refresh();
+
+        $this->assertSame('Ada', $seeker->first_name);
+        $this->assertSame('Okafor', $seeker->last_name);
+        $this->assertSame('Ada Okafor', $seeker->name);
+    }
+
+    public function test_admin_user_detail_renders_for_job_seeker_with_applications(): void
+    {
+        $admin = $this->admin();
+        $seeker = $this->jobSeeker();
+        $job = $this->job($this->employer());
+        $this->application($seeker, $job);
+
+        $this->actingAs($admin)
+            ->get(route('admin.users.show', $seeker))
+            ->assertOk()
+            ->assertSee($seeker->email);
+    }
+
+    public function test_job_seeker_profile_displays_and_updates_phone_number(): void
+    {
+        $seeker = $this->jobSeeker(['phone' => '08031234567']);
+
+        $this->actingAs($seeker)
+            ->get(route('jobseeker.profile.edit'))
+            ->assertOk()
+            ->assertSee('Phone number')
+            ->assertSee('08031234567');
+
+        $this->actingAs($seeker)
+            ->put(route('jobseeker.profile.update'), [
+                'first_name' => 'Test',
+                'last_name' => 'Seeker',
+                'phone' => '0812 345 6789',
+            ])
+            ->assertSessionHasNoErrors();
+
+        $this->assertSame('0812 345 6789', $seeker->fresh()->phone);
+    }
+
+    public function test_job_seeker_profile_rejects_invalid_phone_number(): void
+    {
+        $seeker = $this->jobSeeker();
+
+        $this->actingAs($seeker)
+            ->put(route('jobseeker.profile.update'), ['phone' => 'not-a-phone'])
+            ->assertSessionHasErrors('phone');
+    }
 }

@@ -13,10 +13,17 @@
                 <form method="POST" action="{{ route('user-profile-information.update') }}" class="mt-5 space-y-4">
                     @csrf
                     @method('PUT')
-                    <div>
-                        <label for="name" class="mb-1 block text-sm font-medium text-slate-700">Full name <span class="text-danger" aria-hidden="true">*</span></label>
-                        <input id="name" type="text" name="name" required maxlength="255" value="{{ old('name', $user->name) }}" class="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/30">
-                        @error('name', 'updateProfileInformation') <p class="mt-1 text-sm text-danger">{{ $message }}</p> @enderror
+                    <div class="grid gap-4 sm:grid-cols-2">
+                        <div>
+                            <label for="first_name" class="mb-1 block text-sm font-medium text-slate-700">First name <span class="text-danger" aria-hidden="true">*</span></label>
+                            <input id="first_name" type="text" name="first_name" required maxlength="100" autocomplete="given-name" value="{{ old('first_name', $user->first_name) }}" class="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/30">
+                            @error('first_name', 'updateProfileInformation') <p class="mt-1 text-sm text-danger">{{ $message }}</p> @enderror
+                        </div>
+                        <div>
+                            <label for="last_name" class="mb-1 block text-sm font-medium text-slate-700">Last name <span class="text-danger" aria-hidden="true">*</span></label>
+                            <input id="last_name" type="text" name="last_name" required maxlength="100" autocomplete="family-name" value="{{ old('last_name', $user->last_name) }}" class="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/30">
+                            @error('last_name', 'updateProfileInformation') <p class="mt-1 text-sm text-danger">{{ $message }}</p> @enderror
+                        </div>
                     </div>
                     <div>
                         <label for="email" class="mb-1 block text-sm font-medium text-slate-700">Email address <span class="text-danger" aria-hidden="true">*</span></label>
@@ -36,19 +43,34 @@
                     @csrf
                     @method('PUT')
                     <div>
-                        <label for="current_password" class="mb-1 block text-sm font-medium text-slate-700">Current password <span class="text-danger" aria-hidden="true">*</span></label>
-                        <input id="current_password" type="password" name="current_password" required autocomplete="current-password" class="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/30">
-                        @error('current_password', 'updatePassword') <p class="mt-1 text-sm text-danger">{{ $message }}</p> @enderror
+                        <x-password-input
+                            label="Current password"
+                            name="current_password"
+                            id="current_password"
+                            autocomplete="current-password"
+                            :required="true"
+                            error-bag="updatePassword"
+                        />
                     </div>
                     <div class="grid gap-4 sm:grid-cols-2">
                         <div>
-                            <label for="password" class="mb-1 block text-sm font-medium text-slate-700">New password <span class="text-danger" aria-hidden="true">*</span></label>
-                            <input id="password" type="password" name="password" required autocomplete="new-password" class="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/30">
-                            @error('password', 'updatePassword') <p class="mt-1 text-sm text-danger">{{ $message }}</p> @enderror
+                            <x-password-input
+                                label="New password"
+                                name="password"
+                                id="password"
+                                autocomplete="new-password"
+                                :required="true"
+                                error-bag="updatePassword"
+                            />
                         </div>
                         <div>
-                            <label for="password_confirmation" class="mb-1 block text-sm font-medium text-slate-700">Confirm new password <span class="text-danger" aria-hidden="true">*</span></label>
-                            <input id="password_confirmation" type="password" name="password_confirmation" required autocomplete="new-password" class="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/30">
+                            <x-password-input
+                                label="Confirm new password"
+                                name="password_confirmation"
+                                id="password_confirmation"
+                                autocomplete="new-password"
+                                :required="true"
+                            />
                         </div>
                     </div>
                     <button type="submit" class="inline-flex items-center justify-center rounded-lg bg-brand-700 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-brand-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-500">Update password</button>

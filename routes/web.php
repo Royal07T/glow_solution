@@ -4,6 +4,7 @@ use App\Http\Controllers\AccountController;
 use App\Http\Controllers\Admin\AuditLogController as AdminAuditLogController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboard;
 use App\Http\Controllers\Admin\JobController as AdminJobController;
+use App\Http\Controllers\Admin\SubscriptionPlanController as AdminSubscriptionPlanController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\Admin\VerificationController as AdminVerificationController;
 use App\Http\Controllers\ApplicationController;
@@ -98,7 +99,9 @@ Route::middleware(['auth', 'verified', 'role:admin'])->prefix('admin')->name('ad
     Route::get('/verifications/{verification}/document', [AdminVerificationController::class, 'downloadDocument'])->name('verifications.document');
     Route::get('/audit-logs', [AdminAuditLogController::class, 'index'])->name('audit-logs.index');
     Route::get('/audit-logs/{auditLog}', [AdminAuditLogController::class, 'show'])->name('audit-logs.show');
-    Route::get('/subscription-plans', [App\Http\Controllers\Admin\SubscriptionPlanController::class, 'index'])->name('subscription-plans.index');
+    Route::resource('subscription-plans', AdminSubscriptionPlanController::class)
+        ->except(['show'])
+        ->parameters(['subscription-plans' => 'subscriptionPlan']);
 });
 
 Route::middleware(['auth', 'verified'])->group(function () {
