@@ -335,7 +335,7 @@ php artisan migrate
 
 ### Seeders
 
-`DatabaseSeeder` currently loads the Nigerian state and LGA data:
+`DatabaseSeeder` loads the Nigerian states, LGAs, and the default job categories, including drivers, marketing, sales, domestic, technical, and professional roles:
 
 ```bash
 php artisan db:seed
@@ -343,10 +343,9 @@ php artisan db:seed
 php artisan migrate --seed
 ```
 
-For a complete local environment, seed categories and subscription plans:
+For a complete local environment, seed subscription plans:
 
 ```bash
-php artisan db:seed --class=JobCategorySeeder
 php artisan db:seed --class=SubscriptionPlanSeeder
 ```
 

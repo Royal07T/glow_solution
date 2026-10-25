@@ -10,6 +10,7 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             StateLgaSeeder::class,
+            JobCategorySeeder::class,
         ]);
     }
 }

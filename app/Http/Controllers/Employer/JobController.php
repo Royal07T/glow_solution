@@ -28,7 +28,7 @@ class JobController extends Controller
     public function create()
     {
         $this->authorize('create', Job::class);
-        $categories = JobCategory::where('is_active', true)->get();
+        $categories = JobCategory::where('is_active', true)->orderBy('name')->get();
 
         return view('employer.jobs.create', compact('categories'));
     }
@@ -108,7 +108,7 @@ class JobController extends Controller
     public function edit(Job $job)
     {
         $this->authorize('update', $job);
-        $categories = JobCategory::where('is_active', true)->get();
+        $categories = JobCategory::where('is_active', true)->orderBy('name')->get();
 
         return view('employer.jobs.edit', compact('job', 'categories'));
     }
