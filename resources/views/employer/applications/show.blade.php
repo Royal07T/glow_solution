@@ -74,7 +74,7 @@
                 <h3 class="font-display text-base font-semibold text-slate-900">Documents</h3>
                 @if($application->cv)
                     <p class="mt-2 text-sm text-slate-600">{{ $application->cv->name }}</p>
-                    <a href="{{ route('employer.applications.cv', $application) }}" class="mt-3 inline-flex w-full items-center justify-center rounded-lg border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50">
+                    <a href="{{ route('cvs.download', $application->cv) }}" class="mt-3 inline-flex w-full items-center justify-center rounded-lg border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50">
                         Download CV
                     </a>
                 @else

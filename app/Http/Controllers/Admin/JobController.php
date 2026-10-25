@@ -96,9 +96,15 @@ class JobController extends Controller
 
     public function show(Job $job)
     {
-        $job->load(['employerProfile.user', 'category', 'applications']);
+        $job->load(['employerProfile.user', 'category'])->loadCount('applications');
 
-        return view('admin.jobs.show', compact('job'));
+        $applications = $job->applications()
+            ->with('jobSeeker')
+            ->latest()
+            ->paginate(8)
+            ->withQueryString();
+
+        return view('admin.jobs.show', compact('job', 'applications'));
     }
 
     public function approve(Request $request, Job $job)

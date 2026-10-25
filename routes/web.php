@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AccountController;
+use App\Http\Controllers\Admin\ApplicationController as AdminApplicationController;
 use App\Http\Controllers\Admin\AuditLogController as AdminAuditLogController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboard;
 use App\Http\Controllers\Admin\JobController as AdminJobController;
@@ -63,7 +64,6 @@ Route::middleware(['auth', 'verified', 'role:job_seeker'])->group(function () {
 Route::middleware(['auth', 'verified', 'role:job_seeker'])->group(function () {
     Route::get('/cvs', [CvController::class, 'index'])->name('cvs.index');
     Route::post('/cvs', [CvController::class, 'store'])->name('cvs.store');
-    Route::get('/cvs/{cv}/download', [CvController::class, 'download'])->name('cvs.download');
     Route::delete('/cvs/{cv}', [CvController::class, 'destroy'])->name('cvs.destroy');
 });
 
@@ -100,6 +100,9 @@ Route::middleware(['auth', 'verified', 'role:admin'])->prefix('admin')->name('ad
     Route::put('/jobs/{job}', [AdminJobController::class, 'update'])->name('jobs.update');
     Route::post('/jobs/{job}/approve', [AdminJobController::class, 'approve'])->name('jobs.approve');
     Route::post('/jobs/{job}/reject', [AdminJobController::class, 'reject'])->name('jobs.reject');
+    Route::get('/applications', [AdminApplicationController::class, 'index'])->name('applications.index');
+    Route::get('/applications/{application}', [AdminApplicationController::class, 'show'])->name('applications.show');
+    Route::patch('/applications/{application}/status', [AdminApplicationController::class, 'updateStatus'])->name('applications.update-status');
     Route::get('/verifications', [AdminVerificationController::class, 'index'])->name('verifications.index');
     Route::get('/verifications/{verification}', [AdminVerificationController::class, 'show'])->name('verifications.show');
     Route::post('/verifications/{verification}/approve', [AdminVerificationController::class, 'approve'])->name('verifications.approve');
@@ -113,6 +116,8 @@ Route::middleware(['auth', 'verified', 'role:admin'])->prefix('admin')->name('ad
 });
 
 Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('/cvs/{cv}/download', [CvController::class, 'download'])->name('cvs.download');
+
     Route::get('/settings', [AccountController::class, 'edit'])->name('settings.edit');
 
     Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');

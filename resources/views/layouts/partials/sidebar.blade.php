@@ -67,6 +67,7 @@
                 ['label' => 'Post a job', 'route' => 'admin.jobs.create', 'icon' => 'plus', 'active' => ['admin.jobs.create']],
                 ['label' => 'Job listings', 'route' => 'admin.jobs.index', 'icon' => 'briefcase', 'active' => ['admin.jobs.index', 'admin.jobs.show', 'admin.jobs.edit'], 'without_query' => ['status']],
                 ['label' => 'Job approvals', 'route' => 'admin.jobs.index', 'icon' => 'badge-check', 'active' => ['admin.jobs.*'], 'query' => ['status' => 'pending']],
+                ['label' => 'Applicants', 'route' => 'admin.applications.index', 'icon' => 'users', 'active' => ['admin.applications.*']],
             ]],
             ['label' => 'Business management', 'items' => [
                 ['label' => 'Subscription plans', 'route' => 'admin.subscription-plans.index', 'icon' => 'card', 'active' => ['admin.subscription-plans.*']],
