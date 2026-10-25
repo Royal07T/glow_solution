@@ -65,7 +65,7 @@
         </section>
 
         <div class="flex flex-wrap gap-3">
-            <button type="submit" class="rounded-lg bg-[#062B52 px-5 py-2.5 text-sm font-semibold text-white hover:bg-[#5B21B6">Save company profile</button>
+            <button type="submit" class="rounded-lg bg-[#062B52] px-5 py-2.5 text-sm font-semibold text-white hover:bg-[#07335c]">Save company profile</button>
             <a href="{{ route('employer.dashboard') }}" class="rounded-lg border border-stone-300 px-5 py-2.5 text-sm font-semibold text-slate-700 hover:bg-stone-50">Cancel</a>
         </div>
     </form>

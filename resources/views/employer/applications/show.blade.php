@@ -64,7 +64,7 @@
                             <input id="employer_notes" type="text" name="employer_notes" maxlength="2000" value="{{ $application->employer_notes }}" class="w-full rounded-lg border border-stone-300 px-3 py-2">
                         </div>
                     </div>
-                    <button type="submit" class="rounded-lg bg-[#062B52 px-5 py-2.5 text-sm font-semibold text-white hover:bg-[#5B21B6">Save decision</button>
+                    <button type="submit" class="rounded-lg bg-[#062B52] px-5 py-2.5 text-sm font-semibold text-white hover:bg-[#07335c]">Save decision</button>
                 </form>
             </section>
         </div>

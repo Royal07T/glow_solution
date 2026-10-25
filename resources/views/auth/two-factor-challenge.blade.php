@@ -21,7 +21,7 @@
                     @error('recovery_code') <p class="mt-1 text-sm text-danger">{{ $message }}</p> @enderror
                 </div>
 
-                <button type="submit" class="w-full rounded-lg bg-[#062B52 px-4 py-2.5 text-sm font-semibold text-white hover:bg-[#5B21B6">Verify</button>
+                <button type="submit" class="w-full rounded-lg bg-[#062B52] px-4 py-2.5 text-sm font-semibold text-white hover:bg-[#07335c]">Verify</button>
             </form>
         </div>
     </div>

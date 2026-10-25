@@ -28,7 +28,7 @@
                         <dt class="text-xs uppercase tracking-wide text-slate-500">CV attached</dt>
                         <dd class="text-sm font-medium text-slate-800">
                             @if($application->cv)
-                                <a href="{{ route('cvs.download', $application->cv) }}" class="text-[#062B52 hover:underline">{{ $application->cv->name }}</a>
+                                <a href="{{ route('cvs.download', $application->cv) }}" class="text-[#062B52] hover:underline">{{ $application->cv->name }}</a>
                             @else
                                 None
                             @endif

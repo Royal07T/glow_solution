@@ -70,13 +70,13 @@
 
 <aside
     data-sidebar
-    class="fixed inset-y-0 left-0 z-50 flex w-64 -translate-x-full flex-col bg-[#041e3a text-white transition-transform duration-200 ease-out lg:translate-x-0"
+    class="fixed inset-y-0 left-0 z-50 flex w-64 -translate-x-full flex-col bg-[#041e3a] text-white transition-transform duration-200 ease-out lg:translate-x-0"
     aria-label="Account navigation"
 >
     <div class="flex h-16 shrink-0 items-center gap-2 border-b border-white/10 px-5">
         <a href="{{ route('home') }}" class="flex items-center gap-2">
             <span class="flex h-9 w-9 items-center justify-center rounded-lg bg-gold-500" aria-hidden="true">
-                <span class="font-display text-lg font-bold text-[#041e3a">G</span>
+                <span class="font-display text-lg font-bold text-[#041e3a]">G</span>
             </span>
             <span class="font-display text-base font-bold">Glow Recruitment</span>
         </a>
@@ -102,7 +102,7 @@
                                 <x-icon :name="$item['icon']" class="h-5 w-5 shrink-0" />
                                 <span>{{ $item['label'] }}</span>
                                 @if($item['route'] === 'employer.verification' && $verificationPending)
-                                    <span class="ml-auto rounded-full bg-gold-500 px-2 py-0.5 text-[10px] font-bold text-[#041e3a">Action</span>
+                                    <span class="ml-auto rounded-full bg-gold-500 px-2 py-0.5 text-[10px] font-bold text-[#041e3a]">Action</span>
                                 @endif
                             </a>
                         </li>

@@ -14,7 +14,7 @@
             <input id="user" type="text" name="user" value="{{ request('user') }}" class="w-full rounded-lg border border-stone-300 px-3 py-2 text-sm">
         </div>
         <div class="flex items-end gap-2">
-            <button type="submit" class="rounded-lg bg-[#062B52 px-4 py-2 text-sm font-semibold text-white hover:bg-[#5B21B6">Filter</button>
+            <button type="submit" class="rounded-lg bg-[#062B52] px-4 py-2 text-sm font-semibold text-white hover:bg-[#07335c]">Filter</button>
             <a href="{{ route('admin.audit-logs.index') }}" class="rounded-lg border border-stone-300 px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-stone-50">Reset</a>
         </div>
     </form>
@@ -40,7 +40,7 @@
                             </td>
                             <td class="px-5 py-4">
                                 @if($log->user)
-                                    <a href="{{ route('admin.users.show', $log->user) }}" class="font-medium text-[#062B52 hover:underline">{{ $log->user->name }}</a>
+                                    <a href="{{ route('admin.users.show', $log->user) }}" class="font-medium text-[#062B52] hover:underline">{{ $log->user->name }}</a>
                                 @else
                                     <span class="text-slate-400">system</span>
                                 @endif

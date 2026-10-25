@@ -3,7 +3,9 @@
         <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div class="col-span-1 md:col-span-2">
                 <div class="flex items-center gap-3 mb-4">
-                    <img src="{{ asset('logo.png') }}" alt="Glow Recruitment Agency Solution" class="h-12 w-auto">
+                    <span class="inline-flex items-center justify-center rounded-lg bg-white p-2">
+                        <img src="{{ asset('logo.png') }}" alt="Glow Recruitment Agency Solution" class="h-10 w-auto">
+                    </span>
                     <span class="font-display font-bold text-xl">Glow Recruitment Agency Solution</span>
                 </div>
                 <p class="text-gray-300 mb-4 max-w-md">

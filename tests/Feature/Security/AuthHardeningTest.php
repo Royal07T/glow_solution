@@ -48,8 +48,10 @@ class AuthHardeningTest extends TestCase
     public function test_registration_requires_a_strong_password(): void
     {
         $this->post(route('register'), [
-            'name' => 'New Seeker',
+            'first_name' => 'New',
+            'last_name' => 'Seeker',
             'email' => 'new@example.com',
+            'phone' => '08036227769',
             'password' => 'password',
             'password_confirmation' => 'password',
             'role' => 'job_seeker',
@@ -61,8 +63,10 @@ class AuthHardeningTest extends TestCase
     public function test_new_accounts_are_unverified_and_redirected_to_the_notice(): void
     {
         $response = $this->post(route('register'), [
-            'name' => 'New Seeker',
+            'first_name' => 'New',
+            'last_name' => 'Seeker',
             'email' => 'new@example.com',
+            'phone' => '08036227769',
             'password' => 'Password12345!',
             'password_confirmation' => 'Password12345!',
             'role' => 'job_seeker',
@@ -80,8 +84,10 @@ class AuthHardeningTest extends TestCase
     public function test_registration_cannot_create_an_admin_account(): void
     {
         $this->post(route('register'), [
-            'name' => 'Sneaky Admin',
+            'first_name' => 'Sneaky',
+            'last_name' => 'Admin',
             'email' => 'sneaky@example.com',
+            'phone' => '08036227769',
             'password' => 'Password12345',
             'password_confirmation' => 'Password12345',
             'role' => 'admin',

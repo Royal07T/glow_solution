@@ -27,7 +27,7 @@
             </select>
         </div>
         <div class="flex items-end gap-2">
-            <button type="submit" class="rounded-lg bg-[#062B52 px-4 py-2 text-sm font-semibold text-white hover:bg-[#5B21B6">Filter</button>
+            <button type="submit" class="rounded-lg bg-[#062B52] px-4 py-2 text-sm font-semibold text-white hover:bg-[#07335c]">Filter</button>
             <a href="{{ route('admin.users.index') }}" class="rounded-lg border border-stone-300 px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-stone-50">Reset</a>
         </div>
     </form>
@@ -59,7 +59,7 @@
                             </td>
                             <td class="px-5 py-4 text-slate-500">{{ $user->created_at->format('M j, Y') }}</td>
                             <td class="px-5 py-4 text-right">
-                                <a href="{{ route('admin.users.show', $user) }}" class="font-semibold text-[#062B52 hover:underline">View</a>
+                                <a href="{{ route('admin.users.show', $user) }}" class="font-semibold text-[#062B52] hover:underline">View</a>
                             </td>
                         </tr>
                     @empty

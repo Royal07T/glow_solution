@@ -17,13 +17,13 @@
                     <input id="email" name="email" type="email" required value="{{ old('email') }}" class="w-full rounded-lg border border-stone-300 px-3 py-2">
                     @error('email') <p class="mt-1 text-sm text-danger">{{ $message }}</p> @enderror
                 </div>
-                <button type="submit" class="w-full rounded-lg bg-[#062B52 px-4 py-2.5 text-sm font-semibold text-white hover:bg-[#5B21B6">
+                <button type="submit" class="w-full rounded-lg bg-[#062B52] px-4 py-2.5 text-sm font-semibold text-white hover:bg-[#07335c]">
                     Send reset link
                 </button>
             </form>
 
             <p class="mt-6 text-center text-sm">
-                <a href="{{ route('login') }}" class="font-semibold text-[#062B52 hover:underline">Back to sign in</a>
+                <a href="{{ route('login') }}" class="font-semibold text-[#062B52] hover:underline">Back to sign in</a>
             </p>
         </div>
     </div>

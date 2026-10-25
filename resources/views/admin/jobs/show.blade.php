@@ -67,7 +67,7 @@
 
             <section class="rounded-xl border border-stone-200 bg-white p-5">
                 <h3 class="font-display text-base font-semibold text-slate-900">Employer</h3>
-                <a href="{{ route('admin.users.show', $job->employerProfile->user) }}" class="mt-2 block text-sm font-semibold text-[#062B52 hover:underline">
+                <a href="{{ route('admin.users.show', $job->employerProfile->user) }}" class="mt-2 block text-sm font-semibold text-[#062B52] hover:underline">
                     {{ $job->employerProfile->user->name }}
                 </a>
                 <p class="text-xs text-slate-500">{{ $job->employerProfile->user->email }}</p>

@@ -26,7 +26,7 @@
                             Changing your email requires verification via the link sent to the new address.
                         </p>
                     </div>
-                    <button type="submit" class="rounded-lg bg-[#062B52 px-5 py-2.5 text-sm font-semibold text-white hover:bg-[#5B21B6">Save changes</button>
+                    <button type="submit" class="rounded-lg bg-[#062B52] px-5 py-2.5 text-sm font-semibold text-white hover:bg-[#07335c]">Save changes</button>
                 </form>
             </section>
 
@@ -53,7 +53,7 @@
                             <input id="password_confirmation" type="password" name="password_confirmation" required autocomplete="new-password" class="w-full rounded-lg border border-stone-300 px-3 py-2">
                         </div>
                     </div>
-                    <button type="submit" class="rounded-lg bg-[#062B52 px-5 py-2.5 text-sm font-semibold text-white hover:bg-[#5B21B6">Update password</button>
+                    <button type="submit" class="rounded-lg bg-[#062B52] px-5 py-2.5 text-sm font-semibold text-white hover:bg-[#07335c]">Update password</button>
                 </form>
             </section>
         </div>

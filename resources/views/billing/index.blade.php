@@ -59,7 +59,7 @@
                 <h2 class="font-display text-base font-semibold text-slate-900">Available plans</h2>
                 <div class="mt-3 grid gap-4 sm:grid-cols-2">
                     @forelse($plans as $plan)
-                        <div class="flex flex-col rounded-xl border p-5 {{ $subscription?->subscription_plan_id === $plan->id ? 'border-[#062B52 bg-[#F5F3FF' : 'border-stone-200 bg-white' }}">
+                        <div class="flex flex-col rounded-xl border p-5 {{ $subscription?->subscription_plan_id === $plan->id ? 'border-[#062B52] bg-[#F5F3FF]' : 'border-stone-200 bg-white' }}">
                             <div class="flex items-start justify-between gap-2">
                                 <h3 class="font-display text-lg font-semibold text-slate-900">{{ $plan->name }}</h3>
                                 @if($plan->is_free)
@@ -77,7 +77,7 @@
                                     @csrf
                                     <button type="submit"
                                         @disabled($plan->is_free && $subscription)
-                                        class="w-full rounded-lg px-4 py-2 text-sm font-semibold {{ $plan->is_free && ! $subscription ? 'bg-[#062B52 text-white hover:bg-[#5B21B6' : 'cursor-not-allowed bg-stone-100 text-slate-400' }}">
+                                        class="w-full rounded-lg px-4 py-2 text-sm font-semibold {{ $plan->is_free && ! $subscription ? 'bg-[#062B52] text-white hover:bg-[#07335c]' : 'cursor-not-allowed bg-stone-100 text-slate-400' }}">
                                         {{ $subscription ? ($subscription->subscription_plan_id === $plan->id ? 'Current plan' : 'Plan active') : ($plan->is_free ? 'Activate free plan' : 'Contact support') }}
                                     </button>
                                 </form>
