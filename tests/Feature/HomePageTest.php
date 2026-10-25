@@ -37,7 +37,9 @@ class HomePageTest extends TestCase
         $this->get('/')
             ->assertOk()
             ->assertSee('https://wa.me/2348036227769', false)
-            ->assertSee('Chat with Glow Recruitment on WhatsApp');
+            ->assertSee('Chat with Glow Recruitment on WhatsApp')
+            ->assertSee('Back to top')
+            ->assertSee('data-back-to-top', false);
     }
 
     public function test_whatsapp_link_normalises_international_phone_numbers(): void

@@ -116,6 +116,20 @@ ready(() => {
         });
     });
 
+    const backToTop = document.querySelector('[data-back-to-top]');
+
+    if (backToTop) {
+        const toggleBackToTop = () => {
+            backToTop.classList.toggle('hidden', window.scrollY < 400);
+        };
+
+        toggleBackToTop();
+        window.addEventListener('scroll', toggleBackToTop, { passive: true });
+        backToTop.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+    }
+
     document.querySelectorAll('form[data-confirm]').forEach((form) => {
         form.addEventListener('submit', (event) => {
             if (!window.confirm(form.dataset.confirm)) {

@@ -599,6 +599,18 @@
     </div>
 </section>
 
+<button
+    type="button"
+    data-back-to-top
+    aria-label="Back to top"
+    title="Back to top"
+    class="fixed bottom-24 right-6 z-40 hidden h-12 w-12 items-center justify-center rounded-full border border-gold-600 bg-gold-500 text-brand-900 shadow-lg transition hover:scale-105 hover:bg-gold-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-700"
+>
+    <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M5 15l7-7 7 7"></path>
+    </svg>
+</button>
+
 <a
     href="https://wa.me/{{ $waNumber }}"
     target="_blank"
