@@ -117,7 +117,6 @@
             <span class="inline-flex rounded-md bg-white p-1.5">
                 <img src="{{ asset('logo.png') }}" alt="Glow Recruitment Agency" class="h-7 w-auto">
             </span>
-            <span data-sidebar-brand-text class="sidebar-label truncate font-display text-sm font-bold leading-tight">Glow Recruitment</span>
         </a>
 
         <div class="ml-auto flex items-center gap-1">

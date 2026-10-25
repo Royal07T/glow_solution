@@ -4,7 +4,6 @@
             <div class="flex items-center">
                 <a href="{{ route('home') }}" class="flex items-center gap-3">
                     <img src="{{ asset('logo.png') }}" alt="Glow Recruitment Agency Solution" class="h-10 w-auto">
-                    <span class="font-display font-bold text-xl text-slate-900 hidden sm:block">Glow Recruitment Agency Solution</span>
                 </a>
             </div>
 
