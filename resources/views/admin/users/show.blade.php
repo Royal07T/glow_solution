@@ -6,7 +6,7 @@
 @section('content')
     <div class="grid gap-6 lg:grid-cols-3">
         <div class="space-y-6 lg:col-span-2">
-            <section class="rounded-xl border border-stone-200 bg-white p-6">
+            <section class="rounded-xl border border-slate-200 bg-white p-6">
                 <div class="flex flex-wrap items-start justify-between gap-3">
                     <div>
                         <h2 class="font-display text-xl font-semibold text-slate-900">{{ $user->name }}</h2>
@@ -46,7 +46,7 @@
             </section>
 
             @if($user->isEmployer() && $user->employerProfile)
-                <section class="rounded-xl border border-stone-200 bg-white p-6">
+                <section class="rounded-xl border border-slate-200 bg-white p-6">
                     <h2 class="font-display text-base font-semibold text-slate-900">Employer profile</h2>
                     <dl class="mt-4 grid gap-3 sm:grid-cols-2">
                         <div>
@@ -67,17 +67,17 @@
                         </div>
                     </dl>
                     @if($user->employerProfile->verification_status === 'submitted')
-                        <a href="{{ route('admin.verifications.index', ['status' => 'pending']) }}" class="mt-4 inline-flex rounded-lg border border-stone-300 px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-stone-50">Review verification</a>
+                        <a href="{{ route('admin.verifications.index', ['status' => 'pending']) }}" class="mt-4 inline-flex rounded-lg border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50">Review verification</a>
                     @endif
                 </section>
             @endif
 
-            <section class="rounded-xl border border-stone-200 bg-white">
-                <div class="border-b border-stone-200 px-6 py-4">
+            <section class="rounded-xl border border-slate-200 bg-white">
+                <div class="border-b border-slate-200 px-6 py-4">
                     <h2 class="font-display text-base font-semibold text-slate-900">Recent activity</h2>
                 </div>
                 @forelse($logs as $log)
-                    <div class="flex items-center justify-between gap-3 border-b border-stone-100 px-6 py-3 last:border-0">
+                    <div class="flex items-center justify-between gap-3 border-b border-slate-100 px-6 py-3 last:border-0">
                         <div>
                             <p class="text-sm font-medium text-slate-800">{{ $log->action }}</p>
                             <p class="text-xs text-slate-500">{{ $log->created_at->format('M j, Y g:ia') }}</p>
@@ -92,7 +92,7 @@
 
         <aside class="space-y-4">
             @if(! $user->isAdmin() && ! $user->is(auth()->user()))
-                <section class="rounded-xl border border-stone-200 bg-white p-5">
+                <section class="rounded-xl border border-slate-200 bg-white p-5">
                     <h3 class="font-display text-base font-semibold text-slate-900">
                         {{ $user->is_suspended ? 'Reinstate account' : 'Suspend account' }}
                     </h3>
@@ -109,7 +109,7 @@
                             @csrf
                             <div>
                                 <label for="suspension_reason" class="mb-1 block text-sm font-medium text-slate-700">Reason</label>
-                                <textarea id="suspension_reason" name="suspension_reason" rows="3" required maxlength="500" class="w-full rounded-lg border border-stone-300 px-3 py-2"></textarea>
+                                <textarea id="suspension_reason" name="suspension_reason" rows="3" required maxlength="500" class="w-full rounded-lg border border-slate-300 px-3 py-2"></textarea>
                             </div>
                             <button type="submit" data-confirm="Suspend this account?" class="w-full rounded-lg bg-danger px-4 py-2 text-sm font-semibold text-white hover:bg-red-700">Suspend user</button>
                         </form>
@@ -117,7 +117,7 @@
                 </section>
             @endif
 
-            <section class="rounded-xl border border-stone-200 bg-white p-5">
+            <section class="rounded-xl border border-slate-200 bg-white p-5">
                 <h3 class="font-display text-base font-semibold text-slate-900">Subscription</h3>
                 @if($user->activeSubscription)
                     <p class="mt-2 text-sm text-slate-700">{{ $user->activeSubscription->plan->name }}</p>
@@ -127,7 +127,7 @@
                 @endif
             </section>
 
-            <a href="{{ route('admin.users.index') }}" class="inline-flex w-full items-center justify-center rounded-lg bg-stone-100 px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-stone-200">Back to users</a>
+            <a href="{{ route('admin.users.index') }}" class="inline-flex w-full items-center justify-center rounded-lg bg-slate-100 px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-200">Back to users</a>
         </aside>
     </div>
 @endsection

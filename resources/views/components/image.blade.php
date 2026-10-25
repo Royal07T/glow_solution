@@ -26,6 +26,6 @@
         @error($src) onerror="this.style.display='none'" @enderror
     />
     @if($overlay)
-        <div class="absolute inset-0 bg-[#041e3a]" style="opacity: {{ $overlayOpacity }}%"></div>
+        <div class="absolute inset-0 bg-brand-900" style="opacity: {{ $overlayOpacity }}%"></div>
     @endif
 </div>

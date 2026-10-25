@@ -14,7 +14,7 @@
 </head>
 <body class="font-sans antialiased bg-gray-50">
     <div class="min-h-screen flex">
-        <div class="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-[#041e3a] via-[#062B52] to-[#0a3d6b] items-center justify-center p-12">
+        <div class="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-brand-900 via-brand-700 to-brand-600 items-center justify-center p-12">
             <div class="text-center max-w-md">
                 <img src="{{ asset('logo.png') }}" alt="Glow Recruitment Agency Solution" class="mx-auto mb-8 h-36 w-auto brightness-0 invert drop-shadow-lg">
                 <h1 class="font-display text-3xl xl:text-4xl font-bold text-white mb-4">Glow Recruitment Agency Solution</h1>
@@ -37,14 +37,14 @@
                         <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
                             <div>
                                 <label for="first_name" class="block text-sm font-medium text-slate-700 mb-1">First Name</label>
-                                <input id="first_name" type="text" name="first_name" value="{{ old('first_name') }}" required autofocus autocomplete="given-name" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#062B52]/30 focus:border-[#062B52]">
+                                <input id="first_name" type="text" name="first_name" value="{{ old('first_name') }}" required autofocus autocomplete="given-name" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-700/30 focus:border-brand-700">
                                 @error('first_name')
                                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                 @enderror
                             </div>
                             <div>
                                 <label for="last_name" class="block text-sm font-medium text-slate-700 mb-1">Last Name</label>
-                                <input id="last_name" type="text" name="last_name" value="{{ old('last_name') }}" required autocomplete="family-name" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#062B52]/30 focus:border-[#062B52]">
+                                <input id="last_name" type="text" name="last_name" value="{{ old('last_name') }}" required autocomplete="family-name" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-700/30 focus:border-brand-700">
                                 @error('last_name')
                                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                 @enderror
@@ -53,14 +53,14 @@
                         <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
                             <div>
                                 <label for="email" class="block text-sm font-medium text-slate-700 mb-1">Email</label>
-                                <input id="email" type="email" name="email" value="{{ old('email') }}" required autocomplete="email" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#062B52]/30 focus:border-[#062B52]">
+                                <input id="email" type="email" name="email" value="{{ old('email') }}" required autocomplete="email" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-700/30 focus:border-brand-700">
                                 @error('email')
                                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                 @enderror
                             </div>
                             <div>
                                 <label for="phone" class="block text-sm font-medium text-slate-700 mb-1">Phone Number</label>
-                                <input id="phone" type="tel" name="phone" value="{{ old('phone') }}" required autocomplete="tel" placeholder="0803 622 7769" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#062B52]/30 focus:border-[#062B52]">
+                                <input id="phone" type="tel" name="phone" value="{{ old('phone') }}" required autocomplete="tel" placeholder="0803 622 7769" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-700/30 focus:border-brand-700">
                                 @error('phone')
                                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                 @enderror
@@ -68,7 +68,7 @@
                         </div>
                         <div>
                             <label for="role" class="block text-sm font-medium text-slate-700 mb-1">I am a</label>
-                            <select id="role" name="role" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#062B52]/30 focus:border-[#062B52]">
+                            <select id="role" name="role" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-700/30 focus:border-brand-700">
                                 <option value="">Select role</option>
                                 <option value="job_seeker" {{ old('role') == 'job_seeker' ? 'selected' : '' }}>Job Seeker</option>
                                 <option value="employer" {{ old('role') == 'employer' ? 'selected' : '' }}>Employer</option>
@@ -80,7 +80,7 @@
                         <div x-data="{ show: false }">
                             <label for="password" class="block text-sm font-medium text-slate-700 mb-1">Password</label>
                             <div class="relative">
-                                <input id="password" :type="show ? 'text' : 'password'" name="password" required class="w-full px-3 py-2 pr-10 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#062B52]/30 focus:border-[#062B52]">
+                                <input id="password" :type="show ? 'text' : 'password'" name="password" required class="w-full px-3 py-2 pr-10 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-700/30 focus:border-brand-700">
                                 <button type="button" @click="show = !show" class="absolute inset-y-0 right-0 pr-3 flex items-center">
                                     <svg x-show="!show" class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
@@ -98,7 +98,7 @@
                         <div x-data="{ show: false }">
                             <label for="password_confirmation" class="block text-sm font-medium text-slate-700 mb-1">Confirm Password</label>
                             <div class="relative">
-                                <input id="password_confirmation" :type="show ? 'text' : 'password'" name="password_confirmation" required class="w-full px-3 py-2 pr-10 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#062B52]/30 focus:border-[#062B52]">
+                                <input id="password_confirmation" :type="show ? 'text' : 'password'" name="password_confirmation" required class="w-full px-3 py-2 pr-10 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-700/30 focus:border-brand-700">
                                 <button type="button" @click="show = !show" class="absolute inset-y-0 right-0 pr-3 flex items-center">
                                     <svg x-show="!show" class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
@@ -113,9 +113,9 @@
                                 <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                             @enderror
                         </div>
-                        <button type="submit" class="w-full py-2.5 px-4  bg-[#062B52] hover:bg-[#07335c] text-white font-semibold rounded-lg transition-colors">Create Account</button>
+                        <button type="submit" class="w-full py-2.5 px-4  bg-brand-700 hover:bg-brand-600 text-white font-semibold rounded-lg transition-colors">Create Account</button>
                         <p class="text-center text-sm text-slate-600">
-                            Already have an account? <a href="{{ route('login') }}" class="text-[#062B52] hover:text-[#07335c] font-medium">Sign in</a>
+                            Already have an account? <a href="{{ route('login') }}" class="text-brand-700 hover:text-brand-600 font-medium">Sign in</a>
                         </p>
                     </form>
                 </div>

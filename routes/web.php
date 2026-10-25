@@ -1,24 +1,27 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\SubscriptionPlanController;
-use App\Http\Controllers\SubscriptionController;
-use App\Http\Controllers\HomeController;
-use App\Http\Controllers\JobController;
-use App\Http\Controllers\ApplicationController;
-use App\Http\Controllers\CvController;
-use App\Http\Controllers\JobSeeker\DashboardController as JobSeekerDashboard;
-use App\Http\Controllers\JobSeeker\ProfileController as JobSeekerProfile;
-use App\Http\Controllers\Employer\DashboardController as EmployerDashboard;
-use App\Http\Controllers\Employer\JobController as EmployerJobController;
-use App\Http\Controllers\Employer\ApplicationController as EmployerApplicationController;
+use App\Http\Controllers\AccountController;
+use App\Http\Controllers\Admin\AuditLogController as AdminAuditLogController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboard;
 use App\Http\Controllers\Admin\JobController as AdminJobController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\Admin\VerificationController as AdminVerificationController;
-use App\Http\Controllers\Admin\AuditLogController as AdminAuditLogController;
+use App\Http\Controllers\ApplicationController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\RegisteredUserController;
+use App\Http\Controllers\CvController;
+use App\Http\Controllers\Employer\ApplicationController as EmployerApplicationController;
+use App\Http\Controllers\Employer\DashboardController as EmployerDashboard;
+use App\Http\Controllers\Employer\JobController as EmployerJobController;
+use App\Http\Controllers\Employer\ProfileController;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\JobController;
+use App\Http\Controllers\JobSeeker\DashboardController as JobSeekerDashboard;
+use App\Http\Controllers\JobSeeker\ProfileController as JobSeekerProfile;
+use App\Http\Controllers\SavedJobController;
+use App\Http\Controllers\SubscriptionController;
+use App\Http\Controllers\SubscriptionPlanController;
+use Illuminate\Support\Facades\Route;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/jobs', [JobController::class, 'index'])->name('jobs.index');
@@ -34,6 +37,8 @@ Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name
 // Job Seeker Routes
 Route::middleware(['auth', 'verified', 'role:job_seeker'])->prefix('jobseeker')->name('jobseeker.')->group(function () {
     Route::get('/dashboard', [JobSeekerDashboard::class, 'index'])->name('dashboard');
+    Route::get('/recommended', [JobSeekerDashboard::class, 'recommended'])->name('recommended');
+    Route::get('/interviews', [ApplicationController::class, 'interviews'])->name('interviews');
     Route::get('/profile', [JobSeekerProfile::class, 'edit'])->name('profile.edit');
     Route::put('/profile', [JobSeekerProfile::class, 'update'])->name('profile.update');
 });
@@ -45,7 +50,8 @@ Route::middleware(['auth', 'verified', 'role:job_seeker'])->group(function () {
     Route::get('/jobs/{job}/apply', [ApplicationController::class, 'create'])->name('applications.create');
     Route::post('/jobs/{job}/apply', [ApplicationController::class, 'store'])->name('applications.store');
     Route::post('/applications/{application}/withdraw', [ApplicationController::class, 'withdraw'])->name('applications.withdraw');
-    Route::get('/saved-jobs', [App\Http\Controllers\SavedJobController::class, 'index'])->name('saved-jobs.index');
+    Route::get('/saved-jobs', [SavedJobController::class, 'index'])->name('saved-jobs.index');
+    Route::delete('/saved-jobs/{job}', [SavedJobController::class, 'destroy'])->name('saved-jobs.destroy');
 });
 
 // CV Management
@@ -58,13 +64,7 @@ Route::middleware(['auth', 'verified', 'role:job_seeker'])->group(function () {
 
 // Saved Jobs
 Route::middleware(['auth', 'verified', 'role:job_seeker'])->group(function () {
-    Route::post('/jobs/{job}/save', function(\App\Models\Job $job) {
-        if ($job->status !== 'approved' && (!method_exists($job->status, 'value') || (is_object($job->status) && method_exists($job->status, 'value') ? $job->status->value : (string)$job->status) !== 'approved')) {
-            abort(404);
-        }
-        auth()->user()->savedJobs()->toggle($job->id);
-        return back()->with('success', 'Job saved status updated.');
-    })->name('jobs.save');
+    Route::post('/jobs/{job}/save', [SavedJobController::class, 'toggle'])->name('jobs.save');
 });
 
 // Employer Routes
@@ -74,11 +74,11 @@ Route::middleware(['auth', 'verified', 'role:employer'])->prefix('employer')->na
     Route::get('/applications', [EmployerApplicationController::class, 'index'])->name('applications.index');
     Route::get('/applications/{application}', [EmployerApplicationController::class, 'show'])->name('applications.show');
     Route::patch('/applications/{application}/status', [EmployerApplicationController::class, 'updateStatus'])->name('applications.update-status');
-    Route::get('/verification', function() {
+    Route::get('/verification', function () {
         return view('employer.verification');
     })->name('verification');
-    Route::get('/profile', [\App\Http\Controllers\Employer\ProfileController::class, 'edit'])->name('profile.edit');
-    Route::put('/profile', [\App\Http\Controllers\Employer\ProfileController::class, 'update'])->name('profile.update');
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
 });
 
 // Admin Routes
@@ -98,11 +98,11 @@ Route::middleware(['auth', 'verified', 'role:admin'])->prefix('admin')->name('ad
     Route::get('/verifications/{verification}/document', [AdminVerificationController::class, 'downloadDocument'])->name('verifications.document');
     Route::get('/audit-logs', [AdminAuditLogController::class, 'index'])->name('audit-logs.index');
     Route::get('/audit-logs/{auditLog}', [AdminAuditLogController::class, 'show'])->name('audit-logs.show');
+    Route::get('/subscription-plans', [App\Http\Controllers\Admin\SubscriptionPlanController::class, 'index'])->name('subscription-plans.index');
 });
 
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('/settings', [App\Http\Controllers\AccountController::class, 'edit'])->name('settings.edit');
-    Route::put('/settings', [App\Http\Controllers\AccountController::class, 'update'])->name('settings.update');
+    Route::get('/settings', [AccountController::class, 'edit'])->name('settings.edit');
 });
 
 Route::middleware(['auth', 'verified'])->group(function () {

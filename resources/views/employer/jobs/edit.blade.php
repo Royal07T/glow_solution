@@ -16,8 +16,8 @@
         @include('employer.jobs.partials.form', ['job' => $job, 'categories' => $categories])
 
         <div class="mt-6 flex flex-wrap gap-3">
-            <button type="submit" class="rounded-lg bg-[#062B52] px-5 py-2.5 text-sm font-semibold text-white hover:bg-[#07335c]">Save changes</button>
-            <a href="{{ route('employer.jobs.index') }}" class="rounded-lg border border-stone-300 px-5 py-2.5 text-sm font-semibold text-slate-700 hover:bg-stone-50">Cancel</a>
+            <button type="submit" class="rounded-lg bg-brand-700 px-5 py-2.5 text-sm font-semibold text-white hover:bg-brand-600">Save changes</button>
+            <a href="{{ route('employer.jobs.index') }}" class="rounded-lg border border-slate-300 px-5 py-2.5 text-sm font-semibold text-slate-700 hover:bg-slate-50">Cancel</a>
         </div>
     </form>
 @endsection

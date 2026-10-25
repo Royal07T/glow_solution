@@ -2,64 +2,35 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\UserRole;
 use App\Models\SubscriptionPlan;
-use Illuminate\Http\Request;
 
 class SubscriptionPlanController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
-    }
+        $user = auth()->user();
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
+        if (! $user) {
+            return redirect()->route('login');
+        }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
+        $role = $user->role instanceof UserRole ? $user->role->value : (string) $user->role;
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(SubscriptionPlan $subscriptionPlan)
-    {
-        //
-    }
+        $plans = SubscriptionPlan::query()
+            ->where('is_active', true)
+            ->when(in_array($role, ['job_seeker', 'employer'], true), function ($query) use ($role) {
+                $query->where('target_role', $role);
+            })
+            ->orderBy('sort_order')
+            ->orderBy('price')
+            ->get();
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(SubscriptionPlan $subscriptionPlan)
-    {
-        //
-    }
+        $subscription = $user->activeSubscription()->with('plan')->first()
+            ?? $user->subscriptions()->with('plan')->latest()->first();
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, SubscriptionPlan $subscriptionPlan)
-    {
-        //
-    }
+        $payments = $user->payments()->latest()->take(10)->get();
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(SubscriptionPlan $subscriptionPlan)
-    {
-        //
+        return view('billing.index', compact('plans', 'subscription', 'payments'));
     }
 }

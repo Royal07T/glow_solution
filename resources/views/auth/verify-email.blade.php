@@ -2,8 +2,8 @@
 
 @section('content')
     <div class="mx-auto max-w-lg px-4 py-16 sm:px-6">
-        <div class="rounded-2xl border border-stone-200 bg-white p-8 text-center shadow-sm">
-            <div class="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-[#F5F3FF] text-[#062B52]">
+        <div class="rounded-2xl border border-slate-200 bg-white p-8 text-center shadow-sm">
+            <div class="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-brand-50 text-brand-700">
                 <x-icon name="shield" class="h-6 w-6" />
             </div>
             <h1 class="mt-4 font-display text-2xl font-bold text-slate-900">Verify your email address</h1>
@@ -20,7 +20,7 @@
 
             <form method="POST" action="{{ route('verification.send') }}" class="mt-6">
                 @csrf
-                <button type="submit" class="w-full rounded-lg bg-[#062B52] px-4 py-2.5 text-sm font-semibold text-white hover:bg-[#07335c]">
+                <button type="submit" class="w-full rounded-lg bg-brand-700 px-4 py-2.5 text-sm font-semibold text-white hover:bg-brand-600">
                     Resend verification email
                 </button>
             </form>

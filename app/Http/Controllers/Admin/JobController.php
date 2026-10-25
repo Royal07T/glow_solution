@@ -3,21 +3,32 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\AuditLog;
 use App\Models\Job;
 use Illuminate\Http\Request;
 
 class JobController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $jobs = Job::with(['employerProfile.user', 'category'])->latest()->paginate(15);
+        $jobs = Job::with(['employerProfile.user', 'category'])
+            ->when($request->filled('status'), fn ($query) => $query->where('status', $request->string('status')))
+            ->when($request->filled('search'), function ($query) use ($request) {
+                $query->where('title', 'like', '%'.$request->string('search').'%');
+            })
+            ->latest()
+            ->paginate(15)
+            ->withQueryString();
+
         $pendingCount = Job::where('status', 'pending')->count();
+
         return view('admin.jobs.index', compact('jobs', 'pendingCount'));
     }
 
     public function show(Job $job)
     {
         $job->load(['employerProfile.user', 'category', 'applications']);
+
         return view('admin.jobs.show', compact('job'));
     }
 
@@ -32,7 +43,7 @@ class JobController extends Controller
         ]);
 
         try {
-            \App\Models\AuditLog::record('job.approved', $job);
+            AuditLog::record('job.approved', $job);
         } catch (\Throwable $e) {
         }
 
@@ -53,7 +64,7 @@ class JobController extends Controller
         ]);
 
         try {
-            \App\Models\AuditLog::record('job.rejected', $job);
+            AuditLog::record('job.rejected', $job);
         } catch (\Throwable $e) {
         }
 

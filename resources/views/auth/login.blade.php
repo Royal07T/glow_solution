@@ -14,7 +14,7 @@
 </head>
 <body class="font-sans antialiased bg-gray-50">
     <div class="min-h-screen flex">
-        <div class="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-[#041e3a] via-[#062B52] to-[#0a3d6b] items-center justify-center p-12">
+        <div class="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-brand-900 via-brand-700 to-brand-600 items-center justify-center p-12">
             <div class="text-center max-w-md">
                 <img src="{{ asset('logo.png') }}" alt="Glow Recruitment Agency Solution" class="mx-auto mb-8 h-36 w-auto brightness-0 invert drop-shadow-lg">
                 <h1 class="font-display text-3xl xl:text-4xl font-bold text-white mb-4">Glow Recruitment Agency Solution</h1>
@@ -39,7 +39,7 @@
                         @csrf
                         <div>
                             <label for="email" class="block text-sm font-medium text-slate-700 mb-1">Email</label>
-                            <input id="email" type="email" name="email" value="{{ old('email') }}" required autofocus autocomplete="username" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#062B52]/30 focus:border-[#062B52]">
+                            <input id="email" type="email" name="email" value="{{ old('email') }}" required autofocus autocomplete="username" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-700/30 focus:border-brand-700">
                             @error('email')
                                 <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                             @enderror
@@ -47,7 +47,7 @@
                         <div x-data="{ show: false }">
                             <label for="password" class="block text-sm font-medium text-slate-700 mb-1">Password</label>
                             <div class="relative">
-                                <input id="password" :type="show ? 'text' : 'password'" name="password" required autocomplete="current-password" class="w-full px-3 py-2 pr-10 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#062B52]/30 focus:border-[#062B52]">
+                                <input id="password" :type="show ? 'text' : 'password'" name="password" required autocomplete="current-password" class="w-full px-3 py-2 pr-10 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-700/30 focus:border-brand-700">
                                 <button type="button" @click="show = !show" class="absolute inset-y-0 right-0 pr-3 flex items-center">
                                     <svg x-show="!show" class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
@@ -64,16 +64,16 @@
                         </div>
                         <div class="flex items-center justify-between">
                             <label class="flex items-center">
-                                <input type="checkbox" name="remember" class="rounded border-gray-300 text-[#062B52] focus:ring-[#062B52]">
+                                <input type="checkbox" name="remember" class="rounded border-gray-300 text-brand-700 focus:ring-brand-700">
                                 <span class="ml-2 text-sm text-slate-600">Remember me</span>
                             </label>
                             @if (Route::has('password.request'))
-                                <a href="{{ route('password.request') }}" class="text-sm text-[#062B52] hover:text-[#07335c] font-medium">Forgot password?</a>
+                                <a href="{{ route('password.request') }}" class="text-sm text-brand-700 hover:text-brand-600 font-medium">Forgot password?</a>
                             @endif
                         </div>
-                        <button type="submit" class="w-full py-2.5 px-4  bg-[#062B52] hover:bg-[#07335c] text-white font-semibold rounded-lg transition-colors">Sign In</button>
+                        <button type="submit" class="w-full py-2.5 px-4  bg-brand-700 hover:bg-brand-600 text-white font-semibold rounded-lg transition-colors">Sign In</button>
                         <p class="text-center text-sm text-slate-600">
-                            Don't have an account? <a href="{{ route('register') }}" class="text-[#062B52] hover:text-[#07335c] font-medium">Sign up</a>
+                            Don't have an account? <a href="{{ route('register') }}" class="text-brand-700 hover:text-brand-600 font-medium">Sign up</a>
                         </p>
                     </form>
                 </div>

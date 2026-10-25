@@ -6,7 +6,7 @@
 @section('content')
     <div class="grid gap-6 lg:grid-cols-3">
         <div class="space-y-6 lg:col-span-2">
-            <section class="rounded-xl border border-stone-200 bg-white p-6">
+            <section class="rounded-xl border border-slate-200 bg-white p-6">
                 <div class="flex flex-wrap items-start justify-between gap-3">
                     <div>
                         <h2 class="font-display text-xl font-semibold text-slate-900">{{ $verification->employerProfile->company_name ?? $verification->employerProfile->contact_person }}</h2>
@@ -37,14 +37,14 @@
                 </dl>
 
                 @if($verification->notes)
-                    <div class="mt-5 rounded-lg bg-stone-50 p-4">
+                    <div class="mt-5 rounded-lg bg-slate-50 p-4">
                         <p class="text-xs font-semibold uppercase tracking-wide text-slate-500">Employer notes</p>
                         <p class="mt-1 text-sm text-slate-700">{{ $verification->notes }}</p>
                     </div>
                 @endif
 
                 <div class="mt-5">
-                    <a href="{{ route('admin.verifications.document', $verification) }}" class="inline-flex rounded-lg border border-stone-300 px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-stone-50">
+                    <a href="{{ route('admin.verifications.document', $verification) }}" class="inline-flex rounded-lg border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50">
                         Download private document
                     </a>
                 </div>
@@ -53,7 +53,7 @@
 
         <aside class="space-y-4">
             @if($verification->status === 'pending')
-                <section class="rounded-xl border border-stone-200 bg-white p-5">
+                <section class="rounded-xl border border-slate-200 bg-white p-5">
                     <h3 class="font-display text-base font-semibold text-slate-900">Decision</h3>
                     <form method="POST" action="{{ route('admin.verifications.approve', $verification) }}" class="mt-3">
                         @csrf
@@ -62,30 +62,30 @@
                     <form method="POST" action="{{ route('admin.verifications.reject', $verification) }}" class="mt-4 space-y-2">
                         @csrf
                         <label for="admin_notes" class="block text-sm font-medium text-slate-700">Rejection reason</label>
-                        <textarea id="admin_notes" name="admin_notes" rows="3" required maxlength="1000" class="w-full rounded-lg border border-stone-300 px-3 py-2 text-sm"></textarea>
+                        <textarea id="admin_notes" name="admin_notes" rows="3" required maxlength="1000" class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"></textarea>
                         <button type="submit" data-confirm="Reject this verification?" class="w-full rounded-lg bg-danger px-4 py-2 text-sm font-semibold text-white hover:bg-red-700">Reject</button>
                     </form>
                 </section>
             @else
-                <section class="rounded-xl border border-stone-200 bg-white p-5">
+                <section class="rounded-xl border border-slate-200 bg-white p-5">
                     <h3 class="font-display text-base font-semibold text-slate-900">Reviewed</h3>
                     <p class="mt-2 text-sm text-slate-600">
                         {{ $verification->reviewer->name ?? 'Administrator' }} · {{ $verification->reviewed_at?->format('M j, Y') }}
                     </p>
                     @if($verification->admin_notes)
-                        <p class="mt-2 rounded-lg bg-stone-50 p-3 text-sm text-slate-700">{{ $verification->admin_notes }}</p>
+                        <p class="mt-2 rounded-lg bg-slate-50 p-3 text-sm text-slate-700">{{ $verification->admin_notes }}</p>
                     @endif
                 </section>
             @endif
 
-            <section class="rounded-xl border border-stone-200 bg-white p-5">
+            <section class="rounded-xl border border-slate-200 bg-white p-5">
                 <h3 class="font-display text-base font-semibold text-slate-900">Employer account</h3>
-                <a href="{{ route('admin.users.show', $verification->employerProfile->user) }}" class="mt-2 block text-sm font-semibold text-[#062B52] hover:underline">
+                <a href="{{ route('admin.users.show', $verification->employerProfile->user) }}" class="mt-2 block text-sm font-semibold text-brand-700 hover:underline">
                     View user profile
                 </a>
             </section>
 
-            <a href="{{ route('admin.verifications.index') }}" class="inline-flex w-full items-center justify-center rounded-lg bg-stone-100 px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-stone-200">Back to queue</a>
+            <a href="{{ route('admin.verifications.index') }}" class="inline-flex w-full items-center justify-center rounded-lg bg-slate-100 px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-200">Back to queue</a>
         </aside>
     </div>
 @endsection

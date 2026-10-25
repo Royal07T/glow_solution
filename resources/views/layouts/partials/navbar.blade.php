@@ -1,4 +1,4 @@
-<nav class="bg-white border-b border-stone-200 sticky top-0 z-40" x-data="{ mobileMenuOpen: false }">
+<nav class="bg-white border-b border-slate-200 sticky top-0 z-40" x-data="{ mobileMenuOpen: false }">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16">
             <div class="flex items-center">
@@ -10,32 +10,32 @@
 
             <!-- Desktop Navigation -->
             <div class="hidden md:flex items-center space-x-6">
-                <a href="{{ route('jobs.index') }}" class="text-slate-700 hover:text-[#062B52] font-medium transition-colors">Find Jobs</a>
-                <a href="{{ route('home') }}#for-employers" class="text-slate-700 hover:text-[#062B52] font-medium transition-colors">For Employers</a>
-                <a href="{{ route('home') }}#pricing" class="text-slate-700 hover:text-[#062B52] font-medium transition-colors">Pricing</a>
-                <a href="{{ route('home') }}#contact" class="text-slate-700 hover:text-[#062B52] font-medium transition-colors">Contact</a>
+                <a href="{{ route('jobs.index') }}" class="text-slate-700 hover:text-brand-700 font-medium transition-colors">Find Jobs</a>
+                <a href="{{ route('home') }}#for-employers" class="text-slate-700 hover:text-brand-700 font-medium transition-colors">For Employers</a>
+                <a href="{{ route('home') }}#pricing" class="text-slate-700 hover:text-brand-700 font-medium transition-colors">Pricing</a>
+                <a href="{{ route('home') }}#contact" class="text-slate-700 hover:text-brand-700 font-medium transition-colors">Contact</a>
                 
                 @auth
                     @if(auth()->user()->isJobSeeker())
-                        <a href="{{ route('jobseeker.dashboard') }}" class="text-slate-700 hover:text-[#062B52] font-medium transition-colors">Dashboard</a>
+                        <a href="{{ route('jobseeker.dashboard') }}" class="text-slate-700 hover:text-brand-700 font-medium transition-colors">Dashboard</a>
                     @elseif(auth()->user()->isEmployer())
-                        <a href="{{ route('employer.dashboard') }}" class="text-slate-700 hover:text-[#062B52] font-medium transition-colors">Dashboard</a>
+                        <a href="{{ route('employer.dashboard') }}" class="text-slate-700 hover:text-brand-700 font-medium transition-colors">Dashboard</a>
                     @elseif(auth()->user()->isAdmin())
-                        <a href="{{ route('admin.dashboard') }}" class="text-slate-700 hover:text-[#062B52] font-medium transition-colors">Admin</a>
+                        <a href="{{ route('admin.dashboard') }}" class="text-slate-700 hover:text-brand-700 font-medium transition-colors">Admin</a>
                     @endif
                     <form method="POST" action="{{ route('logout') }}" class="inline">
                         @csrf
-                        <button type="submit" class="text-slate-700 hover:text-[#062B52] font-medium transition-colors">Logout</button>
+                        <button type="submit" class="text-slate-700 hover:text-brand-700 font-medium transition-colors">Logout</button>
                     </form>
                 @else
-                    <a href="{{ route('login') }}" class="text-slate-700 hover:text-[#062B52] font-medium transition-colors">Login</a>
-                    <a href="{{ route('register') }}" class="inline-flex items-center justify-center px-6 py-2.5 bg-[#062B52] hover:bg-[#07335c] text-white font-semibold rounded-lg transition-colors min-h-[44px]">Get Started</a>
+                    <a href="{{ route('login') }}" class="text-slate-700 hover:text-brand-700 font-medium transition-colors">Login</a>
+                    <a href="{{ route('register') }}" class="inline-flex items-center justify-center px-6 py-2.5 bg-brand-700 hover:bg-brand-600 text-white font-semibold rounded-lg transition-colors min-h-[44px]">Get Started</a>
                 @endauth
             </div>
 
             <!-- Mobile menu button -->
             <div class="md:hidden flex items-center">
-                <button @click="mobileMenuOpen = !mobileMenuOpen" type="button" class="text-slate-700 hover:text-[#062B52] p-2" aria-label="Toggle menu">
+                <button @click="mobileMenuOpen = !mobileMenuOpen" type="button" class="text-slate-700 hover:text-brand-700 p-2" aria-label="Toggle menu">
                     <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path x-show="!mobileMenuOpen" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
                         <path x-show="mobileMenuOpen" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
@@ -46,28 +46,28 @@
     </div>
 
     <!-- Mobile menu -->
-    <div x-show="mobileMenuOpen" @click.away="mobileMenuOpen = false" class="md:hidden border-t border-stone-200 bg-white">
+    <div x-show="mobileMenuOpen" @click.away="mobileMenuOpen = false" class="md:hidden border-t border-slate-200 bg-white">
         <div class="px-4 pt-2 pb-3 space-y-1">
-            <a href="{{ route('jobs.index') }}" class="block px-3 py-2 text-slate-700 hover:text-[#062B52] hover:bg-[#F5F3FF] rounded-lg font-medium">Find Jobs</a>
-            <a href="{{ route('home') }}#for-employers" class="block px-3 py-2 text-slate-700 hover:text-[#062B52] hover:bg-[#F5F3FF] rounded-lg font-medium">For Employers</a>
-            <a href="{{ route('home') }}#pricing" class="block px-3 py-2 text-slate-700 hover:text-[#062B52] hover:bg-[#F5F3FF] rounded-lg font-medium">Pricing</a>
-            <a href="{{ route('home') }}#contact" class="block px-3 py-2 text-slate-700 hover:text-[#062B52] hover:bg-[#F5F3FF] rounded-lg font-medium">Contact</a>
+            <a href="{{ route('jobs.index') }}" class="block px-3 py-2 text-slate-700 hover:text-brand-700 hover:bg-brand-50 rounded-lg font-medium">Find Jobs</a>
+            <a href="{{ route('home') }}#for-employers" class="block px-3 py-2 text-slate-700 hover:text-brand-700 hover:bg-brand-50 rounded-lg font-medium">For Employers</a>
+            <a href="{{ route('home') }}#pricing" class="block px-3 py-2 text-slate-700 hover:text-brand-700 hover:bg-brand-50 rounded-lg font-medium">Pricing</a>
+            <a href="{{ route('home') }}#contact" class="block px-3 py-2 text-slate-700 hover:text-brand-700 hover:bg-brand-50 rounded-lg font-medium">Contact</a>
             
             @auth
                 @if(auth()->user()->isJobSeeker())
-                    <a href="{{ route('jobseeker.dashboard') }}" class="block px-3 py-2 text-slate-700 hover:text-[#062B52] hover:bg-[#F5F3FF] rounded-lg font-medium">Dashboard</a>
+                    <a href="{{ route('jobseeker.dashboard') }}" class="block px-3 py-2 text-slate-700 hover:text-brand-700 hover:bg-brand-50 rounded-lg font-medium">Dashboard</a>
                 @elseif(auth()->user()->isEmployer())
-                    <a href="{{ route('employer.dashboard') }}" class="block px-3 py-2 text-slate-700 hover:text-[#062B52] hover:bg-[#F5F3FF] rounded-lg font-medium">Dashboard</a>
+                    <a href="{{ route('employer.dashboard') }}" class="block px-3 py-2 text-slate-700 hover:text-brand-700 hover:bg-brand-50 rounded-lg font-medium">Dashboard</a>
                 @elseif(auth()->user()->isAdmin())
-                    <a href="{{ route('admin.dashboard') }}" class="block px-3 py-2 text-slate-700 hover:text-[#062B52] hover:bg-[#F5F3FF] rounded-lg font-medium">Admin</a>
+                    <a href="{{ route('admin.dashboard') }}" class="block px-3 py-2 text-slate-700 hover:text-brand-700 hover:bg-brand-50 rounded-lg font-medium">Admin</a>
                 @endif
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
-                    <button type="submit" class="w-full text-left px-3 py-2 text-slate-700 hover:text-[#062B52] hover:bg-[#F5F3FF] rounded-lg font-medium">Logout</button>
+                    <button type="submit" class="w-full text-left px-3 py-2 text-slate-700 hover:text-brand-700 hover:bg-brand-50 rounded-lg font-medium">Logout</button>
                 </form>
             @else
-                <a href="{{ route('login') }}" class="block px-3 py-2 text-slate-700 hover:text-[#062B52] hover:bg-[#F5F3FF] rounded-lg font-medium">Login</a>
-                <a href="{{ route('register') }}" class="block px-3 py-2 bg-[#062B52] hover:bg-[#07335c] text-white rounded-lg font-medium text-center mt-2">Get Started</a>
+                <a href="{{ route('login') }}" class="block px-3 py-2 text-slate-700 hover:text-brand-700 hover:bg-brand-50 rounded-lg font-medium">Login</a>
+                <a href="{{ route('register') }}" class="block px-3 py-2 bg-brand-700 hover:bg-brand-600 text-white rounded-lg font-medium text-center mt-2">Get Started</a>
             @endauth
         </div>
     </div>
