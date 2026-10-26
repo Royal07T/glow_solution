@@ -18,7 +18,12 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
-        $middleware->trustProxies(at: '*');
+        $trustedProxies = array_values(array_filter(array_map(
+            'trim',
+            explode(',', (string) env('TRUSTED_PROXIES', ''))
+        )));
+
+        $middleware->trustProxies(at: $trustedProxies);
         $middleware->validateCsrfTokens(except: [
             'payments/paystack/webhook',
         ]);
