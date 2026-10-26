@@ -3,25 +3,30 @@
 namespace App\Http\Controllers;
 
 use App\Enums\UserRole;
-use App\Models\AuditLog;
 use App\Models\Payment;
 use App\Models\SubscriptionPlan;
-use App\Notifications\SystemNotification;
+use App\Services\PaymentReceiptService;
+use App\Services\PaymentService;
 use App\Services\PaystackService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
 class PaystackPaymentController extends Controller
 {
-    public function initialize(Request $request, SubscriptionPlan $plan, PaystackService $paystack)
+    public function initialize(Request $request, SubscriptionPlan $plan, PaystackService $paystack, PaymentService $payments)
     {
         $this->ensurePlanIsAvailable($request->user(), $plan);
 
         if ($plan->is_free || (float) $plan->price <= 0) {
             return back()->with('error', 'Free plans do not require payment.');
+        }
+
+        if ($paidSubscription = $request->user()->activePaidSubscription()) {
+            return back()->with(
+                'error',
+                'Your '.$paidSubscription->plan->name.' plan is active until '.$paidSubscription->ends_at->format('M j, Y').'. Contact support on WhatsApp to change or renew your plan.'
+            );
         }
 
         if (! $paystack->isConfigured()) {
@@ -41,7 +46,7 @@ class PaystackPaymentController extends Controller
         try {
             $data = $paystack->initializeTransaction([
                 'email' => $request->user()->email,
-                'amount' => $this->amountInSubunit($payment),
+                'amount' => $payments->amountInSubunit($payment),
                 'currency' => $payment->currency,
                 'reference' => $payment->reference,
                 'callback_url' => route('payments.paystack.callback'),
@@ -62,12 +67,12 @@ class PaystackPaymentController extends Controller
             return back()->with('error', 'We could not start the Paystack payment. Please try again.');
         }
 
-        $payment->update(['gateway_response' => $data]);
+        $payment->update(['gateway_response' => $payments->sanitizeResponse($data)]);
 
         return redirect()->away($data['authorization_url']);
     }
 
-    public function callback(Request $request, PaystackService $paystack)
+    public function callback(Request $request, PaystackService $paystack, PaymentService $payments)
     {
         $reference = (string) ($request->query('reference') ?: $request->query('trxref'));
 
@@ -93,15 +98,12 @@ class PaystackPaymentController extends Controller
         }
 
         if (($data['status'] ?? null) !== 'success') {
-            $payment->update([
-                'status' => 'failed',
-                'gateway_response' => $data,
-            ]);
+            $payments->markFailed($payment, $data);
 
             return redirect()->route('billing.index')->with('error', 'The Paystack payment was not successful.');
         }
 
-        $this->completePayment($payment, $data);
+        $payments->complete($payment, $data);
         $payment->refresh();
 
         if ($payment->status === 'success') {
@@ -111,7 +113,7 @@ class PaystackPaymentController extends Controller
         return redirect()->route('billing.index')->with('error', 'We could not activate your plan. Please contact support.');
     }
 
-    public function webhook(Request $request, PaystackService $paystack): JsonResponse
+    public function webhook(Request $request, PaystackService $paystack, PaymentService $payments): JsonResponse
     {
         if (! $paystack->isConfigured()) {
             return response()->json(['message' => 'Paystack is not configured.'], 503);
@@ -139,105 +141,22 @@ class PaystackPaymentController extends Controller
         }
 
         if ($payment->status !== 'success') {
-            $this->completePayment($payment, $data);
+            $payments->complete($payment, $data);
         }
 
         return response()->json(['status' => 'success']);
     }
 
-    private function completePayment(Payment $payment, array $data): bool
+    public function receipt(Request $request, Payment $payment, PaymentReceiptService $receipts)
     {
-        $completed = DB::transaction(function () use ($payment, $data): bool {
-            $locked = Payment::query()
-                ->with(['user', 'plan', 'subscription'])
-                ->lockForUpdate()
-                ->find($payment->id);
+        abort_unless($payment->user_id === $request->user()->id || $request->user()->isAdmin(), 403);
+        abort_unless($payment->status === 'success', 404);
 
-            if (! $locked || $locked->status === 'success') {
-                return false;
-            }
-
-            if (! $this->matchesPayment($locked, $data)) {
-                Log::warning('Paystack payment amount or currency mismatch.', [
-                    'payment_id' => $locked->id,
-                    'reference' => $locked->reference,
-                ]);
-
-                $locked->update([
-                    'status' => 'failed',
-                    'gateway_response' => $data,
-                ]);
-
-                return false;
-            }
-
-            $plan = $locked->plan;
-
-            if (! $plan) {
-                $locked->update([
-                    'status' => 'failed',
-                    'gateway_response' => $data,
-                ]);
-
-                return false;
-            }
-
-            $subscription = $locked->subscription
-                ?? $locked->user->subscriptions()->latest()->first();
-
-            $attributes = [
-                'subscription_plan_id' => $plan->id,
-                'status' => 'active',
-                'starts_at' => now(),
-                'ends_at' => $plan->endsAt(),
-                'cancelled_at' => null,
-            ];
-
-            if ($subscription) {
-                $subscription->update($attributes);
-            } else {
-                $subscription = $locked->user->subscriptions()->create($attributes);
-            }
-
-            $locked->update([
-                'subscription_id' => $subscription->id,
-                'status' => 'success',
-                'paid_at' => now(),
-                'gateway_response' => $data,
-            ]);
-
-            try {
-                AuditLog::record('payment.success', $locked);
-                AuditLog::record('subscription.activated', $subscription);
-            } catch (\Throwable $e) {
-            }
-
-            return true;
-        });
-
-        if ($completed) {
-            $payment->refresh()->loadMissing(['user', 'plan']);
-
-            $payment->user?->notify(new SystemNotification(
-                'Payment successful',
-                'Your '.($payment->plan?->name ?? 'subscription').' plan is now active.',
-                route('billing.index', absolute: false),
-                'success',
-            ));
-        }
-
-        return $completed;
-    }
-
-    private function matchesPayment(Payment $payment, array $data): bool
-    {
-        return (int) ($data['amount'] ?? -1) === $this->amountInSubunit($payment)
-            && strtoupper((string) ($data['currency'] ?? '')) === strtoupper($payment->currency);
-    }
-
-    private function amountInSubunit(Payment $payment): int
-    {
-        return (int) round((float) $payment->amount * 100);
+        return response($receipts->pdf($payment), 200, [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => 'attachment; filename="'.$receipts->filename($payment).'"',
+            'Cache-Control' => 'private, no-store, max-age=0',
+        ]);
     }
 
     private function ensurePlanIsAvailable($user, SubscriptionPlan $plan): void

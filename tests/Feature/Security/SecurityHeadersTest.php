@@ -28,6 +28,25 @@ class SecurityHeadersTest extends TestCase
         $this->assertStringContainsString("object-src 'none'", $csp);
         $this->assertStringContainsString("frame-src 'self' https://www.google.com https://maps.google.com", $csp);
         $this->assertStringContainsString("frame-ancestors 'self'", $csp);
+        $this->assertStringContainsString("base-uri 'self'", $csp);
+        $this->assertStringContainsString("form-action 'self'", $csp);
+        $this->assertStringNotContainsString("'unsafe-inline'", $csp);
+        $this->assertStringNotContainsString("'unsafe-eval'", $csp);
+        $this->assertStringNotContainsString('cdn.jsdelivr.net', $csp);
+    }
+
+    public function test_public_pages_do_not_rely_on_inline_scripts_or_styles(): void
+    {
+        foreach ([route('home'), route('login'), route('register')] as $url) {
+            $response = $this->get($url)->assertOk();
+            $html = $response->getContent();
+
+            $this->assertStringNotContainsString('x-data', $html);
+            $this->assertStringNotContainsString('style=', $html);
+            $this->assertStringNotContainsString('onerror=', $html);
+            $this->assertStringNotContainsString('cdn.jsdelivr.net', $html);
+            $this->assertDoesNotMatchRegularExpression('/<script(?![^>]*\bsrc=)[^>]*>/i', $html);
+        }
     }
 
     public function test_authenticated_pages_are_not_cacheable(): void
@@ -38,6 +57,20 @@ class SecurityHeadersTest extends TestCase
 
         $this->assertStringContainsString('no-store', $cacheControl);
         $this->assertStringContainsString('private', $cacheControl);
+    }
+
+    public function test_untrusted_forwarded_headers_are_ignored(): void
+    {
+        $response = $this
+            ->withServerVariables(['REMOTE_ADDR' => '203.0.113.10'])
+            ->withHeaders([
+                'X-Forwarded-Proto' => 'https',
+                'X-Forwarded-Host' => 'evil.test',
+            ])
+            ->get('/');
+
+        $response->assertOk()
+            ->assertDontSee('https://evil.test', false);
     }
 
     public function test_forwarded_https_requests_generate_secure_urls(): void

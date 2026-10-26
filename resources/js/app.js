@@ -1,3 +1,5 @@
+document.documentElement.classList.add('has-js');
+
 const ready = (callback) => {
     if (document.readyState !== 'loading') {
         callback();
@@ -95,6 +97,34 @@ ready(() => {
         window.addEventListener('scroll', updateNav, { passive: true });
     }
 
+    const mobileMenuToggle = document.querySelector('[data-mobile-menu-toggle]');
+    const mobileMenu = document.querySelector('[data-mobile-menu]');
+    const menuOpenIcon = mobileMenuToggle?.querySelector('[data-menu-open]');
+    const menuCloseIcon = mobileMenuToggle?.querySelector('[data-menu-close]');
+
+    const setMobileMenu = (open) => {
+        mobileMenu?.classList.toggle('hidden', !open);
+        menuOpenIcon?.classList.toggle('hidden', open);
+        menuCloseIcon?.classList.toggle('hidden', !open);
+        mobileMenuToggle?.setAttribute('aria-expanded', String(open));
+    };
+
+    if (mobileMenuToggle && mobileMenu) {
+        mobileMenuToggle.addEventListener('click', () => {
+            setMobileMenu(mobileMenu.classList.contains('hidden'));
+        });
+
+        mobileMenu.querySelectorAll('a').forEach((link) => {
+            link.addEventListener('click', () => setMobileMenu(false));
+        });
+
+        document.addEventListener('click', (event) => {
+            if (!mobileMenu.classList.contains('hidden') && !siteNav?.contains(event.target)) {
+                setMobileMenu(false);
+            }
+        });
+    }
+
     const revealTargets = [];
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -106,6 +136,26 @@ ready(() => {
     });
 
     document.querySelectorAll('[data-reveal]').forEach((element) => revealTargets.push(element));
+
+    document.querySelectorAll('[data-progress]').forEach((bar) => {
+        const value = Math.max(0, Math.min(100, Number.parseFloat(bar.dataset.progress) || 0));
+        bar.style.width = `${value}%`;
+    });
+
+    document.querySelectorAll('[data-overlay-opacity]').forEach((overlay) => {
+        const value = Math.max(0, Math.min(100, Number.parseFloat(overlay.dataset.overlayOpacity) || 0));
+        overlay.style.opacity = String(value / 100);
+    });
+
+    document.querySelectorAll('img[data-hide-on-error]').forEach((image) => {
+        const hide = () => image.classList.add('hidden');
+
+        if (image.complete && image.naturalWidth === 0) {
+            hide();
+        } else {
+            image.addEventListener('error', hide, { once: true });
+        }
+    });
 
     if (revealTargets.length) {
         if (prefersReducedMotion || ! ('IntersectionObserver' in window)) {

@@ -9,20 +9,26 @@ use Symfony\Component\HttpFoundation\Response;
 
 class RateLimitSensitiveActions
 {
-    public function handle(Request $request, Closure $next, string $key = 'default'): Response
+    public function handle(Request $request, Closure $next, string $key = 'default', int $maxAttempts = 5, int $decaySeconds = 60): Response
     {
-        $key = $key . '|' . $request->ip();
-        
+        $rateKey = $key.'|'.$request->ip();
+
         if ($request->user()) {
-            $key .= '|' . $request->user()->id;
+            $rateKey .= '|'.$request->user()->id;
         }
 
-        if (RateLimiter::tooManyAttempts($key, 5)) {
-            $seconds = RateLimiter::availableIn($key);
-            return response()->json(['message' => 'Too many attempts. Try again in ' . $seconds . ' seconds.'], 429);
+        if (RateLimiter::tooManyAttempts($rateKey, $maxAttempts)) {
+            $seconds = RateLimiter::availableIn($rateKey);
+            $message = 'Too many attempts. Try again in '.$seconds.' seconds.';
+
+            if ($request->expectsJson()) {
+                return response()->json(['message' => $message], 429, ['Retry-After' => $seconds]);
+            }
+
+            return back()->with('error', $message);
         }
 
-        RateLimiter::hit($key, 60);
+        RateLimiter::hit($rateKey, $decaySeconds);
 
         return $next($request);
     }

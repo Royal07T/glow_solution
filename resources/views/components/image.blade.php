@@ -23,9 +23,9 @@
         @if($srcset) srcset="{{ $srcset }}" @endif
         @if($sizes) sizes="{{ $sizes }}" @endif
         class="{{ $class }} w-full h-full object-cover"
-        @error($src) onerror="this.style.display='none'" @enderror
+        @error($src) data-hide-on-error @enderror
     />
     @if($overlay)
-        <div class="absolute inset-0 bg-brand-900" style="opacity: {{ $overlayOpacity }}%"></div>
+        <div class="absolute inset-0 bg-brand-900" data-overlay-opacity="{{ $overlayOpacity }}"></div>
     @endif
 </div>

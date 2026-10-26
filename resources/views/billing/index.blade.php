@@ -4,6 +4,10 @@
 @section('subtitle', 'Your plan, entitlements and payment history.')
 
 @section('content')
+    @php
+        $activePaid = $subscription?->isActive() && $subscription->plan && ! $subscription->plan->is_free;
+    @endphp
+
     <div class="grid gap-6 lg:grid-cols-3">
         <div class="space-y-6 lg:col-span-2">
             <section class="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
@@ -81,6 +85,9 @@
                             @if($plan->is_free)
                                 @if($isCurrent)
                                     <span class="mt-4 inline-flex w-full items-center justify-center rounded-lg bg-green-100 px-4 py-2 text-sm font-semibold text-green-700">Your current plan</span>
+                                @elseif($activePaid)
+                                    <button type="button" disabled class="mt-4 w-full cursor-not-allowed rounded-lg bg-slate-100 px-4 py-2 text-sm font-semibold text-slate-500">Paid plan active</button>
+                                    <p class="mt-2 text-xs text-slate-500">You can switch to this free plan after {{ $subscription->ends_at?->format('M j, Y') }}.</p>
                                 @else
                                     <form method="POST" action="{{ route('subscriptions.activate', $plan) }}" class="mt-4">
                                         @csrf
@@ -88,7 +95,12 @@
                                     </form>
                                 @endif
                             @else
-                                @if(config('services.paystack.secret_key'))
+                                @if($isCurrent)
+                                    <span class="mt-4 inline-flex w-full items-center justify-center rounded-lg bg-green-100 px-4 py-2 text-sm font-semibold text-green-700">Your current plan</span>
+                                @elseif($activePaid)
+                                    <button type="button" disabled class="mt-4 w-full cursor-not-allowed rounded-lg bg-slate-100 px-4 py-2 text-sm font-semibold text-slate-500">Paid plan active</button>
+                                    <p class="mt-2 text-xs text-slate-500">Contact support on WhatsApp to change or renew before {{ $subscription->ends_at?->format('M j, Y') }}.</p>
+                                @elseif(config('services.paystack.secret_key'))
                                     <form method="POST" action="{{ route('payments.paystack.initialize', $plan) }}" class="mt-4">
                                         @csrf
                                         <button type="submit" class="w-full rounded-lg bg-brand-700 px-4 py-2 text-sm font-semibold text-white hover:bg-brand-800">
@@ -120,7 +132,15 @@
                             <span class="text-sm font-semibold text-slate-800">{{ $payment->currency }} {{ number_format((float) $payment->amount) }}</span>
                             <x-badge :variant="$payment->status === 'success' ? 'success' : ($payment->status === 'failed' ? 'danger' : 'warning')">{{ ucfirst($payment->status) }}</x-badge>
                         </div>
-                        <p class="mt-1 text-xs text-slate-500">{{ $payment->paid_at?->format('M j, Y') ?? $payment->created_at->format('M j, Y') }}{{ $payment->reference ? ' · '.$payment->reference : '' }}</p>
+                        <div class="mt-1 flex items-center justify-between gap-2">
+                            <p class="text-xs text-slate-500">{{ $payment->paid_at?->format('M j, Y') ?? $payment->created_at->format('M j, Y') }}{{ $payment->reference ? ' · '.$payment->reference : '' }}</p>
+                            @if($payment->status === 'success')
+                                <a href="{{ route('payments.receipt', $payment) }}" class="inline-flex shrink-0 items-center gap-1 text-xs font-semibold text-brand-700 hover:text-brand-900">
+                                    <x-icon name="download" class="h-3.5 w-3.5" />
+                                    Receipt
+                                </a>
+                            @endif
+                        </div>
                     </div>
                 @empty
                     <p class="px-5 py-6 text-sm text-slate-600">No payments recorded.</p>
@@ -129,8 +149,11 @@
 
             <section class="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
                 <h3 class="font-display text-base font-semibold text-brand-900">Billing help</h3>
-                <p class="mt-2 text-sm text-slate-600">For invoices, upgrades or refunds contact the Glow Recruitment team. Plan changes are applied by our staff.</p>
-                <a href="{{ route('settings.edit') }}" class="mt-3 inline-flex rounded-lg border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50">Account settings</a>
+                <p class="mt-2 text-sm text-slate-600">For invoices, upgrades, refunds, or payment questions, message us on WhatsApp. Include your payment reference if you have one.</p>
+                <div class="mt-3 flex flex-wrap gap-2">
+                    <x-whatsapp-link :message="'Hi Glow Recruitment, I need help with my subscription or payment.'">Chat on WhatsApp</x-whatsapp-link>
+                    <a href="{{ route('settings.edit') }}" class="inline-flex items-center rounded-lg border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50">Account settings</a>
+                </div>
             </section>
         </aside>
     </div>

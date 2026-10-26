@@ -3,9 +3,7 @@
 @section('content')
 <!-- Hero Section -->
 <section class="relative bg-gradient-to-br from-brand-900 via-brand-700 to-brand-600 overflow-hidden">
-    <div class="absolute inset-0 opacity-10">
-        <div class="absolute inset-0" style="background-image: url('data:image/svg+xml,%3Csvg width=\"60\" height=\"60\" viewBox=\"0 0 60 60\" xmlns=\"http://www.w3.org/2000/svg\"%3E%3Cg fill=\"none\" fill-rule=\"evenodd\"%3E%3Cg fill=\"%23ffffff\" fill-opacity=\"0.4\"%3E%3Ccircle cx=\"30\" cy=\"30\" r=\"4\"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E');"></div>
-    </div>
+    <div class="hero-pattern absolute inset-0 opacity-10"></div>
     
     <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20 lg:py-28">
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
@@ -29,7 +27,7 @@
                 </div>
             </div>
             
-            <div class="relative" data-reveal style="--reveal-delay: 140ms">
+            <div class="reveal-delay-140 relative" data-reveal>
                 <div class="relative rounded-2xl overflow-hidden shadow-2xl">
                     <img src="{{ asset('images/hero-recruitment.jpg') }}" alt="Professional recruiters and job seekers in a meeting" class="w-full h-[400px] sm:h-[500px] object-cover" loading="eager" fetchpriority="high">
                     <div class="absolute inset-0 bg-gradient-to-t from-brand-900/60 to-transparent"></div>
@@ -474,42 +472,42 @@
             <h2 class="font-display text-3xl sm:text-4xl font-bold text-slate-900 mb-4">Frequently Asked Questions</h2>
             <p class="text-lg text-slate-600">Common questions about our services</p>
         </div>
-        <div class="space-y-4" x-data="{ open: null }" data-reveal-group>
-            <div class="border border-slate-200 rounded-lg transition-colors hover:border-brand-200">
-                <button @click="open = open === 1 ? null : 1" class="w-full px-6 py-4 text-left flex justify-between items-center hover:bg-slate-50 transition-colors min-h-[44px]">
+        <div class="space-y-4" data-reveal-group>
+            <details class="group rounded-lg border border-slate-200 transition-colors hover:border-brand-200">
+                <summary class="flex min-h-[44px] w-full cursor-pointer list-none items-center justify-between px-6 py-4 text-left transition-colors hover:bg-slate-50 [&::-webkit-details-marker]:hidden">
                     <span class="font-semibold text-slate-900">How do I register as a job seeker?</span>
-                    <svg class="w-5 h-5 text-slate-500 transition-transform" :class="{ 'rotate-180': open === 1 }" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg class="h-5 w-5 text-slate-500 transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                     </svg>
-                </button>
-                <div x-show="open === 1" x-collapse class="px-6 pb-4">
+                </summary>
+                <div class="px-6 pb-4">
                     <p class="text-slate-600">Click "Get Started" and select "Job Seeker" to create your account. Complete your profile to start browsing and applying to jobs.</p>
                 </div>
-            </div>
-            
-            <div class="border border-slate-200 rounded-lg transition-colors hover:border-brand-200">
-                <button @click="open = open === 2 ? null : 2" class="w-full px-6 py-4 text-left flex justify-between items-center hover:bg-slate-50 transition-colors min-h-[44px]">
+            </details>
+
+            <details class="group rounded-lg border border-slate-200 transition-colors hover:border-brand-200">
+                <summary class="flex min-h-[44px] w-full cursor-pointer list-none items-center justify-between px-6 py-4 text-left transition-colors hover:bg-slate-50 [&::-webkit-details-marker]:hidden">
                     <span class="font-semibold text-slate-900">How do employers post jobs?</span>
-                    <svg class="w-5 h-5 text-slate-500 transition-transform" :class="{ 'rotate-180': open === 2 }" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg class="h-5 w-5 text-slate-500 transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                     </svg>
-                </button>
-                <div x-show="open === 2" x-collapse class="px-6 pb-4">
+                </summary>
+                <div class="px-6 pb-4">
                     <p class="text-slate-600">Register as an employer, subscribe to a plan, and you can post job listings. All employers go through verification.</p>
                 </div>
-            </div>
-            
-            <div class="border border-slate-200 rounded-lg transition-colors hover:border-brand-200">
-                <button @click="open = open === 3 ? null : 3" class="w-full px-6 py-4 text-left flex justify-between items-center hover:bg-slate-50 transition-colors min-h-[44px]">
+            </details>
+
+            <details class="group rounded-lg border border-slate-200 transition-colors hover:border-brand-200">
+                <summary class="flex min-h-[44px] w-full cursor-pointer list-none items-center justify-between px-6 py-4 text-left transition-colors hover:bg-slate-50 [&::-webkit-details-marker]:hidden">
                     <span class="font-semibold text-slate-900">Are subscriptions refundable?</span>
-                    <svg class="w-5 h-5 text-slate-500 transition-transform" :class="{ 'rotate-180': open === 3 }" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg class="h-5 w-5 text-slate-500 transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                     </svg>
-                </button>
-                <div x-show="open === 3" x-collapse class="px-6 pb-4">
+                </summary>
+                <div class="px-6 pb-4">
                     <p class="text-slate-600">Please review our terms of service for refund policies. Subscriptions provide access to platform features as described.</p>
                 </div>
-            </div>
+            </details>
         </div>
     </div>
 </section>
@@ -576,8 +574,7 @@
                 <iframe
                     src="{{ $mapSrc }}"
                     title="Map showing the Glow Recruitment Agency office location"
-                    class="h-80 w-full lg:h-full lg:min-h-[22rem]"
-                    style="border:0"
+                    class="h-80 w-full border-0 lg:h-full lg:min-h-[22rem]"
                     loading="lazy"
                     referrerpolicy="no-referrer-when-downgrade"
                     allowfullscreen

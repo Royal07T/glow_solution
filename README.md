@@ -2,7 +2,7 @@
 
 Glow Recruitment is a subscription-based recruitment marketplace for domestic and professional employment in Nigeria. It connects job seekers with verified employers and gives administrators the tools to moderate listings, verify employers, manage users, and oversee applications.
 
-The application is built as a server-rendered Laravel monolith with Blade templates, Tailwind CSS, Alpine.js, and Paystack payments.
+The application is built as a server-rendered Laravel monolith with Blade templates, Tailwind CSS, vanilla JavaScript, and Paystack payments.
 
 ---
 
@@ -41,10 +41,10 @@ The application is built as a server-rendered Laravel monolith with Blade templa
 - Applicant review for employers and administrators, including CV download and application status updates.
 - Private CV storage with policy-based access control.
 - Free and paid subscription plans with configurable entitlements.
-- Paystack redirect checkout, server-side payment verification, signed webhooks, and idempotent subscription activation.
+- Paystack redirect checkout, server-side verification, signed webhooks, idempotent activation, and downloadable PDF receipts.
 - Nigerian state and LGA data for profile and job location selects.
 - In-app database notifications, audit logs, account security settings, two-factor authentication, and passkey support.
-- Security headers, Content Security Policy, role middleware, form requests, policies, and rate limiting on sensitive actions.
+- Security headers, Content Security Policy, role middleware, form requests, policies, rate limiting, and WhatsApp billing support.
 
 ---
 
@@ -143,13 +143,17 @@ Subscription plans target either job seekers or employers and define entitlement
 - Free plans are activated directly.
 - Paid plans use Paystack hosted checkout.
 - The application creates a pending `Payment` before redirecting.
+- Users with an active paid subscription cannot start another paid checkout or switch to a free plan until it expires. Upgrades and renewals are handled through WhatsApp support.
 - Paystack amounts are sent in the currency subunit (kobo for NGN).
 - The callback verifies the transaction server-side before activating the subscription.
 - The webhook verifies the `x-paystack-signature` header using HMAC SHA512 and the configured secret key.
 - Payment completion is idempotent and protected with a database transaction and row lock.
-- Amount and currency are checked before a payment is marked successful.
+- Paystack reference, amount, and currency are checked before a payment is marked successful.
+- Sensitive Paystack fields such as card authorization codes, signatures, and customer objects are not stored.
 - Successful payments activate the user's subscription and create an audit log entry.
-- Payment history is shown on the billing page.
+- Successful payments receive a database notification, an emailed receipt, and a downloadable PDF receipt.
+- Payment history is shown on the billing page with receipt links.
+- Pending payments are reconciled hourly through `payments:reconcile`, recovering transactions whose webhook was missed.
 
 **Important:** the Paystack merchant account must have at least one active payment channel enabled in the Paystack dashboard. Otherwise transaction initialization fails with `No active channel to process transaction. Please contact merchant`.
 
@@ -200,7 +204,7 @@ Administrators can inspect audit log entries for sensitive actions such as job m
 | Backend | Laravel 13, PHP 8.3+ |
 | Authentication | Laravel Fortify, custom login/registration controllers |
 | Authorization | Policies, gates, custom role middleware |
-| Frontend | Blade, Tailwind CSS 4, Alpine.js 3 |
+| Frontend | Blade, Tailwind CSS 4, vanilla JavaScript |
 | Build tool | Vite 8 |
 | Database | MySQL (recommended for local/runtime) or SQLite |
 | Payments | Paystack |
@@ -370,12 +374,15 @@ Key application values:
 | `APP_ENV` | Usually `local` or `production` |
 | `APP_DEBUG` | Must be `false` in production |
 | `APP_URL` | Public application URL; important for Paystack callbacks |
+| `TRUSTED_PROXIES` | Comma-separated proxy IPs/CIDRs allowed to send forwarded headers; blank when direct |
 | `DB_CONNECTION` | `mysql` or `sqlite` |
 | `DB_DATABASE` | Database name or SQLite file path |
 | `DB_USERNAME` | Database user |
 | `DB_PASSWORD` | Database password |
 | `SESSION_DRIVER` | Session storage, database by default |
+| `SESSION_SECURE_COOKIE` | Set to `true` when serving over HTTPS |
 | `QUEUE_CONNECTION` | Queue backend |
+| `MAIL_MAILER` | Mail transport; receipt emails are skipped if delivery fails |
 | `FILESYSTEM_DISK` | Default filesystem disk |
 | `PAYSTACK_PUBLIC_KEY` | Paystack public key |
 | `PAYSTACK_SECRET_KEY` | Paystack secret key; server-side only |
@@ -383,8 +390,10 @@ Key application values:
 | `PAYSTACK_MERCHANT_EMAIL` | Merchant/fallback contact email |
 | `COMPANY_ADDRESS` | Company address shown on the public site |
 | `COMPANY_PHONE` | Company phone number |
+| `COMPANY_WHATSAPP` | WhatsApp number for support; defaults to `COMPANY_PHONE` |
 | `COMPANY_MAP` | Map coordinates |
 | `COMPANY_MAP_LINK` | Google Maps link |
+| `CLAMAV_COMMAND` | Optional ClamAV executable; CV uploads are scanned when set |
 
 After changing environment values in a cached deployment:
 
@@ -416,7 +425,7 @@ php artisan config:clear
 
 The webhook route is excluded from CSRF protection because Paystack sends a server-to-server POST request. Signature verification and amount/currency checks still apply.
 
-For local HTTPS testing, expose the app with a tunnel such as ngrok and set `APP_URL` to the tunnel URL. The application trusts forwarded proxy headers so generated asset and callback URLs use HTTPS.
+For local HTTPS testing, expose the app with a tunnel such as ngrok and set `APP_URL` to the tunnel URL. Add the tunnel proxy IP/CIDR to `TRUSTED_PROXIES` so forwarded scheme and host headers are trusted; leave it blank when the app is accessed directly.
 
 ---
 
@@ -442,6 +451,8 @@ GET /cvs/{cv}/download
 
 Ensure the web server can write to `storage/` and `bootstrap/cache/`.
 
+Optional malware scanning uses ClamAV before a CV is moved into private storage. Set `CLAMAV_COMMAND` to an executable such as `/usr/bin/clamdscan`; when configured, scanner errors fail closed and reject the upload. Uploads are not scanned when the variable is blank.
+
 ---
 
 ## Security and Authorization
@@ -452,15 +463,20 @@ Ensure the web server can write to `storage/` and `bootstrap/cache/`.
 - Email verification for authenticated application areas.
 - Employer verification and active subscription checks for employer job management.
 - Private CV storage rather than public uploads.
+- Optional ClamAV malware scanning for CV uploads; scanner failures reject the file when enabled.
 - CSRF protection across web forms, with an explicit exception only for the Paystack webhook.
 - Paystack webhook HMAC SHA512 signature validation.
-- Payment amount and currency verification before subscription activation.
+- Paystack reference, amount, and currency verification before subscription activation.
+- Only non-sensitive transaction fields are retained; card authorization codes, signatures, and customer objects are discarded.
 - Idempotent payment completion and database locks to prevent duplicate activation.
-- Content Security Policy and standard security headers.
+- PDF receipts are limited to the payment owner or an administrator and served with `no-store` caching.
+- Card data never reaches the application; checkout is hosted by Paystack.
+- Strict Content Security Policy without `unsafe-inline` or `unsafe-eval`, plus standard security headers.
 - `no-store` cache headers for authenticated responses.
-- Rate limiting on sensitive authentication actions.
+- Rate limiting on login, registration, payment initialisation, subscription activation, job applications, and CV uploads.
 - Two-factor authentication and passkeys through Fortify.
 - Account suspension support.
+- WhatsApp billing support using the configured company number.
 
 Secrets belong only in `.env`. Never commit `.env`, Paystack secret keys, or private uploads.
 
@@ -495,7 +511,7 @@ Build production assets:
 npm run build
 ```
 
-Current suite status at the time of writing: **97 tests, 395 assertions passing**.
+Current suite status at the time of writing: **121 tests, 529 assertions passing**.
 
 ---
 
@@ -512,6 +528,8 @@ Current suite status at the time of writing: **97 tests, 395 assertions passing*
 | `vendor/bin/pint --dirty` | Format changed PHP files |
 | `php artisan route:list` | Inspect registered routes |
 | `php artisan config:clear` | Clear cached configuration |
+| `php artisan payments:reconcile` | Verify recent pending Paystack payments |
+| `php artisan schedule:list` | Inspect scheduled payment reconciliation |
 
 ---
 
@@ -528,7 +546,12 @@ Current suite status at the time of writing: **97 tests, 395 assertions passing*
 - Configure the Paystack live keys and live webhook URL.
 - Enable the required Paystack payment channels.
 - Use HTTPS and ensure the reverse proxy forwards the original scheme and host.
-- Configure a real mail driver if email delivery is required.
+- Set `TRUSTED_PROXIES` to only your reverse proxy IPs/CIDRs; leave blank for direct access.
+- Set `SESSION_SECURE_COOKIE=true` when serving over HTTPS.
+- Restrict database and storage access, enable disk encryption, and encrypt backups containing user data.
+- Configure a real mail driver; payment receipt emails require working mail delivery.
+- Install ClamAV and set `CLAMAV_COMMAND` if upload malware scanning is required.
+- Run `php artisan schedule:run` through cron every minute so pending payments are reconciled hourly.
 - Run `php artisan test` before deployment.
 
 ---
@@ -539,7 +562,13 @@ Current suite status at the time of writing: **97 tests, 395 assertions passing*
 - Employer job edits require moderation again.
 - Paystack test mode can authenticate successfully while still failing checkout if the merchant account has no active channel. Enable a channel in the Paystack dashboard before testing payments.
 - Public job pages hide unapproved, unpublished, expired, or deadline-passed listings.
-- The application currently sends notifications through the database channel; email notifications are not automatically sent for workflow events.
+- Workflow notifications use the database channel. Payment receipt emails are sent when a mail driver is configured; other workflow events are not emailed automatically.
+- The scheduler runs `payments:reconcile` hourly. Configure cron with `* * * * * cd /path/to/app && php artisan schedule:run >> /dev/null 2>&1`.
+- CV malware scanning is disabled until `CLAMAV_COMMAND` points to a working ClamAV executable.
+- Administrators should enroll in two-factor authentication. Automatic enforcement for administrators is not currently enabled.
+- Payment receipts are available only after a payment reaches `success`; failed or pending payments have no receipt.
+- Active paid subscriptions block additional paid checkouts until expiry; support handles upgrades and renewals manually.
+- Billing questions are routed to `COMPANY_WHATSAPP`, which falls back to `COMPANY_PHONE`. WhatsApp is currently a direct contact link, not a ticketing inbox.
 - The `DemoDataSeeder` is optional and intended for local demonstration only.
 
 ---

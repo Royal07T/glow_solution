@@ -41,6 +41,28 @@ class AuditAndUploadTest extends TestCase
         $this->assertStringStartsWith('cvs/', $cv->file_path);
     }
 
+    public function test_cv_upload_is_rejected_when_configured_malware_scanner_flags_it(): void
+    {
+        if (! is_executable('/bin/false')) {
+            $this->markTestSkipped('No /bin/false available for scanner test.');
+        }
+
+        Storage::fake('private');
+        config(['services.clamav.command' => '/bin/false']);
+
+        $seeker = $this->jobSeeker();
+
+        $this->actingAs($seeker)
+            ->post(route('cvs.store'), [
+                'name' => 'Infected CV',
+                'cv' => UploadedFile::fake()->create('resume.pdf', 120, 'application/pdf'),
+            ])
+            ->assertSessionHasErrors('cv');
+
+        $this->assertDatabaseCount('cvs', 0);
+        $this->assertEmpty(Storage::disk('private')->allFiles());
+    }
+
     public function test_admin_job_approval_is_audited(): void
     {
         $admin = $this->admin();

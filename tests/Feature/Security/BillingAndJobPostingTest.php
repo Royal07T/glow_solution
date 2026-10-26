@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Security;
 
+use App\Models\JobCategory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\Concerns\PortalFixtures;
 use Tests\TestCase;
@@ -52,6 +53,56 @@ class BillingAndJobPostingTest extends TestCase
         $this->actingAs($employer)
             ->post(route('subscriptions.activate', $plan))
             ->assertForbidden();
+    }
+
+    public function test_job_seeker_with_an_active_paid_plan_cannot_switch_to_a_free_plan_early(): void
+    {
+        $seeker = $this->jobSeeker();
+        $paidPlan = $this->plan('premium-jobseeker-active', 'job_seeker', false);
+        $freePlan = $this->plan('free-jobseeker-active', 'job_seeker', true);
+        $subscription = $this->subscribe($seeker, $paidPlan);
+
+        $this->actingAs($seeker)
+            ->post(route('subscriptions.activate', $freePlan))
+            ->assertRedirect(route('billing.index'))
+            ->assertSessionHas('error');
+
+        $subscription->refresh();
+
+        $this->assertSame($paidPlan->id, $subscription->subscription_plan_id);
+        $this->assertSame('active', $subscription->status);
+        $this->assertDatabaseCount('subscriptions', 1);
+    }
+
+    public function test_job_seeker_can_switch_to_a_free_plan_after_the_paid_plan_expires(): void
+    {
+        $seeker = $this->jobSeeker();
+        $paidPlan = $this->plan('premium-jobseeker-expired', 'job_seeker', false);
+        $freePlan = $this->plan('free-jobseeker-expired', 'job_seeker', true);
+        $subscription = $this->subscribe($seeker, $paidPlan);
+        $subscription->update(['ends_at' => now()->subDay()]);
+
+        $this->actingAs($seeker)
+            ->post(route('subscriptions.activate', $freePlan))
+            ->assertRedirect(route('jobseeker.dashboard'))
+            ->assertSessionHas('success');
+
+        $this->assertSame($freePlan->id, $subscription->fresh()->subscription_plan_id);
+        $this->assertSame('active', $subscription->fresh()->status);
+    }
+
+    public function test_billing_hides_free_activation_while_a_paid_plan_is_active(): void
+    {
+        $seeker = $this->jobSeeker();
+        $paidPlan = $this->plan('premium-jobseeker-billing', 'job_seeker', false);
+        $freePlan = $this->plan('free-jobseeker-billing', 'job_seeker', true);
+        $this->subscribe($seeker, $paidPlan);
+
+        $this->actingAs($seeker)
+            ->get(route('billing.index'))
+            ->assertOk()
+            ->assertSee('Paid plan active')
+            ->assertDontSee(route('subscriptions.activate', $freePlan), false);
     }
 
     public function test_employer_without_a_subscription_is_redirected_to_billing(): void
@@ -117,7 +168,8 @@ class BillingAndJobPostingTest extends TestCase
 
     private function jobPayload(array $overrides = []): array
     {
-        $category = \App\Models\JobCategory::first() ?? \App\Models\JobCategory::factory()->create();
+        $category = JobCategory::first() ?? JobCategory::factory()->create();
+
         return array_merge([
             'title' => 'Live-in Housekeeper',
             'type' => 'domestic',

@@ -165,6 +165,14 @@ details[data-menu][open] > div {
     transition: box-shadow 250ms ease, background-color 250ms ease;
 }
 
+.hero-pattern {
+    background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.4'%3E%3Ccircle cx='30' cy='30' r='4'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+}
+
+.reveal-delay-140 {
+    --reveal-delay: 140ms;
+}
+
 [data-site-nav].is-scrolled {
     box-shadow: 0 14px 34px -22px rgba(7, 26, 51, 0.5);
 }

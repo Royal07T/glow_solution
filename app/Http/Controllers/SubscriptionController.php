@@ -30,13 +30,22 @@ class SubscriptionController extends Controller
         if ($isJobSeeker && ($plan->target_role && $plan->target_role !== $roleStr && $plan->target_role !== 'job_seeker')) {
             abort(403);
         }
+
+        $isFree = (bool) ($plan->is_free ?? ((float) $plan->price <= 0));
+
+        if ($isFree && ($paidSubscription = $user->activePaidSubscription())) {
+            return redirect()->route('billing.index')->with(
+                'error',
+                'Your '.$paidSubscription->plan->name.' plan is active until '.$paidSubscription->ends_at->format('M j, Y').'. You can switch to a free plan after it expires.'
+            );
+        }
+
         if ($isEmployer) {
             $profile = $user->employerProfile;
             if (! $profile) {
                 return redirect()->route('employer.dashboard')->with('error', 'Employer profile required.');
             }
             $subscription = $user->subscriptions()->first();
-            $isFree = $plan->is_free ?? ((isset($plan->price) && $plan->price == 0) || $plan->price === null || (is_numeric($plan->price) && $plan->price == 0));
             if (! $isFree) {
                 abort(403);
             }
@@ -77,7 +86,6 @@ class SubscriptionController extends Controller
                 return redirect()->route('jobseeker.dashboard')->with('error', 'Profile required.');
             }
             $subscription = $user->subscriptions()->first();
-            $isFree = $plan->is_free ?? ((isset($plan->price) && $plan->price == 0) || $plan->price === null || (is_numeric($plan->price) && $plan->price == 0));
             if ($subscription) {
                 $subscription->update([
                     'subscription_plan_id' => $plan->id,

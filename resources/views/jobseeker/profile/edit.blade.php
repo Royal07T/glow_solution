@@ -195,7 +195,7 @@
                     <span class="font-display text-xl font-bold text-brand-900">{{ $completion['percent'] }}%</span>
                 </div>
                 <div class="mt-2 h-2 w-full overflow-hidden rounded-full bg-slate-100" role="progressbar" aria-valuenow="{{ $completion['percent'] }}" aria-valuemin="0" aria-valuemax="100" aria-label="Profile completion">
-                    <div class="h-full rounded-full bg-gold-500" style="width: {{ $completion['percent'] }}%"></div>
+                    <div class="h-full rounded-full bg-gold-500" data-progress="{{ $completion['percent'] }}"></div>
                 </div>
                 <ul class="mt-3 space-y-2 text-sm">
                     @foreach($completion['checks'] as $check)

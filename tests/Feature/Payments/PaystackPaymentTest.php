@@ -2,12 +2,14 @@
 
 namespace Tests\Feature\Payments;
 
+use App\Mail\PaymentReceiptMail;
 use App\Models\Payment;
 use App\Models\SubscriptionPlan;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\Client\Request as ClientRequest;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Mail;
 use Tests\Concerns\PortalFixtures;
 use Tests\TestCase;
 
@@ -66,6 +68,60 @@ class PaystackPaymentTest extends TestCase
                 && $data['callback_url'] === route('payments.paystack.callback')
                 && $data['metadata']['plan_id'] === $plan->id;
         });
+    }
+
+    public function test_successful_payment_sends_a_receipt_email(): void
+    {
+        Mail::fake();
+
+        $seeker = $this->jobSeeker();
+        $plan = $this->plan('premium-jobseeker-email-receipt', 'job_seeker', false);
+        $payment = $this->pendingPayment($seeker, $plan);
+
+        Http::fake([
+            'https://api.paystack.co/transaction/verify/'.$payment->reference => Http::response([
+                'status' => true,
+                'data' => $this->successfulCharge($payment),
+            ]),
+        ]);
+
+        $this->actingAs($seeker)
+            ->get(route('payments.paystack.callback', ['reference' => $payment->reference]))
+            ->assertRedirect(route('billing.index'));
+
+        Mail::assertSent(PaymentReceiptMail::class, function (PaymentReceiptMail $mail) use ($seeker, $payment) {
+            return $mail->hasTo($seeker->email) && $mail->payment->is($payment);
+        });
+    }
+
+    public function test_active_paid_subscriber_cannot_start_another_paid_payment(): void
+    {
+        $seeker = $this->jobSeeker();
+        $activePlan = $this->plan('premium-jobseeker-active', 'job_seeker', false);
+        $anotherPlan = $this->plan('premium-jobseeker-another', 'job_seeker', false);
+        $this->subscribe($seeker, $activePlan);
+
+        $this->actingAs($seeker)
+            ->from(route('billing.index'))
+            ->post(route('payments.paystack.initialize', $anotherPlan))
+            ->assertRedirect(route('billing.index'))
+            ->assertSessionHas('error');
+
+        $this->assertDatabaseCount('payments', 0);
+    }
+
+    public function test_billing_page_disables_paid_checkout_for_an_active_paid_subscriber(): void
+    {
+        $seeker = $this->jobSeeker();
+        $activePlan = $this->plan('premium-jobseeker-active-ui', 'job_seeker', false);
+        $anotherPlan = $this->plan('premium-jobseeker-another-ui', 'job_seeker', false);
+        $this->subscribe($seeker, $activePlan);
+
+        $this->actingAs($seeker)
+            ->get(route('billing.index'))
+            ->assertOk()
+            ->assertSee('Paid plan active')
+            ->assertDontSee(route('payments.paystack.initialize', $anotherPlan), false);
     }
 
     public function test_paystack_callback_activates_the_subscription_once(): void
@@ -212,6 +268,118 @@ class PaystackPaymentTest extends TestCase
             ->assertSee(route('payments.paystack.initialize', $plan), false);
     }
 
+    public function test_successful_payment_receipt_can_be_downloaded_by_owner(): void
+    {
+        $seeker = $this->jobSeeker();
+        $plan = $this->plan('premium-jobseeker-receipt', 'job_seeker', false);
+        $payment = $this->successfulPayment($seeker, $plan);
+
+        $response = $this->actingAs($seeker)
+            ->get(route('payments.receipt', $payment))
+            ->assertOk()
+            ->assertHeader('content-type', 'application/pdf')
+            ->assertDownload('Glow-Receipt-'.$payment->reference.'.pdf');
+
+        $this->assertStringStartsWith('%PDF-', $response->getContent());
+    }
+
+    public function test_receipt_is_forbidden_for_another_user(): void
+    {
+        $owner = $this->jobSeeker();
+        $other = $this->jobSeeker();
+        $plan = $this->plan('premium-jobseeker-receipt-private', 'job_seeker', false);
+        $payment = $this->successfulPayment($owner, $plan);
+
+        $this->actingAs($other)
+            ->get(route('payments.receipt', $payment))
+            ->assertForbidden();
+    }
+
+    public function test_receipt_is_only_available_for_successful_payments(): void
+    {
+        $seeker = $this->jobSeeker();
+        $plan = $this->plan('premium-jobseeker-receipt-pending', 'job_seeker', false);
+        $payment = $this->pendingPayment($seeker, $plan);
+
+        $this->actingAs($seeker)
+            ->get(route('payments.receipt', $payment))
+            ->assertNotFound();
+    }
+
+    public function test_billing_page_links_successful_payments_to_receipts_and_whatsapp_support(): void
+    {
+        $seeker = $this->jobSeeker();
+        $plan = $this->plan('premium-jobseeker-receipt-link', 'job_seeker', false);
+        $payment = $this->successfulPayment($seeker, $plan);
+
+        $this->actingAs($seeker)
+            ->get(route('billing.index'))
+            ->assertOk()
+            ->assertSee(route('payments.receipt', $payment), false)
+            ->assertSee('Chat on WhatsApp')
+            ->assertSee('https://wa.me/2348036227769', false);
+    }
+
+    public function test_paystack_callback_does_not_store_sensitive_gateway_payload(): void
+    {
+        $seeker = $this->jobSeeker();
+        $plan = $this->plan('premium-jobseeker-sanitized-response', 'job_seeker', false);
+        $payment = $this->pendingPayment($seeker, $plan);
+        $charge = $this->successfulCharge($payment);
+        $charge['authorization'] = [
+            'authorization_code' => 'AUTH_secret_code',
+            'signature' => 'sensitive-signature',
+            'last4' => '4081',
+        ];
+        $charge['customer'] = [
+            'email' => $seeker->email,
+            'phone' => '+2348000000000',
+        ];
+
+        Http::fake([
+            'https://api.paystack.co/transaction/verify/'.$payment->reference => Http::response([
+                'status' => true,
+                'data' => $charge,
+            ]),
+        ]);
+
+        $this->actingAs($seeker)
+            ->get(route('payments.paystack.callback', ['reference' => $payment->reference]))
+            ->assertRedirect(route('billing.index'));
+
+        $gatewayResponse = $payment->fresh()->gateway_response;
+
+        $this->assertSame('success', $gatewayResponse['status']);
+        $this->assertSame($payment->reference, $gatewayResponse['reference']);
+        $this->assertArrayNotHasKey('authorization', $gatewayResponse);
+        $this->assertArrayNotHasKey('customer', $gatewayResponse);
+        $this->assertArrayNotHasKey('metadata', $gatewayResponse);
+    }
+
+    public function test_paystack_callback_rejects_a_mismatched_reference(): void
+    {
+        $seeker = $this->jobSeeker();
+        $plan = $this->plan('premium-jobseeker-reference-mismatch', 'job_seeker', false);
+        $payment = $this->pendingPayment($seeker, $plan);
+        $charge = $this->successfulCharge($payment);
+        $charge['reference'] = 'GLOW-DIFFERENT-REFERENCE';
+
+        Http::fake([
+            'https://api.paystack.co/transaction/verify/'.$payment->reference => Http::response([
+                'status' => true,
+                'data' => $charge,
+            ]),
+        ]);
+
+        $this->actingAs($seeker)
+            ->get(route('payments.paystack.callback', ['reference' => $payment->reference]))
+            ->assertRedirect(route('billing.index'))
+            ->assertSessionHas('error');
+
+        $this->assertSame('failed', $payment->fresh()->status);
+        $this->assertDatabaseCount('subscriptions', 0);
+    }
+
     public function test_paystack_initialization_failure_marks_the_payment_failed(): void
     {
         $seeker = $this->jobSeeker();
@@ -244,6 +412,20 @@ class PaystackPaymentTest extends TestCase
             'currency' => $plan->currency,
             'status' => 'pending',
             'gateway' => 'paystack',
+        ]);
+    }
+
+    private function successfulPayment(User $user, SubscriptionPlan $plan): Payment
+    {
+        return Payment::create([
+            'user_id' => $user->id,
+            'subscription_plan_id' => $plan->id,
+            'reference' => 'GLOW-RECEIPT-'.strtoupper(fake()->unique()->bothify('????####')),
+            'amount' => $plan->price,
+            'currency' => $plan->currency,
+            'status' => 'success',
+            'gateway' => 'paystack',
+            'paid_at' => now(),
         ]);
     }
 

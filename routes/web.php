@@ -37,7 +37,7 @@ Route::get('/locations/lgas', [LocationController::class, 'lgas'])->name('locati
 Route::get('/login', [AuthenticatedSessionController::class, 'create'])->name('login')->middleware('guest');
 Route::post('/login', [AuthenticatedSessionController::class, 'store'])->middleware(['guest', 'throttle:login']);
 Route::get('/register', [RegisteredUserController::class, 'create'])->name('register')->middleware('guest');
-Route::post('/register', [RegisteredUserController::class, 'store'])->middleware('guest');
+Route::post('/register', [RegisteredUserController::class, 'store'])->middleware(['guest', 'rate.limit:register,3,60']);
 Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout')->middleware('auth');
 
 // Job Seeker Routes
@@ -54,7 +54,7 @@ Route::middleware(['auth', 'verified', 'role:job_seeker'])->group(function () {
     Route::get('/applications', [ApplicationController::class, 'index'])->name('applications.index');
     Route::get('/applications/{application}', [ApplicationController::class, 'show'])->name('applications.show');
     Route::get('/jobs/{job}/apply', [ApplicationController::class, 'create'])->name('applications.create');
-    Route::post('/jobs/{job}/apply', [ApplicationController::class, 'store'])->name('applications.store');
+    Route::post('/jobs/{job}/apply', [ApplicationController::class, 'store'])->name('applications.store')->middleware('rate.limit:applications,10,60');
     Route::post('/applications/{application}/withdraw', [ApplicationController::class, 'withdraw'])->name('applications.withdraw');
     Route::get('/saved-jobs', [SavedJobController::class, 'index'])->name('saved-jobs.index');
     Route::delete('/saved-jobs/{job}', [SavedJobController::class, 'destroy'])->name('saved-jobs.destroy');
@@ -63,7 +63,7 @@ Route::middleware(['auth', 'verified', 'role:job_seeker'])->group(function () {
 // CV Management
 Route::middleware(['auth', 'verified', 'role:job_seeker'])->group(function () {
     Route::get('/cvs', [CvController::class, 'index'])->name('cvs.index');
-    Route::post('/cvs', [CvController::class, 'store'])->name('cvs.store');
+    Route::post('/cvs', [CvController::class, 'store'])->name('cvs.store')->middleware('rate.limit:uploads,5,60');
     Route::delete('/cvs/{cv}', [CvController::class, 'destroy'])->name('cvs.destroy');
 });
 
@@ -128,10 +128,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/subscriptions/plans', [SubscriptionPlanController::class, 'index'])->name('subscriptions.plans');
     Route::get('/subscriptions', [SubscriptionController::class, 'index'])->name('subscriptions.index');
-    Route::post('/subscriptions/activate/{plan}', [SubscriptionController::class, 'activate'])->name('subscriptions.activate');
+    Route::post('/subscriptions/activate/{plan}', [SubscriptionController::class, 'activate'])->name('subscriptions.activate')->middleware('rate.limit:subscriptions,5,60');
     Route::get('/billing', [SubscriptionPlanController::class, 'index'])->name('billing.index');
-    Route::post('/payments/paystack/initialize/{plan}', [PaystackPaymentController::class, 'initialize'])->name('payments.paystack.initialize');
+    Route::post('/payments/paystack/initialize/{plan}', [PaystackPaymentController::class, 'initialize'])->name('payments.paystack.initialize')->middleware('rate.limit:payments,5,60');
     Route::get('/payments/paystack/callback', [PaystackPaymentController::class, 'callback'])->name('payments.paystack.callback');
+    Route::get('/payments/{payment}/receipt', [PaystackPaymentController::class, 'receipt'])->name('payments.receipt')->middleware('rate.limit:receipts,10,60');
 });
 
 Route::post('/payments/paystack/webhook', [PaystackPaymentController::class, 'webhook'])->name('payments.paystack.webhook');

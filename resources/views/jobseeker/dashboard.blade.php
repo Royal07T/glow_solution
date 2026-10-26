@@ -159,7 +159,7 @@
                     </div>
 
                     <div class="mt-3 h-2.5 w-full overflow-hidden rounded-full bg-slate-100" role="progressbar" aria-valuenow="{{ $completion['percent'] }}" aria-valuemin="0" aria-valuemax="100" aria-label="Profile completion">
-                        <div class="h-full rounded-full bg-gold-500 transition-all" style="width: {{ $completion['percent'] }}%"></div>
+                        <div class="h-full rounded-full bg-gold-500 transition-all" data-progress="{{ $completion['percent'] }}"></div>
                     </div>
 
                     @if(empty($completion['missing']))

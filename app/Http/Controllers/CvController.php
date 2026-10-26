@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Cv;
+use App\Services\CvMalwareScanner;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -12,10 +13,11 @@ class CvController extends Controller
     {
         $this->authorize('create', Cv::class);
         $cvs = auth()->user()->cvs()->latest()->get();
+
         return view('jobseeker.cvs.index', compact('cvs'));
     }
 
-    public function store(Request $request)
+    public function store(Request $request, CvMalwareScanner $scanner)
     {
         $this->authorize('create', Cv::class);
 
@@ -25,6 +27,7 @@ class CvController extends Controller
         ]);
 
         $file = $request->file('cv');
+        $scanner->scan($file->getRealPath());
         $fileName = $file->getClientOriginalName();
         $filePath = $file->store('cvs', 'private');
 
@@ -45,7 +48,7 @@ class CvController extends Controller
     {
         $this->authorize('download', $cv);
 
-        if (!Storage::disk('private')->exists($cv->file_path)) {
+        if (! Storage::disk('private')->exists($cv->file_path)) {
             abort(404);
         }
 

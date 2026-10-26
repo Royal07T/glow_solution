@@ -11,7 +11,7 @@ use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
-    use HasApiTokens, HasFactory, Notifiable, HasRoles;
+    use HasApiTokens, HasFactory, HasRoles, Notifiable;
 
     protected $fillable = [
         'name',
@@ -71,6 +71,18 @@ class User extends Authenticatable implements MustVerifyEmail
     public function activeSubscription()
     {
         return $this->hasOne(Subscription::class)->where('status', 'active')->latest();
+    }
+
+    public function activePaidSubscription(): ?Subscription
+    {
+        return $this->subscriptions()
+            ->with('plan')
+            ->where('status', 'active')
+            ->whereNotNull('ends_at')
+            ->where('ends_at', '>', now())
+            ->whereHas('plan', fn ($query) => $query->where('is_free', false))
+            ->latest('ends_at')
+            ->first();
     }
 
     public function payments()
