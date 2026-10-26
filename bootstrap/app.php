@@ -2,6 +2,7 @@
 
 use App\Http\Middleware\CheckEmployerVerified;
 use App\Http\Middleware\CheckTwoFactor;
+use App\Http\Middleware\EnforceSessionTimeout;
 use App\Http\Middleware\EnsureSubscriptionActive;
 use App\Http\Middleware\EnsureUserRole;
 use App\Http\Middleware\RateLimitSensitiveActions;
@@ -28,6 +29,9 @@ return Application::configure(basePath: dirname(__DIR__))
             'payments/paystack/webhook',
         ]);
         $middleware->append(SecurityHeaders::class);
+        $middleware->web(append: [
+            EnforceSessionTimeout::class,
+        ]);
         $middleware->alias([
             'role' => EnsureUserRole::class,
             'subscription' => EnsureSubscriptionActive::class,

@@ -292,4 +292,52 @@ ready(() => {
             });
         });
     });
+
+    const sessionTimeout = document.querySelector('[data-session-timeout]');
+    const sessionTimeoutForm = document.querySelector('[data-session-timeout-form]');
+
+    if (sessionTimeout && sessionTimeoutForm) {
+        const remainingSeconds = Math.max(0, Number.parseInt(sessionTimeout.dataset.remaining, 10) || 0);
+        const warningSeconds = Math.max(0, Number.parseInt(sessionTimeout.dataset.warning, 10) || 0);
+        const countdown = sessionTimeout.querySelector('[data-session-timeout-countdown]');
+        const signOutButton = sessionTimeout.querySelector('[data-session-timeout-signout]');
+        const deadline = Date.now() + (remainingSeconds * 1000);
+        let expired = false;
+
+        const formatRemaining = (seconds) => `${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, '0')}`;
+
+        const expire = () => {
+            if (expired) return;
+
+            expired = true;
+            sessionTimeoutForm.submit();
+        };
+
+        const updateCountdown = () => {
+            const seconds = Math.max(0, Math.ceil((deadline - Date.now()) / 1000));
+
+            if (countdown) {
+                countdown.textContent = formatRemaining(seconds);
+            }
+
+            sessionTimeout.classList.toggle('hidden', seconds > warningSeconds);
+
+            if (seconds === 0) {
+                expire();
+            }
+        };
+
+        signOutButton?.addEventListener('click', expire);
+        document.addEventListener('visibilitychange', updateCountdown);
+        window.addEventListener('focus', updateCountdown);
+
+        updateCountdown();
+        window.setInterval(updateCountdown, 1000);
+    }
 });
+
+if (import.meta.env.PROD && 'serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js').catch(() => {});
+    });
+}

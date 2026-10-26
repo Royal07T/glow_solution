@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Http\Middleware\EnforceSessionTimeout;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -22,10 +23,12 @@ class AuthenticatedSessionController extends Controller
 
         if (Auth::attempt($credentials, $request->boolean('remember'))) {
             $request->session()->regenerate();
+            $request->session()->put(EnforceSessionTimeout::STARTED_AT_KEY, now()->timestamp);
 
             $user = Auth::user();
             if ($user->is_suspended) {
                 Auth::logout();
+
                 return back()->withErrors(['email' => 'Your account has been suspended.']);
             }
 
@@ -47,10 +50,17 @@ class AuthenticatedSessionController extends Controller
 
     public function destroy(Request $request)
     {
+        $timedOut = $request->input('reason') === 'timeout';
+
         Auth::guard('web')->logout();
 
         $request->session()->invalidate();
         $request->session()->regenerateToken();
+
+        if ($timedOut) {
+            return redirect()->route('login')
+                ->with('error', 'You have been signed out for security reasons.');
+        }
 
         return redirect('/');
     }

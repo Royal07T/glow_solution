@@ -38,6 +38,22 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Absolute Session Lifetime
+    |--------------------------------------------------------------------------
+    |
+    | This is the maximum number of minutes an authenticated session may stay
+    | active, regardless of user activity. Set to zero to disable the
+    | absolute timeout. The warning value is the number of minutes before
+    | expiry that the in-page countdown is shown.
+    |
+    */
+
+    'absolute_lifetime' => (int) env('SESSION_ABSOLUTE_LIFETIME', 60),
+
+    'timeout_warning' => (int) env('SESSION_TIMEOUT_WARNING', 5),
+
+    /*
+    |--------------------------------------------------------------------------
     | Session Encryption
     |--------------------------------------------------------------------------
     |

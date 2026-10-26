@@ -4,6 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    @include('layouts.partials.pwa')
     <title>Login - Glow Recruitment Agency Solution</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -33,6 +34,9 @@
                     </div>
                     @if (session('status'))
                         <div class="mb-4 text-sm text-green-600">{{ session('status') }}</div>
+                    @endif
+                    @if (session('error'))
+                        <div class="mb-4 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700" role="alert">{{ session('error') }}</div>
                     @endif
                     <form method="POST" action="{{ route('login') }}" class="space-y-4">
                         @csrf

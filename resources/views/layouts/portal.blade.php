@@ -75,5 +75,6 @@
             </div>
         </main>
     </div>
+    @include('layouts.partials.session-timeout')
 </body>
 </html>

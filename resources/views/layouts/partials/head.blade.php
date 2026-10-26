@@ -1,6 +1,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="csrf-token" content="{{ csrf_token() }}">
+@include('layouts.partials.pwa')
 
 <title>{{ $title ?? config('app.name', 'Glow Recruitment Agency Solution') }}</title>
 <meta name="description" content="{{ $description ?? 'Glow Recruitment Agency Solution - Trusted domestic and professional recruitment services in Nigeria.' }}">
