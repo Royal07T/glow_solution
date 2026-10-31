@@ -33,6 +33,10 @@ class SecurityHeadersTest extends TestCase
         $this->assertStringNotContainsString("'unsafe-inline'", $csp);
         $this->assertStringNotContainsString("'unsafe-eval'", $csp);
         $this->assertStringNotContainsString('cdn.jsdelivr.net', $csp);
+
+        $this->assertMatchesRegularExpression("/script-src 'self' 'nonce-[A-Za-z0-9]{40}'/", $csp);
+        preg_match("/'nonce-([^']+)'/", $csp, $matches);
+        $response->assertSee('nonce="'.$matches[1].'"', false);
     }
 
     public function test_public_pages_do_not_rely_on_inline_scripts_or_styles(): void
@@ -75,6 +79,8 @@ class SecurityHeadersTest extends TestCase
 
     public function test_forwarded_https_requests_generate_secure_urls(): void
     {
+        $this->assertSame('127.0.0.1', config('trustedproxy.proxies'));
+
         $response = $this
             ->withServerVariables(['REMOTE_ADDR' => '127.0.0.1'])
             ->withHeaders([
