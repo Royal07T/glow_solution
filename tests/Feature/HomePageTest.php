@@ -42,6 +42,32 @@ class HomePageTest extends TestCase
             ->assertSee('data-back-to-top', false);
     }
 
+    public function test_pages_include_the_branded_preloader_and_network_status(): void
+    {
+        $this->get('/')
+            ->assertOk()
+            ->assertSee('data-site-preloader', false)
+            ->assertSee('data-network-status', false)
+            ->assertSee('Connecting talent with opportunity');
+
+        $this->get(route('login'))
+            ->assertOk()
+            ->assertSee('data-site-preloader', false)
+            ->assertSee('data-network-status', false);
+    }
+
+    public function test_offline_page_has_branded_reconnection_experience(): void
+    {
+        $offlinePage = file_get_contents(public_path('offline.html'));
+        $serviceWorker = file_get_contents(public_path('sw.js'));
+
+        $this->assertStringContainsString("You're offline right now.", $offlinePage);
+        $this->assertStringContainsString('data-retry', $offlinePage);
+        $this->assertStringContainsString('Connection restored. Reloading...', $offlinePage);
+        $this->assertStringContainsString('/offline.html', $serviceWorker);
+        $this->assertStringContainsString('static-v2', $serviceWorker);
+    }
+
     public function test_whatsapp_link_normalises_international_phone_numbers(): void
     {
         config(['company.phone' => '+234 803 622 7769']);

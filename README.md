@@ -45,6 +45,7 @@ The application is built as a server-rendered Laravel monolith with Blade templa
 - Nigerian state and LGA data for profile and job location selects.
 - In-app database notifications, audit logs, account security settings, two-factor authentication, and passkey support.
 - Security headers, Content Security Policy, role middleware, form requests, policies, rate limiting, and WhatsApp billing support.
+- Branded first-load experience with a professional preloader and a PWA-backed offline page that reconnects automatically.
 
 ---
 
@@ -511,7 +512,7 @@ Build production assets:
 npm run build
 ```
 
-Current suite status at the time of writing: **121 tests, 529 assertions passing**.
+Current suite status at the time of writing: **137 tests, 618 assertions passing**.
 
 ---
 
@@ -569,6 +570,8 @@ Current suite status at the time of writing: **121 tests, 529 assertions passing
 - Payment receipts are available only after a payment reaches `success`; failed or pending payments have no receipt.
 - Active paid subscriptions block additional paid checkouts until expiry; support handles upgrades and renewals manually.
 - Billing questions are routed to `COMPANY_WHATSAPP`, which falls back to `COMPANY_PHONE`. WhatsApp is currently a direct contact link, not a ticketing inbox.
+- The branded preloader appears on the first load in a browser session and is skipped for reduced-motion preferences.
+- The offline page is precached by the production service worker. Bump `STATIC_CACHE` in `public/sw.js` whenever precached offline assets change.
 - The `DemoDataSeeder` is optional and intended for local demonstration only.
 
 ---

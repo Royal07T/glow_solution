@@ -1,5 +1,5 @@
 const CACHE_PREFIX = 'glow-pwa';
-const STATIC_CACHE = `${CACHE_PREFIX}-static-v1`;
+const STATIC_CACHE = `${CACHE_PREFIX}-static-v2`;
 const OFFLINE_URL = '/offline.html';
 const PRECACHE_URLS = [
     OFFLINE_URL,
@@ -66,7 +66,13 @@ self.addEventListener('fetch', (event) => {
 
 async function networkWithOfflineFallback(request) {
     try {
-        return await fetch(request);
+        const response = await fetch(request);
+
+        if (response.status >= 500) {
+            throw new Error('The server is temporarily unavailable.');
+        }
+
+        return response;
     } catch {
         return (await caches.match(OFFLINE_URL)) || Response.error();
     }

@@ -19,6 +19,9 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body class="font-sans antialiased bg-white text-slate-900">
+    <x-site-preloader />
+    <x-network-status />
+
     <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-brand-700 focus:text-white focus:rounded-lg">Skip to content</a>
     
     @include('layouts.partials.navbar')

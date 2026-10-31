@@ -22,7 +22,7 @@ class PagesTest extends TestCase
 
         $this->actingAs($seeker);
 
-        $this->get(route('jobseeker.dashboard'))->assertOk();
+        $this->get(route('jobseeker.dashboard'))->assertOk()->assertSee('data-site-preloader', false)->assertSee('data-network-status', false);
         $this->get(route('applications.index'))->assertOk();
         $this->get(route('applications.show', $application))->assertOk();
         $this->get(route('applications.create', $openJob))->assertOk();

@@ -13,6 +13,9 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body class="font-sans antialiased bg-gray-50">
+    <x-site-preloader />
+    <x-network-status />
+
     <div class="min-h-screen flex">
         <div class="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-brand-900 via-brand-700 to-brand-600 items-center justify-center p-12">
             <div class="text-center max-w-md">

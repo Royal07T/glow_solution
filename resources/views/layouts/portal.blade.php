@@ -4,6 +4,9 @@
     @include('layouts.partials.head')
 </head>
 <body class="font-sans antialiased bg-brand-50 text-slate-700">
+    <x-site-preloader />
+    <x-network-status />
+
     <a href="#portal-content" class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[60] focus:rounded-lg focus:bg-brand-700 focus:px-4 focus:py-2 focus:text-white">Skip to content</a>
 
     @include('layouts.partials.sidebar')

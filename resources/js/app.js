@@ -10,6 +10,91 @@ const ready = (callback) => {
 
 ready(() => {
     const html = document.documentElement;
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const preloader = document.querySelector('[data-site-preloader]');
+
+    if (preloader) {
+        let hasSeenPreloader = false;
+
+        try {
+            hasSeenPreloader = sessionStorage.getItem('glow-preloader-seen') === '1';
+        } catch {}
+
+        if (hasSeenPreloader || prefersReducedMotion) {
+            preloader.remove();
+        } else {
+            try {
+                sessionStorage.setItem('glow-preloader-seen', '1');
+            } catch {}
+
+            document.body.classList.add('preloader-active');
+
+            const startedAt = performance.now();
+            let hidden = false;
+
+            const hidePreloader = () => {
+                if (hidden) return;
+
+                hidden = true;
+                preloader.classList.add('is-hidden');
+                document.body.classList.remove('preloader-active');
+                window.setTimeout(() => preloader.remove(), 550);
+            };
+
+            const hideAfterMinimumDisplay = () => {
+                const remaining = Math.max(0, 650 - (performance.now() - startedAt));
+                window.setTimeout(hidePreloader, remaining);
+            };
+
+            if (document.readyState === 'complete') {
+                hideAfterMinimumDisplay();
+            } else {
+                window.addEventListener('load', hideAfterMinimumDisplay, { once: true });
+            }
+
+            window.setTimeout(hidePreloader, 3800);
+        }
+    }
+
+    const networkStatus = document.querySelector('[data-network-status]');
+
+    if (networkStatus) {
+        const networkMessage = networkStatus.querySelector('[data-network-message]');
+        const networkRetry = networkStatus.querySelector('[data-network-retry]');
+        let onlineTimer;
+
+        const updateNetworkStatus = (online) => {
+            window.clearTimeout(onlineTimer);
+            networkStatus.dataset.state = online ? 'online' : 'offline';
+            networkStatus.hidden = false;
+
+            if (networkMessage) {
+                networkMessage.textContent = online
+                    ? 'Connection restored. You can continue.'
+                    : 'You are offline. Some features may be unavailable.';
+            }
+
+            if (online) {
+                onlineTimer = window.setTimeout(() => {
+                    networkStatus.hidden = true;
+                }, 4000);
+            }
+        };
+
+        if (! navigator.onLine) {
+            updateNetworkStatus(false);
+        }
+
+        window.addEventListener('offline', () => updateNetworkStatus(false));
+        window.addEventListener('online', () => updateNetworkStatus(true));
+
+        networkRetry?.addEventListener('click', () => {
+            if (navigator.onLine) {
+                window.location.reload();
+            }
+        });
+    }
+
     const sidebar = document.querySelector('[data-sidebar]');
     const overlay = document.querySelector('[data-sidebar-overlay]');
     const toggles = document.querySelectorAll('[data-sidebar-toggle]');
@@ -126,7 +211,6 @@ ready(() => {
     }
 
     const revealTargets = [];
-    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     document.querySelectorAll('[data-reveal-group]').forEach((group) => {
         Array.from(group.children).forEach((child, index) => {

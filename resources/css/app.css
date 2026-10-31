@@ -161,6 +161,263 @@ details[data-menu][open] > div {
     will-change: auto;
 }
 
+/* Branded page preloader */
+.site-preloader {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    display: grid;
+    place-items: center;
+    overflow: hidden;
+    background:
+        radial-gradient(circle at 50% 38%, rgba(255, 191, 0, 0.12), transparent 34%),
+        linear-gradient(135deg, #04101f 0%, #071a33 42%, #0b2345 74%, #2c4a75 100%);
+    opacity: 1;
+    visibility: visible;
+    transition: opacity 500ms ease, visibility 500ms ease;
+    animation: site-preloader-failsafe 1ms linear 4s forwards;
+}
+
+.site-preloader.is-hidden {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+.site-preloader__glow {
+    position: absolute;
+    border-radius: 9999px;
+    filter: blur(12px);
+    opacity: 0.35;
+    animation: site-preloader-float 5s ease-in-out infinite;
+}
+
+.site-preloader__glow--one {
+    top: -12rem;
+    right: -8rem;
+    width: 30rem;
+    height: 30rem;
+    background: radial-gradient(circle, rgba(255, 191, 0, 0.3), transparent 70%);
+}
+
+.site-preloader__glow--two {
+    bottom: -15rem;
+    left: -10rem;
+    width: 34rem;
+    height: 34rem;
+    background: radial-gradient(circle, rgba(74, 106, 150, 0.4), transparent 70%);
+    animation-delay: -2s;
+}
+
+.site-preloader__content {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2rem;
+    text-align: center;
+}
+
+.site-preloader__emblem {
+    position: relative;
+    display: grid;
+    width: 7.5rem;
+    height: 7.5rem;
+    place-items: center;
+}
+
+.site-preloader__spinner {
+    position: absolute;
+    inset: 0;
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-top-color: var(--color-gold-500);
+    border-right-color: rgba(255, 191, 0, 0.5);
+    border-radius: 9999px;
+    animation: site-preloader-spin 1.15s linear infinite;
+}
+
+.site-preloader__logo-frame {
+    display: grid;
+    width: 5.5rem;
+    height: 5.5rem;
+    place-items: center;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 1.35rem;
+    background: #ffffff;
+    box-shadow: 0 22px 50px -22px rgba(0, 0, 0, 0.85);
+}
+
+.site-preloader__logo {
+    width: 4.5rem;
+    height: 4.5rem;
+    object-fit: contain;
+}
+
+.site-preloader__name {
+    margin: 1.5rem 0 0;
+    color: #ffffff;
+    font-family: var(--font-display);
+    font-size: 0.82rem;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+}
+
+.site-preloader__tagline {
+    margin: 0.4rem 0 0;
+    color: rgba(255, 255, 255, 0.62);
+    font-size: 0.78rem;
+    letter-spacing: 0.02em;
+}
+
+.site-preloader__progress {
+    display: block;
+    width: 11rem;
+    height: 2px;
+    margin-top: 1.5rem;
+    overflow: hidden;
+    border-radius: 9999px;
+    background: rgba(255, 255, 255, 0.14);
+}
+
+.site-preloader__progress span {
+    display: block;
+    width: 42%;
+    height: 100%;
+    border-radius: inherit;
+    background: linear-gradient(90deg, var(--color-gold-500), #fff2b8);
+    animation: site-preloader-progress 1.2s ease-in-out infinite;
+}
+
+.preloader-active {
+    overflow: hidden;
+}
+
+/* Network status banner */
+.network-status {
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    z-index: 90;
+    border-bottom: 1px solid var(--color-gold-300);
+    background: var(--color-gold-50);
+    color: var(--color-brand-900);
+    box-shadow: 0 12px 30px -22px rgba(7, 26, 51, 0.6);
+}
+
+.network-status[hidden] {
+    display: none;
+}
+
+.network-status[data-state="online"] {
+    border-bottom-color: #bbf7d0;
+    background: #f0fdf4;
+}
+
+.network-status__inner {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    width: min(100% - 2rem, 80rem);
+    margin: 0 auto;
+    padding: 0.6rem 0;
+}
+
+.network-status__indicator {
+    width: 0.55rem;
+    height: 0.55rem;
+    flex: none;
+    border-radius: 9999px;
+    background: var(--color-warning);
+    box-shadow: 0 0 0 4px rgba(180, 83, 9, 0.12);
+    animation: network-status-pulse 1.8s ease-in-out infinite;
+}
+
+.network-status[data-state="online"] .network-status__indicator {
+    background: var(--color-success);
+    box-shadow: 0 0 0 4px rgba(21, 128, 61, 0.12);
+    animation: none;
+}
+
+.network-status__message {
+    flex: 1;
+    margin: 0;
+    font-size: 0.82rem;
+    font-weight: 500;
+    line-height: 1.35;
+}
+
+.network-status__action {
+    flex: none;
+    border: 1px solid rgba(7, 26, 51, 0.2);
+    border-radius: 0.5rem;
+    background: #ffffff;
+    padding: 0.35rem 0.75rem;
+    color: var(--color-brand-900);
+    cursor: pointer;
+    font-size: 0.75rem;
+    font-weight: 700;
+}
+
+.network-status__action:hover {
+    background: var(--color-brand-50);
+}
+
+@keyframes site-preloader-spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes site-preloader-progress {
+    0% {
+        transform: translateX(-120%);
+    }
+    100% {
+        transform: translateX(300%);
+    }
+}
+
+@keyframes site-preloader-float {
+    0%,
+    100% {
+        transform: translate3d(0, 0, 0);
+    }
+    50% {
+        transform: translate3d(0, 1.5rem, 0);
+    }
+}
+
+@keyframes site-preloader-failsafe {
+    to {
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+    }
+}
+
+@keyframes network-status-pulse {
+    0%,
+    100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.45;
+    }
+}
+
+@media (max-width: 640px) {
+    .network-status__inner {
+        width: min(100% - 1.5rem, 80rem);
+    }
+
+    .network-status__message {
+        font-size: 0.76rem;
+    }
+}
+
 [data-site-nav] {
     transition: box-shadow 250ms ease, background-color 250ms ease;
 }
