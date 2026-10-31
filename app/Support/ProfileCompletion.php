@@ -30,6 +30,13 @@ class ProfileCompletion
                 'url' => route('jobseeker.profile.edit').'#personal',
             ],
             [
+                'key' => 'photo',
+                'label' => 'Profile photo',
+                'message' => 'Add a clear profile photo so employers can recognise you.',
+                'complete' => filled($profile?->photo_path),
+                'url' => route('jobseeker.profile.edit').'#personal',
+            ],
+            [
                 'key' => 'summary',
                 'label' => 'Professional summary',
                 'message' => 'Write a short summary about your experience and goals.',
@@ -65,6 +72,13 @@ class ProfileCompletion
                     || ! empty($profile?->preferred_categories)
                     || ! empty($profile?->preferred_locations),
                 'url' => route('jobseeker.profile.edit').'#preferences',
+            ],
+            [
+                'key' => 'identity',
+                'label' => 'Identity verification',
+                'message' => 'Submit a valid ID for admin review to get verified.',
+                'complete' => $profile?->isIdentityVerified() ?? false,
+                'url' => route('jobseeker.profile.edit').'#identity',
             ],
             [
                 'key' => 'cv',

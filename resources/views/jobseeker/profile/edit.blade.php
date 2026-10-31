@@ -11,10 +11,13 @@
         $locationsValue = old('preferred_locations_text', is_array($profile->preferred_locations) ? implode(', ', $profile->preferred_locations) : '');
         $educationLevels = ['Secondary / SSCE', 'Diploma', 'HND', 'Bachelor’s degree', 'Master’s degree', 'Doctorate', 'Other'];
         $experienceLevels = ['Entry level', 'Junior', 'Mid level', 'Senior', 'Expert'];
+        $identityStatus = $profile->identity_verification_status ?? 'unsubmitted';
+        $identityStatusLabel = $profile->identityStatusLabel();
+        $identityStatusVariant = $profile->identityStatusBadgeVariant();
     @endphp
 
     <div class="grid gap-6 lg:grid-cols-3">
-        <form method="POST" action="{{ route('jobseeker.profile.update') }}" class="space-y-6 lg:col-span-2">
+        <form method="POST" action="{{ route('jobseeker.profile.update') }}" enctype="multipart/form-data" class="space-y-6 lg:col-span-2">
             @csrf
             @method('PUT')
 
@@ -27,6 +30,22 @@
                     @if(filled($profile->first_name) || filled($profile->last_name))
                         <x-badge variant="success">Started</x-badge>
                     @endif
+                </div>
+
+                <div class="mt-4 flex flex-wrap items-center gap-4 rounded-lg border border-slate-200 bg-slate-50 p-4">
+                    @if(filled($profile->photo_path))
+                        <img src="{{ route('jobseekers.photo', $user) }}" alt="Profile photo" class="h-20 w-20 rounded-full object-cover ring-2 ring-white">
+                    @else
+                        <span class="flex h-20 w-20 shrink-0 items-center justify-center rounded-full bg-brand-100 text-brand-700">
+                            <x-icon name="user" class="h-9 w-9" />
+                        </span>
+                    @endif
+                    <div class="min-w-0 flex-1">
+                        <label for="photo" class="mb-1 block text-sm font-medium text-slate-700">Profile photo</label>
+                        <input id="photo" name="photo" type="file" accept="image/jpeg,image/png,image/webp" class="block w-full text-sm text-slate-600 file:mr-3 file:rounded-lg file:border-0 file:bg-brand-700 file:px-3 file:py-2 file:text-sm file:font-semibold file:text-white hover:file:bg-brand-800">
+                        <p class="mt-1 text-xs text-slate-500">JPG, PNG or WebP. Maximum 2 MB. A clear face photo builds trust with employers.</p>
+                        @error('photo') <p class="mt-1 text-sm text-danger">{{ $message }}</p> @enderror
+                    </div>
                 </div>
 
                 <div class="mt-4 grid gap-4 sm:grid-cols-2">
@@ -70,6 +89,96 @@
                         <label for="country" class="mb-1 block text-sm font-medium text-slate-700">Country</label>
                         <input id="country" name="country" type="text" value="{{ old('country', $profile->country ?? 'Nigeria') }}" autocomplete="country-name" class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/30">
                         @error('country') <p class="mt-1 text-sm text-danger">{{ $message }}</p> @enderror
+                    </div>
+                </div>
+            </section>
+
+            <section id="identity" class="scroll-mt-24 rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+                <div class="flex flex-wrap items-start justify-between gap-3">
+                    <div>
+                        <h2 class="font-display text-base font-semibold text-brand-900">Identity verification</h2>
+                        <p class="mt-1 text-sm text-slate-600">Verify your identity to help keep the marketplace safe. Your ID number is encrypted and only visible to you and authorised admins.</p>
+                    </div>
+                    <x-badge :variant="$identityStatusVariant">{{ $identityStatusLabel }}</x-badge>
+                </div>
+
+                @if($identityStatus === 'pending')
+                    <div class="mt-4 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
+                        <p class="font-medium">Your identity is awaiting review.</p>
+                        @if($profile->identity_submitted_at)
+                            <p class="mt-1">Submitted {{ $profile->identity_submitted_at->format('M j, Y \a\t g:ia') }}. An admin will review your details shortly.</p>
+                        @endif
+                    </div>
+                @elseif($identityStatus === 'approved')
+                    <div class="mt-4 rounded-lg border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-800">
+                        <p class="font-medium">Your identity has been verified.</p>
+                        @if($profile->identity_reviewed_at)
+                            <p class="mt-1">Verified {{ $profile->identity_reviewed_at->format('M j, Y') }}.</p>
+                        @endif
+                    </div>
+                @elseif($identityStatus === 'rejected')
+                    <div class="mt-4 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">
+                        <p class="font-medium">Your identity submission needs attention.</p>
+                        @if(filled($profile->identity_verification_notes))
+                            <p class="mt-1">{{ $profile->identity_verification_notes }}</p>
+                        @endif
+                        <p class="mt-1">Correct the issue and save your profile to resubmit for review.</p>
+                    </div>
+                @else
+                    <div class="mt-4 rounded-lg border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-600">
+                        Provide your ID type, ID number, a clear copy of the document and your guarantor details to submit for verification.
+                    </div>
+                @endif
+
+                <div class="mt-4 grid gap-4 sm:grid-cols-2">
+                    <div>
+                        <label for="identification_type" class="mb-1 block text-sm font-medium text-slate-700">ID type</label>
+                        <select id="identification_type" name="identification_type" class="w-full rounded-lg border px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/30 {{ $errors->has('identification_type') ? 'border-red-400' : 'border-slate-300' }}">
+                            <option value="">Not provided</option>
+                            @foreach(\App\Models\JobSeekerProfile::IDENTIFICATION_TYPES as $value => $label)
+                                <option value="{{ $value }}" @selected(old('identification_type', $profile->identification_type) === $value)>{{ $label }}</option>
+                            @endforeach
+                        </select>
+                        @error('identification_type') <p class="mt-1 text-sm text-danger">{{ $message }}</p> @enderror
+                    </div>
+                    <div>
+                        <label for="identification_number" class="mb-1 block text-sm font-medium text-slate-700">ID number</label>
+                        <input id="identification_number" name="identification_number" type="text" value="{{ old('identification_number', $profile->identification_number) }}" autocomplete="off" class="w-full rounded-lg border px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/30 {{ $errors->has('identification_number') ? 'border-red-400' : 'border-slate-300' }}">
+                        @error('identification_number') <p class="mt-1 text-sm text-danger">{{ $message }}</p> @enderror
+                    </div>
+                    <div class="sm:col-span-2">
+                        <label for="identification_file" class="mb-1 block text-sm font-medium text-slate-700">ID document</label>
+                        <input id="identification_file" name="identification_file" type="file" accept="image/jpeg,image/png,image/webp,application/pdf" class="block w-full text-sm text-slate-600 file:mr-3 file:rounded-lg file:border-0 file:bg-slate-700 file:px-3 file:py-2 file:text-sm file:font-semibold file:text-white hover:file:bg-slate-800">
+                        <p class="mt-1 text-xs text-slate-500">Upload a clear JPG, PNG, WebP or PDF copy. Maximum 5 MB.</p>
+                        @error('identification_file') <p class="mt-1 text-sm text-danger">{{ $message }}</p> @enderror
+                        @if(filled($profile->identification_document_path))
+                            <a href="{{ route('jobseekers.identification', $user) }}" target="_blank" rel="noopener" class="mt-2 inline-flex items-center gap-1 text-sm font-medium text-brand-700 hover:text-brand-900">
+                                <x-icon name="document" class="h-4 w-4" /> View uploaded ID document
+                            </a>
+                        @endif
+                    </div>
+
+                    <div class="sm:col-span-2 border-t border-slate-200 pt-4">
+                        <h3 class="font-display text-sm font-semibold text-brand-900">Guarantor details</h3>
+                        <p class="mt-1 text-sm text-slate-600">Provide someone who can vouch for you. Admins may contact your guarantor as part of identity verification.</p>
+
+                        <div class="mt-3 grid gap-4 sm:grid-cols-2">
+                            <div>
+                                <label for="guarantor_name" class="mb-1 block text-sm font-medium text-slate-700">Guarantor's full name</label>
+                                <input id="guarantor_name" name="guarantor_name" type="text" value="{{ old('guarantor_name', $profile->guarantor_name) }}" autocomplete="off" class="w-full rounded-lg border px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/30 {{ $errors->has('guarantor_name') ? 'border-red-400' : 'border-slate-300' }}">
+                                @error('guarantor_name') <p class="mt-1 text-sm text-danger">{{ $message }}</p> @enderror
+                            </div>
+                            <div>
+                                <label for="guarantor_phone" class="mb-1 block text-sm font-medium text-slate-700">Guarantor's phone number</label>
+                                <input id="guarantor_phone" name="guarantor_phone" type="tel" value="{{ old('guarantor_phone', $profile->guarantor_phone) }}" autocomplete="off" placeholder="e.g. 0803 622 7769" class="w-full rounded-lg border px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/30 {{ $errors->has('guarantor_phone') ? 'border-red-400' : 'border-slate-300' }}">
+                                @error('guarantor_phone') <p class="mt-1 text-sm text-danger">{{ $message }}</p> @enderror
+                            </div>
+                            <div class="sm:col-span-2">
+                                <label for="guarantor_address" class="mb-1 block text-sm font-medium text-slate-700">Guarantor's address</label>
+                                <textarea id="guarantor_address" name="guarantor_address" rows="3" maxlength="500" class="w-full rounded-lg border px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/30 {{ $errors->has('guarantor_address') ? 'border-red-400' : 'border-slate-300' }}">{{ old('guarantor_address', $profile->guarantor_address) }}</textarea>
+                                @error('guarantor_address') <p class="mt-1 text-sm text-danger">{{ $message }}</p> @enderror
+                            </div>
+                        </div>
                     </div>
                 </div>
             </section>

@@ -20,6 +20,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\JobController;
 use App\Http\Controllers\JobSeeker\DashboardController as JobSeekerDashboard;
 use App\Http\Controllers\JobSeeker\ProfileController as JobSeekerProfile;
+use App\Http\Controllers\JobSeekerIdentityController;
 use App\Http\Controllers\LocationController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PaystackPaymentController;
@@ -92,6 +93,8 @@ Route::middleware(['auth', 'verified', 'role:admin'])->prefix('admin')->name('ad
     Route::resource('users', AdminUserController::class);
     Route::post('/users/{user}/suspend', [AdminUserController::class, 'suspend'])->name('users.suspend');
     Route::post('/users/{user}/unsuspend', [AdminUserController::class, 'unsuspend'])->name('users.unsuspend');
+    Route::post('/users/{user}/identity/approve', [AdminUserController::class, 'approveIdentity'])->name('users.identity.approve');
+    Route::post('/users/{user}/identity/reject', [AdminUserController::class, 'rejectIdentity'])->name('users.identity.reject');
     Route::get('/jobs', [AdminJobController::class, 'index'])->name('jobs.index');
     Route::get('/jobs/create', [AdminJobController::class, 'create'])->name('jobs.create');
     Route::post('/jobs', [AdminJobController::class, 'store'])->name('jobs.store');
@@ -117,6 +120,8 @@ Route::middleware(['auth', 'verified', 'role:admin'])->prefix('admin')->name('ad
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/cvs/{cv}/download', [CvController::class, 'download'])->name('cvs.download');
+    Route::get('/job-seekers/{user}/photo', [JobSeekerIdentityController::class, 'photo'])->name('jobseekers.photo');
+    Route::get('/job-seekers/{user}/identification', [JobSeekerIdentityController::class, 'document'])->name('jobseekers.identification');
 
     Route::get('/settings', [AccountController::class, 'edit'])->name('settings.edit');
 
