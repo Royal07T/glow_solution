@@ -45,28 +45,35 @@
                 @endif
             </section>
 
-            <section class="rounded-xl border border-slate-200 bg-white p-6">
-                <h2 class="font-display text-base font-semibold text-slate-900">Update status</h2>
-                <form method="POST" action="{{ route('admin.applications.update-status', $application) }}" class="mt-4 space-y-4">
-                    @csrf
-                    @method('PATCH')
-                    <div class="grid gap-4 sm:grid-cols-2">
-                        <div>
-                            <label for="status" class="mb-1 block text-sm font-medium text-slate-700">New status</label>
-                            <select id="status" name="status" class="w-full rounded-lg border border-slate-300 px-3 py-2">
-                                @foreach(['under_review' => 'Under review', 'shortlisted' => 'Shortlisted', 'interview' => 'Interview', 'accepted' => 'Accepted', 'rejected' => 'Rejected'] as $value => $label)
-                                    <option value="{{ $value }}" @selected(($application->status instanceof \App\Enums\ApplicationStatus ? $application->status->value : $application->status) === $value)>{{ $label }}</option>
-                                @endforeach
-                            </select>
+            @can('update', $application)
+                <section class="rounded-xl border border-slate-200 bg-white p-6">
+                    <h2 class="font-display text-base font-semibold text-slate-900">Update status</h2>
+                    <form method="POST" action="{{ route('admin.applications.update-status', $application) }}" class="mt-4 space-y-4">
+                        @csrf
+                        @method('PATCH')
+                        <div class="grid gap-4 sm:grid-cols-2">
+                            <div>
+                                <label for="status" class="mb-1 block text-sm font-medium text-slate-700">New status</label>
+                                <select id="status" name="status" class="w-full rounded-lg border border-slate-300 px-3 py-2">
+                                    @foreach(['under_review' => 'Under review', 'shortlisted' => 'Shortlisted', 'interview' => 'Interview', 'accepted' => 'Accepted', 'rejected' => 'Rejected'] as $value => $label)
+                                        <option value="{{ $value }}" @selected(($application->status instanceof \App\Enums\ApplicationStatus ? $application->status->value : $application->status) === $value)>{{ $label }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div>
+                                <label for="employer_notes" class="mb-1 block text-sm font-medium text-slate-700">Note to candidate <span class="text-slate-400">(optional)</span></label>
+                                <input id="employer_notes" type="text" name="employer_notes" maxlength="2000" value="{{ $application->employer_notes }}" class="w-full rounded-lg border border-slate-300 px-3 py-2">
+                            </div>
                         </div>
-                        <div>
-                            <label for="employer_notes" class="mb-1 block text-sm font-medium text-slate-700">Note to candidate <span class="text-slate-400">(optional)</span></label>
-                            <input id="employer_notes" type="text" name="employer_notes" maxlength="2000" value="{{ $application->employer_notes }}" class="w-full rounded-lg border border-slate-300 px-3 py-2">
-                        </div>
-                    </div>
-                    <button type="submit" class="rounded-lg bg-brand-700 px-5 py-2.5 text-sm font-semibold text-white hover:bg-brand-600">Save decision</button>
-                </form>
-            </section>
+                        <button type="submit" class="rounded-lg bg-brand-700 px-5 py-2.5 text-sm font-semibold text-white hover:bg-brand-600">Save decision</button>
+                    </form>
+                </section>
+            @else
+                <section class="rounded-xl border border-slate-200 bg-white p-6">
+                    <h2 class="font-display text-base font-semibold text-slate-900">Employer-managed application</h2>
+                    <p class="mt-2 text-sm leading-6 text-slate-600">Only the employer who posted this role can update its application status. Agency admins can review the candidate details but cannot change the decision for employer-owned listings.</p>
+                </section>
+            @endcan
         </div>
 
         <aside class="space-y-4">

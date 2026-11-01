@@ -64,6 +64,33 @@ class ApplicationReviewTest extends TestCase
         $this->assertDatabaseCount('notifications', 1);
     }
 
+    public function test_admin_cannot_update_status_for_another_employers_application(): void
+    {
+        $admin = $this->admin();
+        $job = $this->job($this->employer(), ['title' => 'Employer Managed Role']);
+        $seeker = $this->jobSeeker();
+        $application = $this->application($seeker, $job);
+
+        $this->actingAs($admin)
+            ->get(route('admin.applications.show', $application))
+            ->assertOk()
+            ->assertSee('Employer-managed application')
+            ->assertSee('Only the employer who posted this role can update its application status.')
+            ->assertDontSee('Save decision');
+
+        $this->actingAs($admin)
+            ->patch(route('admin.applications.update-status', $application), [
+                'status' => 'shortlisted',
+                'employer_notes' => 'Attempted admin override.',
+            ])
+            ->assertForbidden();
+
+        $application->refresh();
+
+        $this->assertSame(ApplicationStatus::SUBMITTED, $application->status);
+        $this->assertNull($application->employer_notes);
+    }
+
     public function test_admin_applications_can_be_filtered_by_job_and_status(): void
     {
         $admin = $this->admin();

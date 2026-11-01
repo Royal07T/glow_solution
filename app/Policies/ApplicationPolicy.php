@@ -32,7 +32,7 @@ class ApplicationPolicy
     public function update(User $user, Application $application): bool
     {
         if ($user->isAdmin()) {
-            return true;
+            return $application->job->employerProfile?->user_id === $user->id;
         }
 
         if ($user->isEmployer()) {
