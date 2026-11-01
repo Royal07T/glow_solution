@@ -2,9 +2,9 @@
 
 namespace App\Models;
 
+use App\Enums\JobStatus;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Enums\JobStatus;
 
 class Job extends Model
 {
@@ -71,6 +71,11 @@ class Job extends Model
         return $this->belongsToMany(User::class, 'saved_jobs')->withTimestamps();
     }
 
+    public function feedback()
+    {
+        return $this->hasMany(Feedback::class);
+    }
+
     public function isApproved()
     {
         return $this->status === 'approved' && $this->published_at && $this->published_at->isPast();
@@ -80,12 +85,14 @@ class Job extends Model
     {
         return $this->expires_at && $this->expires_at->isPast();
     }
+
     public function statusVariant(): string
     {
         if ($this->status instanceof JobStatus) {
             return $this->status->statusVariant();
         }
         $status = JobStatus::tryFrom($this->status ?? 'pending');
+
         return $status ? $status->statusVariant() : 'secondary';
     }
 
@@ -95,6 +102,7 @@ class Job extends Model
             return $this->status->statusLabel();
         }
         $status = JobStatus::tryFrom($this->status ?? 'pending');
+
         return $status ? $status->statusLabel() : ucfirst($this->status ?? '');
     }
 }

@@ -7,21 +7,30 @@ use App\Models\AuditLog;
 use App\Models\EmployerVerification;
 use App\Models\Job;
 use App\Models\User;
+use App\Support\SearchTerm;
 use Illuminate\Http\Request;
 
 class AuditLogController extends Controller
 {
     public function index(Request $request)
     {
+        $validated = $request->validate([
+            'action' => ['nullable', 'string', 'max:100'],
+            'user' => ['nullable', 'string', 'max:100'],
+        ]);
+
+        $action = SearchTerm::clean($validated['action'] ?? null);
+        $user = SearchTerm::clean($validated['user'] ?? null);
+
         $query = AuditLog::with('user')->latest();
 
-        if ($request->filled('action')) {
-            $query->where('action', 'like', '%'.$request->string('action').'%');
+        if ($action !== '') {
+            $query->where('action', 'like', '%'.$action.'%');
         }
 
-        if ($request->filled('user')) {
-            $query->whereHas('user', function ($q) use ($request) {
-                $q->where('email', 'like', '%'.$request->string('user').'%');
+        if ($user !== '') {
+            $query->whereHas('user', function ($q) use ($user) {
+                $q->where('email', 'like', '%'.$user.'%');
             });
         }
 

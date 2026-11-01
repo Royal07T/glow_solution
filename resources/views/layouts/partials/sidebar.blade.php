@@ -23,6 +23,7 @@
                 ['label' => 'Subscription & billing', 'route' => 'billing.index', 'icon' => 'card', 'active' => ['billing.*']],
                 ['label' => 'Plans & pricing', 'route' => 'subscriptions.plans', 'icon' => 'sparkles', 'active' => ['subscriptions.plans']],
                 ['label' => 'Settings', 'route' => 'settings.edit', 'icon' => 'settings', 'active' => ['settings.*']],
+                ['label' => 'Feedback', 'route' => 'feedback.create', 'icon' => 'send', 'active' => ['feedback.*']],
                 ['label' => 'Help & support', 'route' => 'home', 'icon' => 'help-circle', 'active' => [], 'fragment' => 'contact'],
             ]],
         ];
@@ -50,6 +51,7 @@
             ]],
             ['label' => 'Account', 'items' => [
                 ['label' => 'Settings', 'route' => 'settings.edit', 'icon' => 'settings', 'active' => ['settings.*']],
+                ['label' => 'Feedback', 'route' => 'feedback.create', 'icon' => 'send', 'active' => ['feedback.*']],
                 ['label' => 'Help & support', 'route' => 'home', 'icon' => 'help-circle', 'active' => [], 'fragment' => 'contact'],
             ]],
         ];
@@ -73,6 +75,7 @@
                 ['label' => 'Subscription plans', 'route' => 'admin.subscription-plans.index', 'icon' => 'card', 'active' => ['admin.subscription-plans.*']],
             ]],
             ['label' => 'Platform operations', 'items' => [
+                ['label' => 'Feedback', 'route' => 'admin.feedback.index', 'icon' => 'send', 'active' => ['admin.feedback.*']],
                 ['label' => 'Audit logs', 'route' => 'admin.audit-logs.index', 'icon' => 'shield', 'active' => ['admin.audit-logs.*']],
             ]],
             ['label' => 'Account', 'items' => [

@@ -4,6 +4,7 @@ use App\Http\Controllers\AccountController;
 use App\Http\Controllers\Admin\ApplicationController as AdminApplicationController;
 use App\Http\Controllers\Admin\AuditLogController as AdminAuditLogController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboard;
+use App\Http\Controllers\Admin\FeedbackController as AdminFeedbackController;
 use App\Http\Controllers\Admin\JobController as AdminJobController;
 use App\Http\Controllers\Admin\SubscriptionPlanController as AdminSubscriptionPlanController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
@@ -16,6 +17,8 @@ use App\Http\Controllers\Employer\ApplicationController as EmployerApplicationCo
 use App\Http\Controllers\Employer\DashboardController as EmployerDashboard;
 use App\Http\Controllers\Employer\JobController as EmployerJobController;
 use App\Http\Controllers\Employer\ProfileController;
+use App\Http\Controllers\EmployerVerificationController;
+use App\Http\Controllers\FeedbackController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\JobController;
 use App\Http\Controllers\JobSeeker\DashboardController as JobSeekerDashboard;
@@ -32,7 +35,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/jobs', [JobController::class, 'index'])->name('jobs.index');
 Route::get('/jobs/{job}', [JobController::class, 'show'])->name('jobs.show');
-Route::get('/locations/lgas', [LocationController::class, 'lgas'])->name('locations.lgas');
+Route::get('/locations/lgas', [LocationController::class, 'lgas'])->name('locations.lgas')->middleware('rate.limit:locations,60,60');
 
 // Auth routes
 Route::get('/login', [AuthenticatedSessionController::class, 'create'])->name('login')->middleware('guest');
@@ -61,7 +64,7 @@ Route::middleware(['auth', 'verified', 'role:job_seeker'])->prefix('jobseeker')-
     Route::get('/recommended', [JobSeekerDashboard::class, 'recommended'])->name('recommended');
     Route::get('/interviews', [ApplicationController::class, 'interviews'])->name('interviews');
     Route::get('/profile', [JobSeekerProfile::class, 'edit'])->name('profile.edit');
-    Route::put('/profile', [JobSeekerProfile::class, 'update'])->name('profile.update');
+    Route::put('/profile', [JobSeekerProfile::class, 'update'])->name('profile.update')->middleware('rate.limit:profile-updates,10,60');
 });
 
 // Applications
@@ -70,66 +73,75 @@ Route::middleware(['auth', 'verified', 'role:job_seeker'])->group(function () {
     Route::get('/applications/{application}', [ApplicationController::class, 'show'])->name('applications.show');
     Route::get('/jobs/{job}/apply', [ApplicationController::class, 'create'])->name('applications.create');
     Route::post('/jobs/{job}/apply', [ApplicationController::class, 'store'])->name('applications.store')->middleware('rate.limit:applications,10,60');
-    Route::post('/applications/{application}/withdraw', [ApplicationController::class, 'withdraw'])->name('applications.withdraw');
+    Route::post('/applications/{application}/withdraw', [ApplicationController::class, 'withdraw'])->name('applications.withdraw')->middleware('rate.limit:withdrawals,5,60');
     Route::get('/saved-jobs', [SavedJobController::class, 'index'])->name('saved-jobs.index');
-    Route::delete('/saved-jobs/{job}', [SavedJobController::class, 'destroy'])->name('saved-jobs.destroy');
+    Route::delete('/saved-jobs/{job}', [SavedJobController::class, 'destroy'])->name('saved-jobs.destroy')->middleware('rate.limit:saved-jobs,30,60');
 });
 
 // CV Management
 Route::middleware(['auth', 'verified', 'role:job_seeker'])->group(function () {
     Route::get('/cvs', [CvController::class, 'index'])->name('cvs.index');
     Route::post('/cvs', [CvController::class, 'store'])->name('cvs.store')->middleware('rate.limit:uploads,5,60');
-    Route::delete('/cvs/{cv}', [CvController::class, 'destroy'])->name('cvs.destroy');
+    Route::delete('/cvs/{cv}', [CvController::class, 'destroy'])->name('cvs.destroy')->middleware('rate.limit:uploads,5,60');
 });
 
 // Saved Jobs
 Route::middleware(['auth', 'verified', 'role:job_seeker'])->group(function () {
-    Route::post('/jobs/{job}/save', [SavedJobController::class, 'toggle'])->name('jobs.save');
+    Route::post('/jobs/{job}/save', [SavedJobController::class, 'toggle'])->name('jobs.save')->middleware('rate.limit:saved-jobs,30,60');
+});
+
+// Feedback
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('/feedback', [FeedbackController::class, 'create'])->name('feedback.create');
+    Route::post('/feedback', [FeedbackController::class, 'store'])->name('feedback.store')->middleware('rate.limit:feedback,5,60');
 });
 
 // Employer Routes
 Route::middleware(['auth', 'verified', 'role:employer'])->prefix('employer')->name('employer.')->group(function () {
     Route::get('/dashboard', [EmployerDashboard::class, 'index'])->name('dashboard');
-    Route::resource('jobs', EmployerJobController::class);
+    Route::resource('jobs', EmployerJobController::class)
+        ->middlewareFor(['store', 'update', 'destroy'], 'rate.limit:employer-jobs,20,60');
     Route::get('/applications', [EmployerApplicationController::class, 'index'])->name('applications.index');
     Route::get('/applications/{application}', [EmployerApplicationController::class, 'show'])->name('applications.show');
-    Route::patch('/applications/{application}/status', [EmployerApplicationController::class, 'updateStatus'])->name('applications.update-status');
-    Route::get('/verification', function () {
-        return view('employer.verification');
-    })->name('verification');
+    Route::patch('/applications/{application}/status', [EmployerApplicationController::class, 'updateStatus'])->name('applications.update-status')->middleware('rate.limit:application-status,30,60');
+    Route::get('/verification', [EmployerVerificationController::class, 'index'])->name('verification');
+    Route::post('/verification', [EmployerVerificationController::class, 'store'])->name('verification.store')->middleware('rate.limit:employer-verification,5,60');
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update')->middleware('rate.limit:profile-updates,10,60');
 });
 
 // Admin Routes
 Route::middleware(['auth', 'verified', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [AdminDashboard::class, 'index'])->name('dashboard');
-    Route::resource('users', AdminUserController::class);
-    Route::post('/users/{user}/suspend', [AdminUserController::class, 'suspend'])->name('users.suspend');
-    Route::post('/users/{user}/unsuspend', [AdminUserController::class, 'unsuspend'])->name('users.unsuspend');
-    Route::post('/users/{user}/identity/approve', [AdminUserController::class, 'approveIdentity'])->name('users.identity.approve');
-    Route::post('/users/{user}/identity/reject', [AdminUserController::class, 'rejectIdentity'])->name('users.identity.reject');
+    Route::resource('users', AdminUserController::class)
+        ->middlewareFor(['store', 'update', 'destroy'], 'rate.limit:admin-users,10,60');
+    Route::post('/users/{user}/suspend', [AdminUserController::class, 'suspend'])->name('users.suspend')->middleware('rate.limit:admin-actions,30,60');
+    Route::post('/users/{user}/unsuspend', [AdminUserController::class, 'unsuspend'])->name('users.unsuspend')->middleware('rate.limit:admin-actions,30,60');
+    Route::post('/users/{user}/identity/approve', [AdminUserController::class, 'approveIdentity'])->name('users.identity.approve')->middleware('rate.limit:admin-actions,30,60');
+    Route::post('/users/{user}/identity/reject', [AdminUserController::class, 'rejectIdentity'])->name('users.identity.reject')->middleware('rate.limit:admin-actions,30,60');
     Route::get('/jobs', [AdminJobController::class, 'index'])->name('jobs.index');
     Route::get('/jobs/create', [AdminJobController::class, 'create'])->name('jobs.create');
-    Route::post('/jobs', [AdminJobController::class, 'store'])->name('jobs.store');
+    Route::post('/jobs', [AdminJobController::class, 'store'])->name('jobs.store')->middleware('rate.limit:admin-actions,30,60');
     Route::get('/jobs/{job}', [AdminJobController::class, 'show'])->name('jobs.show');
     Route::get('/jobs/{job}/edit', [AdminJobController::class, 'edit'])->name('jobs.edit');
-    Route::put('/jobs/{job}', [AdminJobController::class, 'update'])->name('jobs.update');
-    Route::post('/jobs/{job}/approve', [AdminJobController::class, 'approve'])->name('jobs.approve');
-    Route::post('/jobs/{job}/reject', [AdminJobController::class, 'reject'])->name('jobs.reject');
+    Route::put('/jobs/{job}', [AdminJobController::class, 'update'])->name('jobs.update')->middleware('rate.limit:admin-actions,30,60');
+    Route::post('/jobs/{job}/approve', [AdminJobController::class, 'approve'])->name('jobs.approve')->middleware('rate.limit:admin-actions,30,60');
+    Route::post('/jobs/{job}/reject', [AdminJobController::class, 'reject'])->name('jobs.reject')->middleware('rate.limit:admin-actions,30,60');
     Route::get('/applications', [AdminApplicationController::class, 'index'])->name('applications.index');
     Route::get('/applications/{application}', [AdminApplicationController::class, 'show'])->name('applications.show');
-    Route::patch('/applications/{application}/status', [AdminApplicationController::class, 'updateStatus'])->name('applications.update-status');
+    Route::patch('/applications/{application}/status', [AdminApplicationController::class, 'updateStatus'])->name('applications.update-status')->middleware('rate.limit:admin-actions,30,60');
     Route::get('/verifications', [AdminVerificationController::class, 'index'])->name('verifications.index');
     Route::get('/verifications/{verification}', [AdminVerificationController::class, 'show'])->name('verifications.show');
-    Route::post('/verifications/{verification}/approve', [AdminVerificationController::class, 'approve'])->name('verifications.approve');
-    Route::post('/verifications/{verification}/reject', [AdminVerificationController::class, 'reject'])->name('verifications.reject');
+    Route::post('/verifications/{verification}/approve', [AdminVerificationController::class, 'approve'])->name('verifications.approve')->middleware('rate.limit:admin-actions,30,60');
+    Route::post('/verifications/{verification}/reject', [AdminVerificationController::class, 'reject'])->name('verifications.reject')->middleware('rate.limit:admin-actions,30,60');
     Route::get('/verifications/{verification}/document', [AdminVerificationController::class, 'downloadDocument'])->name('verifications.document');
+    Route::get('/feedback', [AdminFeedbackController::class, 'index'])->name('feedback.index');
     Route::get('/audit-logs', [AdminAuditLogController::class, 'index'])->name('audit-logs.index');
     Route::get('/audit-logs/{auditLog}', [AdminAuditLogController::class, 'show'])->name('audit-logs.show');
     Route::resource('subscription-plans', AdminSubscriptionPlanController::class)
         ->except(['show'])
-        ->parameters(['subscription-plans' => 'subscriptionPlan']);
+        ->parameters(['subscription-plans' => 'subscriptionPlan'])
+        ->middlewareFor(['store', 'update', 'destroy'], 'rate.limit:admin-actions,30,60');
 });
 
 Route::middleware(['auth', 'verified'])->group(function () {
@@ -141,7 +153,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
     Route::get('/notifications/{notification}/read', [NotificationController::class, 'read'])->name('notifications.read');
-    Route::post('/notifications/read-all', [NotificationController::class, 'markAllRead'])->name('notifications.read-all');
+    Route::post('/notifications/read-all', [NotificationController::class, 'markAllRead'])->name('notifications.read-all')->middleware('rate.limit:notifications,30,60');
 });
 
 Route::middleware(['auth', 'verified'])->group(function () {

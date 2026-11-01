@@ -4,12 +4,21 @@ namespace App\Http\Controllers;
 
 use App\Models\Job;
 use App\Models\JobCategory;
+use App\Support\SearchTerm;
 use Illuminate\Http\Request;
 
 class JobController extends Controller
 {
     public function index(Request $request)
     {
+        $validated = $request->validate([
+            'keyword' => ['nullable', 'string', 'max:100'],
+            'category' => ['nullable', 'integer', 'exists:job_categories,id'],
+            'type' => ['nullable', 'in:domestic,professional'],
+            'employment_type' => ['nullable', 'in:full_time,part_time,contract,temporary,live_in,live_out'],
+            'location' => ['nullable', 'string', 'max:100'],
+        ]);
+
         $query = Job::with(['employerProfile', 'category'])
             ->where('status', 'approved')
             ->whereNotNull('published_at')
@@ -18,8 +27,9 @@ class JobController extends Controller
                 $q->whereNull('expires_at')->orWhere('expires_at', '>', now());
             });
 
-        if ($request->filled('keyword')) {
-            $keyword = $request->string('keyword');
+        $keyword = SearchTerm::clean($validated['keyword'] ?? null);
+
+        if ($keyword !== '') {
             $query->where(function ($q) use ($keyword) {
                 $q->where('title', 'like', '%'.$keyword.'%')
                     ->orWhere('description', 'like', '%'.$keyword.'%')
@@ -30,20 +40,21 @@ class JobController extends Controller
             });
         }
 
-        if ($request->filled('category')) {
-            $query->where('job_category_id', $request->category);
+        if (filled($validated['category'] ?? null)) {
+            $query->where('job_category_id', $validated['category']);
         }
 
-        if ($request->filled('type')) {
-            $query->where('type', $request->type);
+        if (filled($validated['type'] ?? null)) {
+            $query->where('type', $validated['type']);
         }
 
-        if ($request->filled('employment_type')) {
-            $query->where('employment_type', $request->employment_type);
+        if (filled($validated['employment_type'] ?? null)) {
+            $query->where('employment_type', $validated['employment_type']);
         }
 
-        if ($request->filled('location')) {
-            $location = $request->string('location');
+        $location = SearchTerm::clean($validated['location'] ?? null);
+
+        if ($location !== '') {
             $query->where(function ($q) use ($location) {
                 $q->where('location', 'like', '%'.$location.'%')
                     ->orWhere('city', 'like', '%'.$location.'%')

@@ -4,6 +4,14 @@
 @section('subtitle', 'Search accounts, review job seeker identity submissions and manage access.')
 
 @section('content')
+    <div class="mb-5 flex flex-wrap items-center justify-between gap-3">
+        <p class="text-sm text-slate-600">Manage job seeker, employer and administrator accounts.</p>
+        <a href="{{ route('admin.users.create') }}" class="inline-flex items-center gap-2 rounded-lg bg-brand-700 px-4 py-2.5 text-sm font-semibold text-white hover:bg-brand-800">
+            <x-icon name="plus" class="h-4 w-4" />
+            Create admin
+        </a>
+    </div>
+
     <form method="GET" action="{{ route('admin.users.index') }}" class="mb-5 grid gap-3 rounded-xl border border-slate-200 bg-white p-4 sm:grid-cols-2 lg:grid-cols-5">
         <div>
             <label for="search" class="mb-1 block text-xs font-medium text-slate-600">Search</label>

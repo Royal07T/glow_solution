@@ -20,7 +20,7 @@
                 <dl class="mt-5 grid gap-3 sm:grid-cols-2">
                     <div>
                         <dt class="text-xs uppercase tracking-wide text-slate-500">Document type</dt>
-                        <dd class="text-sm font-medium text-slate-800">{{ ucfirst(str_replace('_', ' ', $verification->document_type)) }}</dd>
+                        <dd class="text-sm font-medium text-slate-800">{{ $verification->documentTypeLabel() }}</dd>
                     </div>
                     <div>
                         <dt class="text-xs uppercase tracking-wide text-slate-500">Submitted</dt>

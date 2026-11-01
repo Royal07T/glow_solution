@@ -30,7 +30,7 @@ class EmailVerificationTest extends TestCase
 
         $verificationUrl = URL::temporarySignedRoute(
             'verification.verify',
-            now()->addMinutes(60),
+            now()->addMinutes(config('auth.verification.expire')),
             ['id' => $user->id, 'hash' => sha1($user->email)],
         );
 
@@ -50,6 +50,31 @@ class EmailVerificationTest extends TestCase
             ->assertSee('Email verified')
             ->assertSee($user->email)
             ->assertSee(route('jobseeker.dashboard'), false);
+    }
+
+    public function test_expired_verification_link_redirects_to_notice_without_verifying_email(): void
+    {
+        $user = $this->jobSeeker(['email_verified_at' => null]);
+
+        $verificationUrl = URL::temporarySignedRoute(
+            'verification.verify',
+            now()->addMinutes(config('auth.verification.expire')),
+            ['id' => $user->id, 'hash' => sha1($user->email)],
+        );
+
+        $this->travel(11)->minutes();
+
+        $this->actingAs($user)
+            ->get($verificationUrl)
+            ->assertRedirect(route('verification.notice'))
+            ->assertSessionHas('error', 'This verification link has expired or is invalid. Please request a new one.');
+
+        $this->assertNull($user->fresh()->email_verified_at);
+    }
+
+    public function test_verification_link_expires_after_ten_minutes(): void
+    {
+        $this->assertSame(10, config('auth.verification.expire'));
     }
 
     public function test_fortify_home_path_redirects_users_to_their_dashboard(): void

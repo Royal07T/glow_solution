@@ -2,44 +2,105 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Enums\UserRole;
 use App\Http\Controllers\Controller;
 use App\Models\Application;
 use App\Models\AuditLog;
 use App\Models\User;
 use App\Notifications\SystemNotification;
+use App\Support\SearchTerm;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rule;
+use Illuminate\Validation\Rules;
 
 class UserController extends Controller
 {
     public function index(Request $request)
     {
+        $validated = $request->validate([
+            'role' => ['nullable', Rule::enum(UserRole::class)],
+            'search' => ['nullable', 'string', 'max:100'],
+            'status' => ['nullable', Rule::in(['active', 'suspended'])],
+            'identity_status' => ['nullable', Rule::in(['unsubmitted', 'pending', 'approved', 'rejected'])],
+        ]);
+
+        $search = SearchTerm::clean($validated['search'] ?? null);
+
         $query = User::query()->with(['jobSeekerProfile', 'employerProfile']);
 
-        if ($request->filled('role')) {
-            $query->where('role', $request->role);
+        if (filled($validated['role'] ?? null)) {
+            $query->where('role', $validated['role']);
         }
 
-        if ($request->filled('search')) {
-            $query->where(function ($q) use ($request) {
-                $q->where('name', 'like', '%'.$request->search.'%')
-                    ->orWhere('email', 'like', '%'.$request->search.'%')
-                    ->orWhere('phone', 'like', '%'.$request->search.'%');
+        if ($search !== '') {
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', '%'.$search.'%')
+                    ->orWhere('email', 'like', '%'.$search.'%')
+                    ->orWhere('phone', 'like', '%'.$search.'%');
             });
         }
 
-        if ($request->filled('status')) {
-            $query->where('is_suspended', $request->status === 'suspended');
+        if (filled($validated['status'] ?? null)) {
+            $query->where('is_suspended', $validated['status'] === 'suspended');
         }
 
-        if ($request->filled('identity_status')) {
-            $query->whereHas('jobSeekerProfile', function ($q) use ($request) {
-                $q->where('identity_verification_status', $request->identity_status);
+        if (filled($validated['identity_status'] ?? null)) {
+            $query->whereHas('jobSeekerProfile', function ($q) use ($validated) {
+                $q->where('identity_verification_status', $validated['identity_status']);
             });
         }
 
         $users = $query->latest()->paginate(15)->withQueryString();
 
         return view('admin.users.index', compact('users'));
+    }
+
+    public function create()
+    {
+        return view('admin.users.create');
+    }
+
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
+            'first_name' => ['required', 'string', 'max:100'],
+            'last_name' => ['required', 'string', 'max:100'],
+            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
+            'phone' => ['nullable', 'string', 'max:20', 'regex:/^[0-9+\-\s()]{7,20}$/'],
+            'password' => ['required', 'confirmed', Rules\Password::defaults()],
+        ], [
+            'phone.regex' => 'Please enter a valid phone number.',
+        ]);
+
+        $firstName = trim($validated['first_name']);
+        $lastName = trim($validated['last_name']);
+
+        $user = User::create([
+            'name' => trim($firstName.' '.$lastName),
+            'first_name' => $firstName,
+            'last_name' => $lastName,
+            'email' => $validated['email'],
+            'phone' => $validated['phone'] ?? null,
+            'password' => Hash::make($validated['password']),
+            'role' => UserRole::ADMIN->value,
+        ]);
+
+        $user->forceFill(['email_verified_at' => now()])->save();
+
+        try {
+            AuditLog::record(
+                'admin.created',
+                $user,
+                [],
+                ['role' => UserRole::ADMIN->value, 'email' => $user->email],
+            );
+        } catch (\Throwable $e) {
+        }
+
+        return redirect()
+            ->route('admin.users.show', $user)
+            ->with('success', 'Administrator account created successfully.');
     }
 
     public function show(User $user)
@@ -139,7 +200,7 @@ class UserController extends Controller
     public function suspend(Request $request, User $user)
     {
         $validated = $request->validate([
-            'suspension_reason' => 'required|string',
+            'suspension_reason' => 'required|string|max:1000',
         ]);
 
         if ($user->isAdmin()) {

@@ -19,7 +19,7 @@ class RegisteredUserController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
+        $validated = $request->validate([
             'first_name' => ['required', 'string', 'max:100'],
             'last_name' => ['required', 'string', 'max:100'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
@@ -30,17 +30,17 @@ class RegisteredUserController extends Controller
             'phone.regex' => 'Please enter a valid phone number.',
         ]);
 
-        $firstName = trim($request->first_name);
-        $lastName = trim($request->last_name);
+        $firstName = trim($validated['first_name']);
+        $lastName = trim($validated['last_name']);
 
         $user = User::create([
             'name' => trim($firstName.' '.$lastName),
             'first_name' => $firstName,
             'last_name' => $lastName,
-            'email' => $request->email,
-            'phone' => $request->phone,
-            'password' => Hash::make($request->password),
-            'role' => $request->role,
+            'email' => $validated['email'],
+            'phone' => $validated['phone'],
+            'password' => Hash::make($validated['password']),
+            'role' => $validated['role'],
         ]);
 
         if ($user->isJobSeeker()) {
@@ -56,6 +56,7 @@ class RegisteredUserController extends Controller
         if ($user->isEmployer()) {
             return redirect(route('employer.dashboard'));
         }
+
         return redirect(route('jobseeker.dashboard'));
     }
 }

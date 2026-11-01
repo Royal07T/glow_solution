@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Application;
 use App\Notifications\SystemNotification;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class ApplicationController extends Controller
 {
@@ -17,16 +18,24 @@ class ApplicationController extends Controller
 
     public function index(Request $request)
     {
+        $validated = $request->validate([
+            'job' => ['nullable', 'integer', 'exists:jobs,id'],
+            'status' => ['nullable', Rule::enum(ApplicationStatus::class)],
+        ]);
+
+        $jobId = $validated['job'] ?? null;
+        $status = $validated['status'] ?? null;
+
         $profile = auth()->user()->employerProfile;
         $jobs = $profile->jobs()->latest()->get();
-        $applications = Application::whereHas('job', function ($q) use ($profile, $request) {
+        $applications = Application::whereHas('job', function ($q) use ($profile, $jobId) {
             $q->where('employer_profile_id', $profile->id);
-            if ($request->filled('job')) {
-                $q->where('id', $request->job);
+            if (filled($jobId)) {
+                $q->where('id', $jobId);
             }
         })->with(['job', 'jobSeeker', 'cv'])
-            ->when($request->filled('status'), function ($q) use ($request) {
-                $q->where('status', $request->status);
+            ->when($status !== null, function ($q) use ($status) {
+                $q->where('status', $status);
             })
             ->latest()->paginate(15)->withQueryString();
 
@@ -47,7 +56,7 @@ class ApplicationController extends Controller
 
         $validated = $request->validate([
             'status' => 'required|in:submitted,under_review,shortlisted,interview,accepted,rejected,withdrawn',
-            'employer_notes' => 'nullable|string',
+            'employer_notes' => 'nullable|string|max:2000',
         ]);
 
         $previousStatus = $application->status;

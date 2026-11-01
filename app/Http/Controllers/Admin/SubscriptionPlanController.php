@@ -126,7 +126,31 @@ class SubscriptionPlanController extends Controller
             return [];
         }
 
-        return json_decode($json, true) ?: [];
+        $decoded = json_decode($json, true);
+
+        if (! is_array($decoded)) {
+            return [];
+        }
+
+        $entitlements = [];
+
+        foreach ($decoded as $key => $value) {
+            if (! is_string($key)) {
+                continue;
+            }
+
+            if (is_string($value)) {
+                $entitlements[$key] = trim(strip_tags($value));
+
+                continue;
+            }
+
+            if (is_int($value) || is_float($value) || is_bool($value) || is_null($value)) {
+                $entitlements[$key] = $value;
+            }
+        }
+
+        return $entitlements;
     }
 
     private function uniqueSlug(?string $slug, string $name, ?SubscriptionPlan $plan = null): string

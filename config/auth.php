@@ -75,6 +75,20 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Email Verification
+    |--------------------------------------------------------------------------
+    |
+    | This value controls how long the signed email verification link remains
+    | valid. After it expires, the user must request a new verification email.
+    |
+    */
+
+    'verification' => [
+        'expire' => 10,
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
     | Resetting Passwords
     |--------------------------------------------------------------------------
     |

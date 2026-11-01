@@ -9,8 +9,14 @@
             <h1 class="mt-4 font-display text-2xl font-bold text-slate-900">Verify your email address</h1>
             <p class="mt-2 text-sm text-slate-600">
                 We sent a verification link to <span class="font-semibold">{{ auth()->user()->email }}</span>.
-                Please open it to activate your account.
+                Please open it within 10 minutes to activate your account.
             </p>
+
+            @if(session('error'))
+                <p class="mt-4 rounded-lg bg-red-50 px-4 py-3 text-sm text-red-800">
+                    {{ session('error') }}
+                </p>
+            @endif
 
             @if(session('status') === 'verification-link-sent')
                 <p class="mt-4 rounded-lg bg-green-50 px-4 py-3 text-sm text-green-800">

@@ -45,6 +45,11 @@ class Application extends Model
         return $this->belongsTo(Cv::class);
     }
 
+    public function feedback()
+    {
+        return $this->hasMany(Feedback::class);
+    }
+
     public function statusVariant(): string
     {
         if ($this->status instanceof ApplicationStatus) {
@@ -56,6 +61,7 @@ class Application extends Model
                 return $status->variant();
             }
         }
+
         return 'neutral';
     }
 
@@ -70,12 +76,14 @@ class Application extends Model
                 return $status->label();
             }
         }
+
         return $this->status ? ucfirst(str_replace('_', ' ', $this->status)) : 'Unknown';
     }
 
     public function canBeWithdrawn(): bool
     {
         $status = $this->status instanceof ApplicationStatus ? $this->status : ApplicationStatus::tryFrom($this->status);
+
         return in_array($status, [ApplicationStatus::SUBMITTED, ApplicationStatus::UNDER_REVIEW]);
     }
 }

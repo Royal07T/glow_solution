@@ -40,7 +40,7 @@
                                     <p class="font-semibold text-slate-900">{{ $verification->employerProfile->company_name ?? $verification->employerProfile->contact_person }}</p>
                                     <p class="text-xs text-slate-500">{{ $verification->employerProfile->user->email }}</p>
                                 </td>
-                                <td class="px-5 py-4 text-slate-600">{{ ucfirst(str_replace('_', ' ', $verification->document_type)) }}</td>
+                                <td class="px-5 py-4 text-slate-600">{{ $verification->documentTypeLabel() }}</td>
                                 <td class="px-5 py-4">
                                     <x-badge :variant="$verification->status === 'approved' ? 'success' : ($verification->status === 'rejected' ? 'danger' : 'warning')">
                                         {{ ucfirst($verification->status) }}

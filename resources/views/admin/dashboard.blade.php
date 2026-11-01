@@ -70,7 +70,7 @@
                 <div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-100 px-5 py-4 last:border-0">
                     <div class="min-w-0">
                         <p class="font-semibold text-brand-900">{{ $verification->employerProfile->company_name ?? $verification->employerProfile->user->name ?? 'Employer' }}</p>
-                        <p class="text-xs text-slate-500">{{ ucfirst($verification->document_type ?? 'Document') }} · submitted {{ $verification->created_at->diffForHumans() }}</p>
+                        <p class="text-xs text-slate-500">{{ $verification->documentTypeLabel() }} · submitted {{ $verification->created_at->diffForHumans() }}</p>
                     </div>
                     <a href="{{ route('admin.verifications.show', $verification) }}" class="text-sm font-semibold text-brand-700 hover:underline">Review</a>
                 </div>

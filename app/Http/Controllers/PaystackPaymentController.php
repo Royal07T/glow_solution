@@ -74,7 +74,12 @@ class PaystackPaymentController extends Controller
 
     public function callback(Request $request, PaystackService $paystack, PaymentService $payments)
     {
-        $reference = (string) ($request->query('reference') ?: $request->query('trxref'));
+        $validated = $request->validate([
+            'reference' => ['nullable', 'string', 'max:100'],
+            'trxref' => ['nullable', 'string', 'max:100'],
+        ]);
+
+        $reference = (string) ($validated['reference'] ?? $validated['trxref'] ?? '');
 
         if ($reference === '') {
             return redirect()->route('billing.index')->with('error', 'The payment reference is missing.');
@@ -123,14 +128,19 @@ class PaystackPaymentController extends Controller
             return response()->json(['message' => 'Invalid signature.'], 401);
         }
 
-        if ($request->input('event') !== 'charge.success') {
+        $validated = $request->validate([
+            'event' => ['nullable', 'string', 'max:100'],
+            'data' => ['nullable', 'array'],
+        ]);
+
+        if (($validated['event'] ?? null) !== 'charge.success') {
             return response()->json(['status' => 'ignored']);
         }
 
-        $data = (array) $request->input('data', []);
+        $data = $validated['data'] ?? [];
         $reference = $data['reference'] ?? null;
 
-        if (! $reference || ($data['status'] ?? null) !== 'success') {
+        if (! is_string($reference) || $reference === '' || ($data['status'] ?? null) !== 'success') {
             return response()->json(['status' => 'ignored']);
         }
 

@@ -40,7 +40,7 @@ class JobController extends Controller
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'job_category_id' => 'required|exists:job_categories,id',
-            'type' => 'nullable|in:full_time,part_time,contract,internship,domestic',
+            'type' => 'nullable|in:domestic,professional',
             'employment_type' => 'nullable|in:full_time,part_time,contract,temporary,live_in,live_out',
             'description' => 'required|string',
             'requirements' => 'nullable|string',
@@ -57,7 +57,7 @@ class JobController extends Controller
 
         $profile = auth()->user()->employerProfile;
 
-        $employmentType = $validated['employment_type'] ?? ($validated['type'] === 'domestic' ? 'live_in' : ($validated['type'] ?? 'full_time'));
+        $employmentType = $validated['employment_type'] ?? (($validated['type'] ?? null) === 'domestic' ? 'live_in' : ($validated['type'] ?? 'full_time'));
         if (isset($validated['type']) && in_array($validated['type'], ['full_time', 'part_time', 'contract'])) {
             $employmentType = $validated['type'];
         }
@@ -120,7 +120,7 @@ class JobController extends Controller
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'job_category_id' => 'required|exists:job_categories,id',
-            'type' => 'nullable|in:full_time,part_time,contract,internship,domestic',
+            'type' => 'nullable|in:domestic,professional',
             'employment_type' => 'nullable|in:full_time,part_time,contract,temporary,live_in,live_out',
             'description' => 'required|string',
             'requirements' => 'nullable|string',
@@ -135,7 +135,7 @@ class JobController extends Controller
             'is_remote' => 'nullable|boolean',
         ]);
 
-        $employmentType = $validated['employment_type'] ?? ($validated['type'] === 'domestic' ? 'live_in' : ($validated['type'] ?? $job->employment_type ?? 'full_time'));
+        $employmentType = $validated['employment_type'] ?? (($validated['type'] ?? null) === 'domestic' ? 'live_in' : ($validated['type'] ?? $job->employment_type ?? 'full_time'));
         if (isset($validated['type']) && in_array($validated['type'], ['full_time', 'part_time', 'contract'])) {
             $employmentType = $validated['type'];
         }

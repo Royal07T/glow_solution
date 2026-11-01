@@ -9,15 +9,20 @@ use App\Notifications\SystemNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\Rule;
 
 class VerificationController extends Controller
 {
     public function index(Request $request)
     {
+        $validated = $request->validate([
+            'status' => ['nullable', Rule::in(['pending', 'approved', 'rejected'])],
+        ]);
+
         $query = EmployerVerification::with(['employerProfile.user', 'reviewer'])->latest();
 
-        if ($request->filled('status')) {
-            $query->where('status', $request->string('status'));
+        if (filled($validated['status'] ?? null)) {
+            $query->where('status', $validated['status']);
         }
 
         $verifications = $query->paginate(15)->withQueryString();

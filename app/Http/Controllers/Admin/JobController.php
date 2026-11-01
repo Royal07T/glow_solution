@@ -10,8 +10,10 @@ use App\Models\Job;
 use App\Models\JobCategory;
 use App\Models\User;
 use App\Notifications\SystemNotification;
+use App\Support\SearchTerm;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
 
 class JobController extends Controller
 {
@@ -80,10 +82,18 @@ class JobController extends Controller
 
     public function index(Request $request)
     {
+        $validated = $request->validate([
+            'status' => ['nullable', Rule::enum(JobStatus::class)],
+            'search' => ['nullable', 'string', 'max:100'],
+        ]);
+
+        $status = $validated['status'] ?? null;
+        $search = SearchTerm::clean($validated['search'] ?? null);
+
         $jobs = Job::with(['employerProfile.user', 'category'])
-            ->when($request->filled('status'), fn ($query) => $query->where('status', $request->string('status')))
-            ->when($request->filled('search'), function ($query) use ($request) {
-                $query->where('title', 'like', '%'.$request->string('search').'%');
+            ->when($status !== null, fn ($query) => $query->where('status', $status))
+            ->when($search !== '', function ($query) use ($search) {
+                $query->where('title', 'like', '%'.$search.'%');
             })
             ->latest()
             ->paginate(15)
@@ -109,12 +119,16 @@ class JobController extends Controller
 
     public function approve(Request $request, Job $job)
     {
+        $validated = $request->validate([
+            'admin_notes' => ['nullable', 'string', 'max:2000'],
+        ]);
+
         $job->update([
             'status' => 'approved',
             'published_at' => now(),
             'reviewed_by' => auth()->id(),
             'reviewed_at' => now(),
-            'admin_notes' => $request->admin_notes,
+            'admin_notes' => $validated['admin_notes'] ?? null,
         ]);
 
         try {
@@ -140,7 +154,7 @@ class JobController extends Controller
     public function reject(Request $request, Job $job)
     {
         $validated = $request->validate([
-            'admin_notes' => 'required|string',
+            'admin_notes' => 'required|string|max:2000',
         ]);
 
         $job->update([

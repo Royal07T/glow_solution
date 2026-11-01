@@ -7,14 +7,21 @@ use App\Models\Application;
 use App\Models\Job;
 use App\Notifications\SystemNotification;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class ApplicationController extends Controller
 {
     public function index(Request $request)
     {
+        $validated = $request->validate([
+            'status' => ['nullable', Rule::enum(ApplicationStatus::class)],
+        ]);
+
+        $status = $validated['status'] ?? null;
+
         $applications = auth()->user()->applications()
             ->with(['job.employerProfile'])
-            ->when($request->filled('status'), fn ($query) => $query->where('status', $request->string('status')))
+            ->when($status !== null, fn ($query) => $query->where('status', $status))
             ->latest()
             ->paginate(10)
             ->withQueryString();
@@ -76,8 +83,8 @@ class ApplicationController extends Controller
             'cover_letter' => 'nullable|string|max:2000',
         ]);
 
-        if ($request->cv_id) {
-            $cv = auth()->user()->cvs()->find($request->cv_id);
+        if (filled($validated['cv_id'] ?? null)) {
+            $cv = auth()->user()->cvs()->find($validated['cv_id']);
             if (! $cv) {
                 abort(403);
             }
