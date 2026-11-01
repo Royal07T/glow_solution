@@ -60,7 +60,7 @@
                                         <div class="flex flex-wrap items-center justify-end gap-3">
                                             <a href="{{ route('applications.show', $application) }}" class="font-semibold text-brand-700 hover:underline">View details</a>
                                             @if($application->canBeWithdrawn())
-                                                <form method="POST" action="{{ route('applications.withdraw', $application) }}" data-confirm="Withdraw this application? This cannot be undone.">
+                                                <form method="POST" action="{{ route('applications.withdraw', $application) }}" data-confirm="Withdraw this application? This cannot be undone." data-confirm-title="Withdraw application" data-confirm-variant="danger">
                                                     @csrf
                                                     <button type="submit" class="text-sm font-medium text-danger hover:underline">Withdraw</button>
                                                 </form>

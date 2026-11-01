@@ -2,8 +2,8 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16">
             <div class="flex items-center">
-                <a href="{{ route('home') }}" class="flex items-center gap-3">
-                    <img src="{{ asset('logo.png') }}" alt="Glow Recruitment Agency Solution" class="h-10 w-auto">
+                <a href="{{ route('home') }}" class="flex h-12 w-32 shrink-0 items-center sm:h-14 sm:w-36" aria-label="Glow Recruitment Agency Solution home">
+                    <img src="{{ asset('logo.png') }}" alt="Glow Recruitment Agency Solution" class="block h-full w-full object-contain object-left">
                 </a>
             </div>
 

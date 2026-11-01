@@ -76,7 +76,7 @@
                     <a href="{{ route('jobs.show', $application->job) }}" class="rounded-lg border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50">View job</a>
                     <a href="{{ route('applications.index') }}" class="rounded-lg px-4 py-2 text-sm font-semibold text-slate-600 hover:bg-slate-100">Back to applications</a>
                     @if($application->canBeWithdrawn())
-                        <form method="POST" action="{{ route('applications.withdraw', $application) }}" data-confirm="Withdraw this application? This cannot be undone.">
+                        <form method="POST" action="{{ route('applications.withdraw', $application) }}" data-confirm="Withdraw this application? This cannot be undone." data-confirm-title="Withdraw application" data-confirm-variant="danger">
                             @csrf
                             <button type="submit" class="rounded-lg border border-red-200 px-4 py-2 text-sm font-semibold text-danger hover:bg-red-50">Withdraw application</button>
                         </form>

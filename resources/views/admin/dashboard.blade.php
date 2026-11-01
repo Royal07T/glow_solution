@@ -41,7 +41,7 @@
                                 <x-icon name="check" class="h-3.5 w-3.5" /> Approve
                             </button>
                         </form>
-                        <form method="POST" action="{{ route('admin.jobs.reject', $job) }}" data-confirm="Reject this job posting?">
+                        <form method="POST" action="{{ route('admin.jobs.reject', $job) }}" data-confirm="Reject this job posting?" data-confirm-title="Reject job posting" data-confirm-variant="danger">
                             @csrf
                             <input type="hidden" name="admin_notes" value="Does not meet requirements">
                             <button type="submit" class="inline-flex items-center gap-1 rounded-lg border border-red-200 px-3 py-1.5 text-xs font-semibold text-danger hover:bg-red-50">

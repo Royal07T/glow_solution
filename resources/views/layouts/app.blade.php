@@ -54,5 +54,6 @@
     
     @include('layouts.partials.footer')
     @include('layouts.partials.session-timeout')
+    <x-confirm-dialog />
 </body>
 </html>

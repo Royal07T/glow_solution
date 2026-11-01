@@ -61,7 +61,9 @@
                             <td class="px-5 py-4">
                                 <div class="flex items-center gap-3">
                                     @if($seekerProfile?->photo_path)
-                                        <img src="{{ route('jobseekers.photo', $user) }}" alt="" class="h-9 w-9 rounded-full object-cover">
+                                        <a href="{{ route('jobseekers.photo', $user) }}" target="_blank" rel="noopener" class="shrink-0 rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-400 focus-visible:ring-offset-2" aria-label="View {{ $user->name }}'s profile photo">
+                                            <img src="{{ route('jobseekers.photo', $user) }}" alt="Profile photo of {{ $user->name }}" class="h-9 w-9 rounded-full object-cover">
+                                        </a>
                                     @endif
                                     <div>
                                         <p class="font-semibold text-slate-900">{{ $user->name }}</p>

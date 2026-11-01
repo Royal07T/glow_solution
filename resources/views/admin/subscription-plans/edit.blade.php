@@ -18,7 +18,7 @@
             <p class="mt-1 text-sm text-slate-600">
                 Plans with subscribers cannot be deleted. Deactivate the plan instead to hide it from new sign-ups.
             </p>
-            <form method="POST" action="{{ route('admin.subscription-plans.destroy', $plan) }}" class="mt-4" data-confirm="Delete this plan permanently?">
+            <form method="POST" action="{{ route('admin.subscription-plans.destroy', $plan) }}" class="mt-4" data-confirm="Delete this plan permanently?" data-confirm-title="Delete plan" data-confirm-variant="danger">
                 @csrf
                 @method('DELETE')
                 <button type="submit" class="inline-flex items-center justify-center rounded-lg border border-red-300 px-4 py-2 text-sm font-semibold text-red-700 hover:bg-red-50">

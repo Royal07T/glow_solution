@@ -105,8 +105,19 @@ body {
         display: none;
     }
 
-    html.sidebar-collapsed [data-sidebar] [data-sidebar-brand-text] {
+    html.sidebar-collapsed [data-sidebar] [data-sidebar-brand-text],
+    html.sidebar-collapsed [data-sidebar] [data-sidebar-brand] {
         display: none;
+    }
+
+    html.sidebar-collapsed [data-sidebar] [data-sidebar-header] {
+        justify-content: center;
+        padding-left: 0.5rem;
+        padding-right: 0.5rem;
+    }
+
+    html.sidebar-collapsed [data-sidebar] [data-sidebar-header-actions] {
+        margin-left: 0;
     }
 
     html.sidebar-collapsed [data-portal-main] {
@@ -445,6 +456,27 @@ details[data-menu][open] > div {
 
 [id] {
     scroll-margin-top: 5rem;
+}
+
+[data-confirm-dialog-backdrop] {
+    animation: confirm-dialog-fade 160ms ease-out;
+}
+
+[data-confirm-dialog-panel] {
+    animation: confirm-dialog-rise 180ms ease-out;
+}
+
+@keyframes confirm-dialog-fade {
+    from {
+        opacity: 0;
+    }
+}
+
+@keyframes confirm-dialog-rise {
+    from {
+        opacity: 0;
+        transform: translateY(0.75rem) scale(0.98);
+    }
 }
 
 /* Respect reduced-motion preferences */

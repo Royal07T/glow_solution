@@ -51,7 +51,7 @@
                             <a href="{{ route('cvs.download', $cv) }}" class="inline-flex items-center gap-1.5 rounded-lg border border-slate-300 px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50">
                                 <x-icon name="download" class="h-4 w-4" /> Download
                             </a>
-                            <form method="POST" action="{{ route('cvs.destroy', $cv) }}" data-confirm="Delete this CV permanently?">
+                            <form method="POST" action="{{ route('cvs.destroy', $cv) }}" data-confirm="Delete this CV permanently?" data-confirm-title="Delete CV" data-confirm-variant="danger">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="inline-flex items-center gap-1.5 rounded-lg border border-red-200 px-3 py-2 text-sm font-semibold text-danger hover:bg-red-50">

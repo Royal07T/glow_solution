@@ -12,7 +12,9 @@
                 <div class="flex flex-wrap items-start justify-between gap-3">
                     <div class="flex items-center gap-3">
                         @if($seekerProfile?->photo_path)
-                            <img src="{{ route('jobseekers.photo', $user) }}" alt="" class="h-12 w-12 rounded-full object-cover">
+                            <a href="{{ route('jobseekers.photo', $user) }}" target="_blank" rel="noopener" class="shrink-0 rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-400 focus-visible:ring-offset-2" aria-label="View {{ $user->name }}'s profile photo">
+                                <img src="{{ route('jobseekers.photo', $user) }}" alt="Profile photo of {{ $user->name }}" class="h-14 w-14 rounded-full border border-slate-200 object-cover">
+                            </a>
                         @endif
                         <div>
                             <h2 class="font-display text-xl font-semibold text-slate-900">{{ $user->name }}</h2>
@@ -152,6 +154,32 @@
                             <x-badge :variant="$seekerProfile->identityStatusBadgeVariant()">{{ $seekerProfile->identityStatusLabel() }}</x-badge>
                         </div>
 
+                        <div class="mt-4 flex flex-col gap-4 rounded-xl border border-slate-200 bg-white p-4 sm:flex-row sm:items-center">
+                            @if($seekerProfile->photo_path)
+                                <a href="{{ route('jobseekers.photo', $user) }}" target="_blank" rel="noopener" class="group relative block w-fit shrink-0 overflow-hidden rounded-xl border border-slate-200">
+                                    <img src="{{ route('jobseekers.photo', $user) }}" alt="Profile photo of {{ $user->name }}" class="h-28 w-28 object-cover transition-transform duration-200 group-hover:scale-105">
+                                    <span class="absolute inset-x-0 bottom-0 bg-brand-950/75 px-2 py-1 text-center text-xs font-semibold text-white">View full photo</span>
+                                </a>
+                                <div class="min-w-0">
+                                    <p class="text-xs uppercase tracking-wide text-slate-500">Profile photo</p>
+                                    <p class="mt-1 text-sm font-medium text-slate-800">{{ $user->name }}</p>
+                                    <p class="mt-1 text-sm text-slate-600">Compare this photo with the submitted identification document before approving the identity.</p>
+                                    <a href="{{ route('jobseekers.photo', $user) }}" target="_blank" rel="noopener" class="mt-2 inline-flex items-center gap-1.5 text-sm font-semibold text-brand-700 hover:underline">
+                                        Open full-size photo <x-icon name="external-link" class="h-4 w-4" />
+                                    </a>
+                                </div>
+                            @else
+                                <span class="flex h-28 w-28 shrink-0 items-center justify-center rounded-xl border border-dashed border-slate-300 bg-slate-50 text-slate-400">
+                                    <x-icon name="user" class="h-10 w-10" />
+                                </span>
+                                <div class="min-w-0">
+                                    <p class="text-xs uppercase tracking-wide text-slate-500">Profile photo</p>
+                                    <p class="mt-1 text-sm font-medium text-slate-800">No photo uploaded</p>
+                                    <p class="mt-1 text-sm text-slate-600">The job seeker has not uploaded a profile photo.</p>
+                                </div>
+                            @endif
+                        </div>
+
                         <dl class="mt-3 grid gap-3 sm:grid-cols-2">
                             <div>
                                 <dt class="text-xs uppercase tracking-wide text-slate-500">ID type</dt>
@@ -237,13 +265,13 @@
                             <div class="mt-3 grid gap-3 sm:grid-cols-2">
                                 <form method="POST" action="{{ route('admin.users.identity.approve', $user) }}">
                                     @csrf
-                                    <button type="submit" data-confirm="Approve this job seeker's identity?" class="w-full rounded-lg bg-green-700 px-4 py-2 text-sm font-semibold text-white hover:bg-green-800">Approve identity</button>
+                                    <button type="submit" data-confirm="Approve this job seeker's identity?" data-confirm-title="Approve identity" data-confirm-label="Approve identity" data-confirm-variant="success" class="w-full rounded-lg bg-green-700 px-4 py-2 text-sm font-semibold text-white hover:bg-green-800">Approve identity</button>
                                 </form>
                                 <form method="POST" action="{{ route('admin.users.identity.reject', $user) }}" class="space-y-2">
                                     @csrf
                                     <label for="identity_verification_notes" class="sr-only">Rejection reason</label>
                                     <textarea id="identity_verification_notes" name="identity_verification_notes" rows="2" required maxlength="1000" placeholder="Reason for rejection" class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"></textarea>
-                                    <button type="submit" data-confirm="Reject this identity submission?" class="w-full rounded-lg bg-danger px-4 py-2 text-sm font-semibold text-white hover:bg-red-700">Reject identity</button>
+                                    <button type="submit" data-confirm="Reject this identity submission?" data-confirm-title="Reject identity" data-confirm-label="Reject identity" data-confirm-variant="danger" class="w-full rounded-lg bg-danger px-4 py-2 text-sm font-semibold text-white hover:bg-red-700">Reject identity</button>
                                 </form>
                             </div>
                         </div>
@@ -290,7 +318,7 @@
                                 <label for="suspension_reason" class="mb-1 block text-sm font-medium text-slate-700">Reason</label>
                                 <textarea id="suspension_reason" name="suspension_reason" rows="3" required maxlength="500" class="w-full rounded-lg border border-slate-300 px-3 py-2"></textarea>
                             </div>
-                            <button type="submit" data-confirm="Suspend this account?" class="w-full rounded-lg bg-danger px-4 py-2 text-sm font-semibold text-white hover:bg-red-700">Suspend user</button>
+                            <button type="submit" data-confirm="Suspend this account?" data-confirm-title="Suspend account" data-confirm-label="Suspend user" data-confirm-variant="danger" class="w-full rounded-lg bg-danger px-4 py-2 text-sm font-semibold text-white hover:bg-red-700">Suspend user</button>
                         </form>
                     @endif
                 </section>

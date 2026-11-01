@@ -112,14 +112,14 @@
     class="fixed inset-y-0 left-0 z-50 flex w-64 -translate-x-full flex-col bg-brand-700 text-white shadow-xl transition-transform duration-200 ease-out lg:translate-x-0"
     aria-label="{{ $roleLabel }} navigation"
 >
-    <div class="flex h-16 shrink-0 items-center gap-3 border-b border-white/10 px-3">
-        <a href="{{ route('home') }}" class="flex min-w-0 items-center gap-2.5 rounded-lg p-1 focus-visible:outline-gold-400">
-            <span class="inline-flex rounded-md bg-white p-1.5">
-                <img src="{{ asset('logo.png') }}" alt="Glow Recruitment Agency" class="h-7 w-auto">
+    <div data-sidebar-header class="flex h-16 shrink-0 items-center gap-3 border-b border-white/10 px-3">
+        <a data-sidebar-brand href="{{ route('home') }}" class="flex min-w-0 items-center gap-2.5 rounded-lg p-1 focus-visible:outline-gold-400">
+            <span class="inline-flex max-w-full rounded-md bg-white p-1.5">
+                <img src="{{ asset('logo.png') }}" alt="Glow Recruitment Agency" class="h-8 w-auto max-w-full object-contain object-left">
             </span>
         </a>
 
-        <div class="ml-auto flex items-center gap-1">
+        <div data-sidebar-header-actions class="ml-auto flex items-center gap-1">
             <button type="button" data-sidebar-collapse class="hidden rounded-lg p-2 text-white/70 hover:bg-white/10 hover:text-white lg:inline-flex" aria-label="Collapse navigation" aria-pressed="false">
                 <x-icon name="panel-left" class="h-5 w-5" />
             </button>

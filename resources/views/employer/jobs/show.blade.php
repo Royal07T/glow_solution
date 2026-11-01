@@ -107,7 +107,7 @@
                     <form method="POST" action="{{ route('employer.jobs.destroy', $job) }}">
                         @csrf
                         @method('DELETE')
-                        <button type="submit" data-confirm="Delete this job listing?" class="rounded-lg border border-red-200 px-4 py-2 text-sm font-semibold text-danger hover:bg-red-50">Delete</button>
+                        <button type="submit" data-confirm="Delete this job listing?" data-confirm-title="Delete job listing" data-confirm-label="Delete listing" data-confirm-variant="danger" class="rounded-lg border border-red-200 px-4 py-2 text-sm font-semibold text-danger hover:bg-red-50">Delete</button>
                     </form>
                 @endif
             </div>

@@ -79,5 +79,6 @@
         </main>
     </div>
     @include('layouts.partials.session-timeout')
+    <x-confirm-dialog />
 </body>
 </html>

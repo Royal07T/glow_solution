@@ -37,7 +37,7 @@
                             <a href="{{ route('applications.create', $job) }}" class="inline-flex rounded-lg bg-brand-700 px-3 py-2 text-sm font-semibold text-white hover:bg-brand-800">Apply now</a>
                         @endif
 
-                        <form method="POST" action="{{ route('saved-jobs.destroy', $job) }}" data-confirm="Remove this job from your saved list?">
+                        <form method="POST" action="{{ route('saved-jobs.destroy', $job) }}" data-confirm="Remove this job from your saved list?" data-confirm-title="Remove saved job" data-confirm-variant="danger">
                             @csrf
                             @method('DELETE')
                             <button type="submit" class="inline-flex items-center gap-1.5 rounded-lg border border-slate-300 px-3 py-2 text-sm font-semibold text-slate-600 hover:bg-slate-50">

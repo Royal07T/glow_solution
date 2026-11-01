@@ -346,20 +346,182 @@ ready(() => {
         });
     });
 
+    const confirmDialog = document.querySelector('[data-confirm-dialog]');
+    const confirmDialogTitle = confirmDialog?.querySelector('[data-confirm-dialog-title]');
+    const confirmDialogMessage = confirmDialog?.querySelector('[data-confirm-dialog-message]');
+    const confirmDialogConfirm = confirmDialog?.querySelector('[data-confirm-dialog-confirm]');
+    const confirmDialogCancel = confirmDialog?.querySelector('[data-confirm-dialog-cancel]');
+    const confirmDialogBackdrop = confirmDialog?.querySelector('[data-confirm-dialog-backdrop]');
+    const confirmDialogIconWrap = confirmDialog?.querySelector('[data-confirm-dialog-icon-wrap]');
+    const confirmDialogIcons = confirmDialog ? confirmDialog.querySelectorAll('[data-confirm-dialog-icon]') : [];
+    const confirmDialogVariants = {
+        primary: {
+            iconWrap: ['bg-brand-50', 'text-brand-700'],
+            confirm: ['bg-brand-700', 'hover:bg-brand-600', 'focus-visible:ring-brand-300'],
+        },
+        success: {
+            iconWrap: ['bg-green-50', 'text-green-700'],
+            confirm: ['bg-green-700', 'hover:bg-green-800', 'focus-visible:ring-green-300'],
+        },
+        danger: {
+            iconWrap: ['bg-red-50', 'text-danger'],
+            confirm: ['bg-danger', 'hover:bg-red-700', 'focus-visible:ring-red-300'],
+        },
+    };
+    const confirmDialogVariantClasses = Object.values(confirmDialogVariants).flatMap((variant) => [
+        ...variant.iconWrap,
+        ...variant.confirm,
+    ]);
+    let activeConfirmCallback = null;
+    let confirmDialogPreviousFocus = null;
+    let confirmDialogPreviousOverflow = '';
+    let confirmDialogIsOpen = false;
+
+    const closeConfirmDialog = (restoreFocus = true) => {
+        if (!confirmDialog || !confirmDialogIsOpen) return;
+
+        confirmDialogIsOpen = false;
+        confirmDialog.hidden = true;
+        document.body.style.overflow = confirmDialogPreviousOverflow;
+
+        if (restoreFocus && confirmDialogPreviousFocus instanceof HTMLElement) {
+            confirmDialogPreviousFocus.focus();
+        }
+
+        confirmDialogPreviousFocus = null;
+        activeConfirmCallback = null;
+    };
+
+    const openConfirmDialog = (options, callback) => {
+        if (!confirmDialog) {
+            callback();
+            return;
+        }
+
+        if (confirmDialogIsOpen) {
+            closeConfirmDialog(false);
+        }
+
+        const variant = confirmDialogVariants[options.variant] ? options.variant : 'primary';
+
+        confirmDialogPreviousFocus = document.activeElement;
+        confirmDialogPreviousOverflow = document.body.style.overflow;
+        activeConfirmCallback = callback;
+        confirmDialogIsOpen = true;
+
+        confirmDialogTitle.textContent = options.title || 'Please confirm';
+        confirmDialogMessage.textContent = options.message || 'Are you sure you want to continue?';
+        confirmDialogConfirm.textContent = options.confirmLabel || 'Confirm';
+        confirmDialogCancel.textContent = options.cancelLabel || 'Cancel';
+
+        confirmDialogIconWrap.classList.remove(...confirmDialogVariantClasses);
+        confirmDialogConfirm.classList.remove(...confirmDialogVariantClasses);
+        confirmDialogIconWrap.classList.add(...confirmDialogVariants[variant].iconWrap);
+        confirmDialogConfirm.classList.add(...confirmDialogVariants[variant].confirm);
+
+        confirmDialogIcons.forEach((icon) => {
+            icon.classList.toggle('hidden', icon.dataset.confirmDialogIcon !== variant);
+        });
+
+        confirmDialog.hidden = false;
+        document.body.style.overflow = 'hidden';
+        window.requestAnimationFrame(() => confirmDialogConfirm.focus());
+    };
+
+    const confirmOptionsFor = (source, submitter = null) => {
+        const submitButton = submitter ?? (source.matches('button') ? source : source.querySelector('button[type="submit"]'));
+
+        return {
+            title: submitter?.dataset.confirmTitle || source.dataset.confirmTitle || 'Please confirm',
+            message: source.dataset.confirm || submitter?.dataset.confirm || '',
+            confirmLabel: submitter?.dataset.confirmLabel || source.dataset.confirmLabel || submitButton?.textContent.trim() || 'Confirm',
+            cancelLabel: submitter?.dataset.confirmCancelLabel || source.dataset.confirmCancelLabel || 'Cancel',
+            variant: submitter?.dataset.confirmVariant || source.dataset.confirmVariant || 'primary',
+        };
+    };
+
     document.querySelectorAll('form[data-confirm]').forEach((form) => {
+        let approved = false;
+
         form.addEventListener('submit', (event) => {
-            if (!window.confirm(form.dataset.confirm)) {
-                event.preventDefault();
+            if (approved) {
+                approved = false;
+                return;
             }
+
+            event.preventDefault();
+
+            const submitter = event.submitter instanceof HTMLElement ? event.submitter : null;
+
+            openConfirmDialog(confirmOptionsFor(form, submitter), () => {
+                approved = true;
+
+                if (typeof form.requestSubmit === 'function') {
+                    form.requestSubmit(submitter ?? undefined);
+                } else {
+                    form.submit();
+                }
+            });
         });
     });
 
+    const replayedConfirmClicks = new WeakSet();
+
     document.querySelectorAll('button[data-confirm]').forEach((button) => {
+        if (button.closest('form[data-confirm]')) return;
+
         button.addEventListener('click', (event) => {
-            if (!window.confirm(button.dataset.confirm)) {
-                event.preventDefault();
+            if (replayedConfirmClicks.has(button)) {
+                replayedConfirmClicks.delete(button);
+                return;
             }
+
+            if (button.type === 'submit' && button.form && ! button.form.checkValidity()) {
+                return;
+            }
+
+            event.preventDefault();
+
+            openConfirmDialog(confirmOptionsFor(button), () => {
+                replayedConfirmClicks.add(button);
+                button.click();
+            });
         });
+    });
+
+    confirmDialogConfirm?.addEventListener('click', () => {
+        const callback = activeConfirmCallback;
+        closeConfirmDialog();
+        callback?.();
+    });
+
+    confirmDialogCancel?.addEventListener('click', () => closeConfirmDialog());
+    confirmDialogBackdrop?.addEventListener('click', () => closeConfirmDialog());
+
+    confirmDialog?.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape') {
+            event.preventDefault();
+            closeConfirmDialog();
+            return;
+        }
+
+        if (event.key !== 'Tab') return;
+
+        const focusable = Array.from(confirmDialog.querySelectorAll('button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'))
+            .filter((element) => ! element.classList.contains('hidden'));
+
+        if (! focusable.length) return;
+
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+
+        if (event.shiftKey && document.activeElement === first) {
+            event.preventDefault();
+            last.focus();
+        } else if (! event.shiftKey && document.activeElement === last) {
+            event.preventDefault();
+            first.focus();
+        }
     });
 
     document.querySelectorAll('form').forEach((form) => {

@@ -30,6 +30,9 @@ class JobSeekerIdentityReviewTest extends TestCase
             ->assertSee('08035551234')
             ->assertSee('12 Allen Avenue, Ikeja, Lagos')
             ->assertSee('View ID document')
+            ->assertSee('View full photo')
+            ->assertSee('Open full-size photo')
+            ->assertSee(route('jobseekers.photo', $seeker), false)
             ->assertSee('Approve identity');
     }
 

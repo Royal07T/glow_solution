@@ -97,7 +97,7 @@
                     @csrf
                     <label for="admin_notes" class="block text-sm font-medium text-slate-700">Rejection reason</label>
                     <textarea id="admin_notes" name="admin_notes" rows="3" required maxlength="1000" class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"></textarea>
-                    <button type="submit" data-confirm="Reject this listing?" class="w-full rounded-lg bg-danger px-4 py-2 text-sm font-semibold text-white hover:bg-red-700">Reject listing</button>
+                    <button type="submit" data-confirm="Reject this listing?" data-confirm-title="Reject listing" data-confirm-label="Reject listing" data-confirm-variant="danger" class="w-full rounded-lg bg-danger px-4 py-2 text-sm font-semibold text-white hover:bg-red-700">Reject listing</button>
                 </form>
             </section>
 

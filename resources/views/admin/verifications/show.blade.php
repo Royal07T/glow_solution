@@ -63,7 +63,7 @@
                         @csrf
                         <label for="admin_notes" class="block text-sm font-medium text-slate-700">Rejection reason</label>
                         <textarea id="admin_notes" name="admin_notes" rows="3" required maxlength="1000" class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"></textarea>
-                        <button type="submit" data-confirm="Reject this verification?" class="w-full rounded-lg bg-danger px-4 py-2 text-sm font-semibold text-white hover:bg-red-700">Reject</button>
+                        <button type="submit" data-confirm="Reject this verification?" data-confirm-title="Reject verification" data-confirm-label="Reject verification" data-confirm-variant="danger" class="w-full rounded-lg bg-danger px-4 py-2 text-sm font-semibold text-white hover:bg-red-700">Reject</button>
                     </form>
                 </section>
             @else
