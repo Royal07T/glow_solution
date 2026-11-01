@@ -41,6 +41,20 @@ Route::get('/register', [RegisteredUserController::class, 'create'])->name('regi
 Route::post('/register', [RegisteredUserController::class, 'store'])->middleware(['guest', 'rate.limit:register,3,60']);
 Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout')->middleware('auth');
 
+Route::get('/home', function () {
+    $user = auth()->user();
+
+    return redirect()->route(match (true) {
+        $user->isAdmin() => 'admin.dashboard',
+        $user->isEmployer() => 'employer.dashboard',
+        default => 'jobseeker.dashboard',
+    });
+})->middleware('auth')->name('home.redirect');
+
+Route::view('/email/verified', 'auth.email-verified')
+    ->middleware(['auth', 'verified'])
+    ->name('verification.verified');
+
 // Job Seeker Routes
 Route::middleware(['auth', 'verified', 'role:job_seeker'])->prefix('jobseeker')->name('jobseeker.')->group(function () {
     Route::get('/dashboard', [JobSeekerDashboard::class, 'index'])->name('dashboard');
