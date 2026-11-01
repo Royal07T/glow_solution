@@ -286,6 +286,28 @@ ready(() => {
         });
     });
 
+    document.querySelectorAll('[data-sensitive-toggle]').forEach((button) => {
+        const container = button.closest('[data-sensitive]');
+        const masked = container?.querySelector('[data-sensitive-masked]');
+        const actual = container?.querySelector('[data-sensitive-actual]');
+
+        if (!container || !masked || !actual) return;
+
+        button.addEventListener('click', () => {
+            const show = actual.classList.contains('hidden');
+            const label = button.dataset.sensitiveLabel || 'information';
+            const action = show ? 'Hide' : 'Show';
+
+            masked.classList.toggle('hidden', show);
+            actual.classList.toggle('hidden', ! show);
+            button.setAttribute('aria-pressed', String(show));
+            button.setAttribute('aria-label', `${action} ${label}`);
+            button.setAttribute('title', `${action} ${label}`);
+            button.querySelector('[data-sensitive-eye-open]')?.classList.toggle('hidden', show);
+            button.querySelector('[data-sensitive-eye-off]')?.classList.toggle('hidden', ! show);
+        });
+    });
+
     const backToTop = document.querySelector('[data-back-to-top]');
 
     if (backToTop) {

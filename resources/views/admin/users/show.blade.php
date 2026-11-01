@@ -1,7 +1,9 @@
 @extends('layouts.portal')
 
 @section('title', $user->name)
-@section('subtitle', $user->email)
+@section('subtitle')
+    <x-sensitive-value :value="$user->email" label="email address" />
+@endsection
 
 @section('content')
     @php($seekerProfile = $user->jobSeekerProfile)
@@ -18,7 +20,7 @@
                         @endif
                         <div>
                             <h2 class="font-display text-xl font-semibold text-slate-900">{{ $user->name }}</h2>
-                            <p class="text-sm text-slate-600">{{ $user->email }}</p>
+                            <p class="text-sm text-slate-600"><x-sensitive-value :value="$user->email" label="email address" /></p>
                         </div>
                     </div>
                     <div class="flex gap-2">
@@ -86,7 +88,7 @@
                     <div class="flex flex-wrap items-start justify-between gap-3">
                         <div>
                             <h2 class="font-display text-base font-semibold text-slate-900">Job seeker profile</h2>
-                            <p class="mt-1 text-sm text-slate-600">Review the details submitted by this job seeker.</p>
+                            <p class="mt-1 text-sm text-slate-600">Review the details submitted by this job seeker. Sensitive information is hidden until you reveal it.</p>
                         </div>
                         <x-badge :variant="$seekerProfile->identityStatusBadgeVariant()">{{ $seekerProfile->identityStatusLabel() }}</x-badge>
                     </div>
@@ -98,11 +100,11 @@
                         </div>
                         <div>
                             <dt class="text-xs uppercase tracking-wide text-slate-500">Phone</dt>
-                            <dd class="text-sm font-medium text-slate-800">{{ $user->phone ?: '—' }}</dd>
+                            <dd class="text-sm font-medium text-slate-800"><x-sensitive-value :value="$user->phone" label="phone number" /></dd>
                         </div>
                         <div>
                             <dt class="text-xs uppercase tracking-wide text-slate-500">Date of birth</dt>
-                            <dd class="text-sm font-medium text-slate-800">{{ $seekerProfile->date_of_birth?->format('M j, Y') ?: '—' }}</dd>
+                            <dd class="text-sm font-medium text-slate-800"><x-sensitive-value :value="$seekerProfile->date_of_birth?->format('M j, Y')" label="date of birth" /></dd>
                         </div>
                         <div>
                             <dt class="text-xs uppercase tracking-wide text-slate-500">Gender</dt>
@@ -114,7 +116,7 @@
                         </div>
                         <div>
                             <dt class="text-xs uppercase tracking-wide text-slate-500">Address</dt>
-                            <dd class="text-sm font-medium text-slate-800">{{ $seekerProfile->address ?: '—' }}</dd>
+                            <dd class="text-sm font-medium text-slate-800"><x-sensitive-value :value="$seekerProfile->address" label="home address" /></dd>
                         </div>
                         <div>
                             <dt class="text-xs uppercase tracking-wide text-slate-500">Education</dt>
@@ -187,7 +189,7 @@
                             </div>
                             <div>
                                 <dt class="text-xs uppercase tracking-wide text-slate-500">ID number</dt>
-                                <dd class="text-sm font-medium text-slate-800">{{ $seekerProfile->identification_number ?: '—' }}</dd>
+                                <dd class="text-sm font-medium text-slate-800"><x-sensitive-value :value="$seekerProfile->identification_number" label="national ID number" /></dd>
                             </div>
                             <div>
                                 <dt class="text-xs uppercase tracking-wide text-slate-500">Submitted</dt>
@@ -214,15 +216,15 @@
                                 <dl class="mt-2 grid gap-3 sm:grid-cols-2">
                                     <div>
                                         <dt class="text-xs text-slate-500">Name</dt>
-                                        <dd class="text-sm font-medium text-slate-800">{{ $seekerProfile->guarantor_name }}</dd>
+                                        <dd class="text-sm font-medium text-slate-800"><x-sensitive-value :value="$seekerProfile->guarantor_name" label="guarantor name" /></dd>
                                     </div>
                                     <div>
                                         <dt class="text-xs text-slate-500">Phone</dt>
-                                        <dd class="text-sm font-medium text-slate-800">{{ $seekerProfile->guarantor_phone }}</dd>
+                                        <dd class="text-sm font-medium text-slate-800"><x-sensitive-value :value="$seekerProfile->guarantor_phone" label="guarantor phone number" /></dd>
                                     </div>
                                     <div class="sm:col-span-2">
                                         <dt class="text-xs text-slate-500">Address</dt>
-                                        <dd class="text-sm font-medium text-slate-800">{{ $seekerProfile->guarantor_address }}</dd>
+                                        <dd class="text-sm font-medium text-slate-800"><x-sensitive-value :value="$seekerProfile->guarantor_address" label="guarantor address" /></dd>
                                     </div>
                                 </dl>
                             @else
